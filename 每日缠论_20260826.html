@@ -143,13 +143,7 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <div class="pcard fix" style="grid-column:1/-1"><h3>🔮 追问③ · 今日推演：三种可能性与操盘预案（16:14 @79,002）</h3>
 <div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
 <b>快照：</b>中枢 78,600~79,100/200 内第 7 段；<b>量能一路萎缩</b>（下午量只有中午四成）；30m MACD 零轴粘合（DIF 32）；费率降至 0.0059%（低于基准）。缩量对峙——方向大概率留给美盘，<b>缩口越久离开越猛</b>。<br><br>
-<b>三种可能性（主观概率，每条演化一张独立图 A/B/C，图上标号①②③对应步骤——提优化时直接说「图B的②」）：</b><br>
-<table style="border-collapse:collapse;width:100%;margin:6px 0">
-<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">演化</td><td>概率</td><td>路径</td><td>关键判据</td></tr>
-<tr><td style="padding:5px"><b class="r">B 向下离开（图B）</b></td><td>~40%</td><td>破 78,600 回抽不回 = <b>30m三卖</b> → 77,808 → 破则 76,600 第一梯队</td><td>回抽不回中枢（收回 78,900 上方作废）</td></tr>
-<tr><td style="padding:5px"><b class="y">A 向上离开（图A）</b></td><td>~35%</td><td>破 79,200 回抽不回 → 挑战前高 79,540 → <b>看盘整背驰</b>：背驰+顶分型 = 类二卖</td><td>到 79,540 时红柱面积与前段比</td></tr>
-<tr><td style="padding:5px"><b class="b">C 中枢延伸（图C）</b></td><td>~25%</td><td>78,600~79,100 磨到明天</td><td>延伸至第 9 段升级大级别</td></tr>
-</table>
+<b>三种可能性（一句话+一张图，交替排在下方图A/B/C）：B 向下离开~40%（图B）｜A 向上离开~35%（图A）｜C 中枢延伸~25%（图C）。</b><br>
 <b>结构事实：</b>空单有两条路径（A 终点=类二卖位置最好；B 过程=三卖顺势更稳）；多单今天<b>无计划内位置</b>（中枢内无买点；三买要等向上离开后回踩不回 79,100/200——属剧本作废分支，到时重算）。<br><br>
 <b>操盘预案（阶段3之后才可执行，现在只预习）：</b><br>
 <table style="border-collapse:collapse;width:100%;margin:6px 0">
@@ -162,10 +156,13 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 💡 概率是主观估计不是计算——<b>布局比押注重要</b>：A/B 两条路都有预案、C 出现时不动。今晚是拿着剧本坐在电影院——电影怎么演是市场的事。
 </div></div>
 <div class="sec">📜 图A · 演化A（35%）向上离开 → 类二卖</div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">一句话：破 79,200 回抽不回 → 挑战前高 79,540 → 红柱面积比前段萎缩（盘整背驰）+顶分型 = 类二卖做空位。</div>
 <div class="chart-card" id="chartA"></div>
 <div class="sec">📜 图B · 演化B（40%）向下离开 → 三卖</div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">一句话：破 ZD 78,600 后回抽 78,900 收不回 = 30m 三类卖点 → 下跌段延续看 77,808 → 76,600 第一梯队。</div>
 <div class="chart-card" id="chartB"></div>
-<div class="sec">📜 图C · 演化C（25%）中枢延伸 → 等8/27日线</div>
+<div class="sec">📜 图C · 演化C（25%）中枢延伸 → 等 8/27 日线</div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">一句话：78,600~79,100 内继续震荡，延伸至第 9 段升级大级别中枢；明天日线顶分型确认与否定深度。</div>
 <div class="chart-card" id="chartC"></div>
 <div class="chart-card" id="chartTimeline"></div>
 <div class="note">⚠️ 级别精确化：眼前30m反弹若夭折在78,980下方=仅30m级别小二卖（轻仓或放弃）；「4h二卖」需要反弹长成4h规模（数天数笔）再失败——仓位与目标差一个量级。制定于8/26，作废线触发后（过79,556看80,235；过81,271全作废）请回来重算。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。</div>
@@ -251,7 +248,9 @@ function draw(boxId,ks,anns,opts){
      +`<text x="${ml+6}" y="${(y1-4).toFixed(1)}" fill="${b.col}" font-size="11" font-weight="700">${b.lab}</text>`;});
   (opts.lines||[]).forEach(l=>{const y=Y(l.p);
     s+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${ml+pw}" y2="${y.toFixed(1)}" stroke="${l.col}" stroke-width="${l.w||1.2}" stroke-dasharray="${l.d||"7,4"}" opacity=".85"/>`
-     +`<text x="${ml+6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700">${l.lab}</text>`;});
+     +(l.side==="r"
+       ?`<text x="${ml+pw-6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700" text-anchor="end">${l.lab}</text>`
+       :`<text x="${ml+6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700">${l.lab}</text>`);});
   // 趋势线(任意两点)
   (opts.tlines||[]).forEach(l=>{const q1=at(l.t1),q2=at(l.t2);
     const x1=ml+(q1+0.5)*pw/n,x2=ml+(q2+0.5)*pw/n;
@@ -415,40 +414,40 @@ async function load(){
     const rArea=(i1,i2)=>{let s2=0;for(let i=i1;i<=i2;i++)if(mS.hist[i]>0)s2+=mS.hist[i];return s2};
     const sA1=ixS(T("2026-08-26T05:00:00")),sA2=ixS(T("2026-08-26T10:00:00"));
     const baseA1=rArea(sA1,sA2);
-    // 图A 向上离开→类二卖
+    // 图A 向上离开→类二卖(标签左右分开,防重叠)
     draw("chartA",kS,[
-      {t:T("2026-08-26T10:00"),p:79200,col:"#f0b90b",txt:"①起点:反弹笔顶79,200|破此=向上离开确认"},
-      {t:T("2026-08-26T08:00"),p:79100,col:"#8b949e",txt:"②回抽不回ZG|(79,100上方企稳)"},
-      {t:T("2026-08-26T16:00"),p:79540,col:"#f6465d",txt:"③到前高79,540|比a2/a1<85%=盘整背驰"}
-    ],{title:"图A · 向上离开(35%)：①破79,200 → ②回抽不回 → ③前高79,540看背驰 → ④顶分型+破回踩低点=类二卖 → ⑤止损80,250 目标78,600/77,800",H:420,now,
-       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"中枢 ZD=78,600~ZG≈79,100"},
-              {lo:79300,hi:79550,col:"#f0b90b",lab:"③④类二卖观察/进场区 79,300~79,550"}],
-       lines:[{p:79540,col:"#f6465d",lab:"③ 前高分位 79,540（比背驰）"},
-              {p:79200,col:"#f0b90b",lab:"① 向上离开确认 79,200"},
+      {t:T("2026-08-26T10:00"),p:79200,col:"#f0b90b",txt:"①破此=离开确认"},
+      {t:T("2026-08-26T08:00"),p:79100,col:"#8b949e",txt:"②回抽不回ZG"},
+      {t:T("2026-08-26T16:00"),p:79540,col:"#f6465d",txt:"③前高·比a2/a1"}
+    ],{title:"图A · ①破79,200→②回抽不回→③前高79,540比背驰→④顶分型=类二卖→⑤止损80,250·目标78,600/77,800",H:420,now,
+       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"中枢 78,600~79,100"},
+              {lo:79300,hi:79550,col:"#f0b90b",lab:"③④ 进场观察区 79,300~79,550"}],
+       lines:[{p:79540,col:"#f6465d",lab:"③ 前高分位 79,540"},
+              {p:79200,col:"#f0b90b",lab:"① 离开确认 79,200",side:"r"},
               {p:80250,col:"#f6465d",lab:"⑤ 止损 80,250"},
-              {p:78600,col:"#2ebd85",lab:"⑤ 目标1 78,600"}],
-       macd:mS,divAreas:[{i1:sA1,i2:sA2,lab:"a1基准="+baseA1.toFixed(0)+"（③时比a2）"}]});
+              {p:78600,col:"#2ebd85",lab:"⑤ 目标1 78,600",side:"r"}],
+       macd:mS,divAreas:[{i1:sA1,i2:sA2,lab:"a1基准（③时比a2）"}]});
     // 图B 向下离开→三卖
     draw("chartB",kS,[
-      {t:T("2026-08-26T12:30"),p:78600,col:"#f6465d",txt:"①起点:破ZD 78,600|回抽不回=三卖",below:true},
-      {t:T("2026-08-26T14:30"),p:78900,col:"#8b949e",txt:"②回抽确认位78,900|收回此上方=作废",below:true},
-      {t:T("2026-08-26T05:00"),p:77808,col:"#2ebd85",txt:"③目标1 77,808|(中枢下沿)",below:true}
-    ],{title:"图B · 向下离开(40%)：①破78,600 → ②回抽78,900收不回=三卖成立 → ③目标77,808 → ④目标77,000/76,600 → ⑤止损79,250",H:420,now,
-       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"中枢 ZD=78,600~ZG≈79,100"},
-              {lo:76600,hi:77000,col:"#2ebd85",lab:"④ 目标2区 76,600第一梯队上沿"}],
-       lines:[{p:78600,col:"#f6465d",lab:"① 三卖触发=破ZD 78,600"},
-              {p:78900,col:"#8b949e",lab:"② 回抽确认 78,900"},
-              {p:79250,col:"#f6465d",lab:"⑤ 止损 79,250"},
+      {t:T("2026-08-26T12:30"),p:78600,col:"#f6465d",txt:"①破此=三卖触发",below:true},
+      {t:T("2026-08-26T14:30"),p:78900,col:"#8b949e",txt:"②回抽确认",below:true},
+      {t:T("2026-08-26T05:00"),p:77808,col:"#2ebd85",txt:"③目标1",below:true}
+    ],{title:"图B · ①破78,600→②回抽78,900收不回=三卖→③目标77,808→④目标77,000/76,600→⑤止损79,250",H:420,now,
+       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"中枢 78,600~79,100"},
+              {lo:76600,hi:77000,col:"#2ebd85",lab:"④ 目标2区 76,600上沿"}],
+       lines:[{p:78600,col:"#f6465d",lab:"① 三卖触发 78,600"},
+              {p:78900,col:"#8b949e",lab:"② 回抽确认 78,900",side:"r"},
+              {p:79250,col:"#f6465d",lab:"⑤ 止损 79,250",side:"r"},
               {p:77808,col:"#2ebd85",lab:"③ 目标1 77,808"}]});
     // 图C 中枢延伸
     draw("chartC",kS,[
-      {t:T("2026-08-26T13:30"),p:79100,col:"#8b949e",txt:"①ZG 79,100|区间上沿"},
-      {t:T("2026-08-26T13:00"),p:78600,col:"#8b949e",txt:"②ZD 78,600|区间下沿",below:true},
-      {t:T("2026-08-26T16:00"),p:78850,col:"#58a6ff",txt:"③延伸中(第7段)|22:00仍在区间=今日延伸收场",below:true}
-    ],{title:"图C · 中枢延伸(25%)：①②78,600~79,100内继续震荡 → ③延伸至第9段=升级大级别中枢 → 明天8/27日线顶分型确认与否定深度",H:420,now,
-       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"①② 延伸区间 78,600 ~ 79,100（第7段，9段升级）"}],
-       lines:[{p:79200,col:"#8b949e",lab:"离开确认上沿 79,200（去图A）"},
-              {p:77808,col:"#8b949e",lab:"离开确认下沿 77,808（去图B）"}],
+      {t:T("2026-08-26T13:30"),p:79100,col:"#8b949e",txt:"①ZG 79,100"},
+      {t:T("2026-08-26T13:00"),p:78600,col:"#8b949e",txt:"②ZD 78,600",below:true},
+      {t:T("2026-08-26T16:00"),p:78850,col:"#58a6ff",txt:"③第7段延伸中",below:true}
+    ],{title:"图C · ①②区间内震荡→③延伸至第9段=升级大级别→8/27日线顶分型定深度",H:420,now,
+       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"①② 延伸区间 78,600 ~ 79,100"}],
+       lines:[{p:79200,col:"#8b949e",lab:"上出口 79,200（去图A）"},
+              {p:77808,col:"#8b949e",lab:"下出口 77,808（去图B）",side:"r"}],
        macd:mS});
     $("updTag").textContent="BTC "+F(now)+" · "+new Date().toLocaleTimeString("zh-CN",{hour12:false});
   }catch(e){$("verdict").innerHTML="加载失败："+e.message;$("verdict").className="verdict r"}
