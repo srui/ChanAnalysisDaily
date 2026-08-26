@@ -1,0 +1,17 @@
+# ===== 私人交易数据(绝不推送到GitHub) =====
+tradeLog.json
+tradeLog.backup.*.json
+交易记录_导入.json
+交易日志_*.json
+server.log
+*.log
+
+# 交易截图(私人)
+*.jpg
+*.jpeg
+*.png
+
+# 系统
+.DS_Store
+archive/
+briefs/
