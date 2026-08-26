@@ -161,6 +161,7 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <b>风控三条：</b>单笔 1U、杠杆≤10x、<b>时间止损</b>——美盘 22:00 仍在 78,600~79,100 内=延伸收场，睡觉；明天 8/27 看<b>日线顶分型确认与否</b>（决定下半场深度的大变量）。<br><br>
 💡 概率是主观估计不是计算——<b>布局比押注重要</b>：A/B 两条路都有预案、C 出现时不动。今晚是拿着剧本坐在电影院——电影怎么演是市场的事。
 </div></div>
+<div class="chart-card" id="chartScenario"></div>
 <div class="chart-card" id="chartTimeline"></div>
 <div class="note">⚠️ 级别精确化：眼前30m反弹若夭折在78,980下方=仅30m级别小二卖（轻仓或放弃）；「4h二卖」需要反弹长成4h规模（数天数笔）再失败——仓位与目标差一个量级。制定于8/26，作废线触发后（过79,556看80,235；过81,271全作废）请回来重算。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。</div>
 </div>
@@ -401,6 +402,23 @@ async function load(){
          {t1:T("2026-08-26T00:00"),p1:79540,t2:T("2026-08-26T09:00"),p2:78800,col:"#f6465d",lab:"三角上沿(降)"},
          {t1:T("2026-08-25T21:30"),p1:78060,t2:T("2026-08-26T09:00"),p2:78200,col:"#2ebd85",lab:"三角下沿(平)"}],
        struct:{bi:biL,segs:segsL,zs:zsL,lastPrice:kL[kL.length-1].c}});
+    // ===== 图六: 今日推演图(中枢三路径+预警位+预案区) =====
+    const kS=await fetchK2("30m",T("2026-08-25T20:00:00"),null);
+    const aS=kS.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const mS=calcMACD(aS);
+    draw("chartScenario",kS,[
+      {t:T("2026-08-26T10:00"),p:79200,col:"#f0b90b",txt:"反弹笔顶 79,200|A:破此=向上离开(35%)|→ 前高79,540 看盘整背驰"},
+      {t:T("2026-08-26T12:30"),p:78600,col:"#58a6ff",txt:"ZD 78,600|B:破此回抽不回=三卖(40%)",below:true},
+      {t:T("2026-08-26T05:00"),p:77808,col:"#2ebd85",txt:"77,808 下沿|B路径第一目标",below:true},
+      {t:T("2026-08-26T13:00"),p:78600,col:"#8b949e",txt:"量能萎缩|3021→1300",below:true}
+    ],{title:"30分钟 · 今日推演：新中枢(78,600~79,100)三路径 + 四个预警位 + 两预案区 · MACD零轴粘合",H:430,now,
+       bands:[{lo:78600,hi:79100,col:"#58a6ff",lab:"新中枢 ZD=78,600 ~ ZG≈79,100（第③笔后生成，现第7段）"},
+              {lo:79300,hi:79550,col:"#f0b90b",lab:"空A预案区(预习勿动)：前高分位 79,300~79,550"}],
+       lines:[{p:79540,col:"#f6465d",lab:"79,540 前高分位 · 类二卖观察（预警②）"},
+              {p:79200,col:"#f0b90b",lab:"79,200 向上离开确认（预警①）"},
+              {p:78600,col:"#58a6ff",lab:"78,600 ZD·三卖触发（预警③）"},
+              {p:77808,col:"#2ebd85",lab:"77,808 下沿（预警④）"}],
+       macd:mS});
     $("updTag").textContent="BTC "+F(now)+" · "+new Date().toLocaleTimeString("zh-CN",{hour12:false});
   }catch(e){$("verdict").innerHTML="加载失败："+e.message;$("verdict").className="verdict r"}
 }
