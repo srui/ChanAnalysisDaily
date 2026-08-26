@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ChanAnalysisDaily · 每日缠论</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b111e;color:#cdd6e6;font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh;
+background-image:radial-gradient(1000px 500px at 80% -10%,rgba(240,185,11,.07),transparent),radial-gradient(800px 400px at -10% 110%,rgba(88,166,255,.05),transparent)}
+.wrap{max-width:860px;margin:0 auto;padding:48px 20px 60px}
+header{text-align:center;margin-bottom:34px}
+.badge{display:inline-block;font-size:11px;color:#f0b90b;border:1px solid #f0b90b;padding:3px 14px;border-radius:20px;letter-spacing:2px;margin-bottom:14px}
+h1{font-size:32px;font-weight:700;background:linear-gradient(90deg,#fff 20%,#f0b90b 85%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.sub{color:#8ea0bd;font-size:14px}
+.list{display:flex;flex-direction:column;gap:12px;margin-bottom:30px}
+a.card{display:block;background:#0e1626;border:1px solid #223049;border-radius:14px;padding:18px 22px;text-decoration:none;color:#cdd6e6;transition:.2s;position:relative;overflow:hidden}
+a.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#f0b90b;opacity:0;transition:.2s}
+a.card:hover{border-color:#f0b90b;transform:translateY(-2px);box-shadow:0 8px 24px rgba(240,185,11,.1)}
+a.card:hover::before{opacity:1}
+.card .date{font-size:12px;color:#f0b90b;letter-spacing:1px;margin-bottom:4px}
+.card .name{font-size:17px;font-weight:700;color:#e8eefb;margin-bottom:4px}
+.card .desc{font-size:13px;color:#8ea0bd}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.feat{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#161f33;color:#8ea0bd;border:1px solid #223049}
+footer{text-align:center;color:#66748f;font-size:12px;line-height:2;border-top:1px solid #1c2942;padding-top:22px}
+footer a{color:#58a6ff;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="badge">CHAN · 缠论 · DAILY</span>
+<h1>ChanAnalysisDaily</h1>
+<p class="sub">每日缠论学习与行情问答 · 一天一页 · K线实时绘制</p>
+</header>
+
+<div class="list">
+<a class="card" href="每日缠论_20260826.html">
+<div class="date">2026-08-26</div>
+<div class="name">🎯 二卖剧本 · BTC 4h顶分型后的反弹监控</div>
+<div class="desc">81,271 顶分型确认 → 压力簇 79,300~79,556 埋伏 → 收敛三角 77,800~79,540 等第二次测试。含区间套卖出版、5m实盘演练、受阻梯队、马后炮复盘。</div>
+<div class="tags"><span class="feat">自动状态判定</span><span class="feat">区间套镜像</span><span class="feat">斐波那契共振</span><span class="feat">马后炮</span></div>
+</a>
+<a class="card" href="案例复盘_BTC0824二买.html">
+<div class="date">2026-08-24 案例（被 8/26 笔记引用）</div>
+<div class="name">📋 BTC 8/24 平台三探底与二买确认</div>
+<div class="desc">高位中枢三探不破 → 16:00 低点抬高二买 → 平台突破 +4.5%。五节结构：全景 → 反转确认 → 区间套 → 级别透视 → 教科书汇总。</div>
+<div class="tags"><span class="feat">五图标注</span><span class="feat">买卖镜像</span><span class="feat">级别自相似</span></div>
+</a>
+<a class="card" href="做空位置地图.html">
+<div class="date">工具（被笔记引用）</div>
+<div class="name">🎯 做空位置地图 · 条件触发版</div>
+<div class="desc">三个做空位置（双顶阻抗/破位回抽/4h一卖）实时K线自动标注 + 清算簇叠加 + 破位触发器，可切币种与周期。</div>
+<div class="tags"><span class="feat">三级位置</span><span class="feat">清算簇</span><span class="feat">自动判定</span></div>
+</a>
+</div>
+
+<footer>
+ChanAnalysisDaily · 数据源 Binance Futures API · 纯前端，浏览器直开即用<br>
+仅供个人学习研究，不构成投资建议 · <a href="https://github.com/srui/ChanAnalysisDaily">GitHub 仓库</a>
+</footer>
+</div>
+</body>
+</html>
