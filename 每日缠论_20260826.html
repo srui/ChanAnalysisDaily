@@ -39,7 +39,7 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <div class="wrap">
 <header>
 <h1>📖 每日缠论 · 2026-08-26 <small>🎯 二卖剧本 · BTC 4h顶分型(81,271)后的反弹监控 · 制定于 8/26 09:12 @78,774</small></h1>
-<button class="btn" id="rfBtn">↻ 刷新</button>
+<span class="btn" style="cursor:default">🔒 8/26 快照</span>
 <span class="btn" style="cursor:default" id="updTag">—</span>
 </header>
 <div class="sub">剧本逻辑：<b>4h 顶分型已确认（81,271，右侧5根全低）→ 4h回调进行中 → 等 30m 反弹长出规模（2~3笔）→ 在 <b style="color:#f6465d">79,300~79,556 压力簇</b>（8/21顶79,556 + 8/25 20:00高79,500 + 8/26 00:00高79,540 三重共振）下方受阻 → 30m顶分型确认 → 跌破反弹回调低点 = 二卖生效</b>。</div>
@@ -140,6 +140,7 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 ③ <b>中枢延伸</b>：78,600~79,100 内继续震荡，段不改向，延伸至第9段升级。<br><br>
 💡 「4h 在等二卖」和「30m 在走向上一段」<b>不是二选一——同一块表的两根指针</b>：4h 二卖需要的反弹，在 30m 视角就是一段上涨（级别自相似：4h 回调里的一笔 ≈ 30m 的一段）。
 </div></div>
+<div class="chart-card" id="chartTimeline"></div>
 <div class="pcard fix" style="grid-column:1/-1"><h3>🔮 追问③ · 今日推演：三种可能性与操盘预案（16:14 @79,002）</h3>
 <div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
 <b>快照：</b>中枢 78,600~79,100/200 内第 7 段；<b>量能一路萎缩</b>（下午量只有中午四成）；30m MACD 零轴粘合（DIF 32）；费率降至 0.0059%（低于基准）。缩量对峙——方向大概率留给美盘，<b>缩口越久离开越猛</b>。<br><br>
@@ -164,8 +165,15 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <div class="sec">📜 图C · 演化C（25%）中枢延伸 → 等 8/27 日线</div>
 <div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">一句话：78,600~79,100 内继续震荡，延伸至第 9 段升级大级别中枢；明天日线顶分型确认与否定深度。</div>
 <div class="chart-card" id="chartC"></div>
-<div class="chart-card" id="chartTimeline"></div>
-<div class="note">⚠️ 级别精确化：眼前30m反弹若夭折在78,980下方=仅30m级别小二卖（轻仓或放弃）；「4h二卖」需要反弹长成4h规模（数天数笔）再失败——仓位与目标差一个量级。制定于8/26，作废线触发后（过79,556看80,235；过81,271全作废）请回来重算。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。</div>
+
+<div class="sec">🏆 追问④ · 走势终完美 Case：BTC 82,829→57,759（5/6→7/1，56天-30%）</div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">一句话：标准日线下跌趋势（两个中枢依次下移）——<b>顶部以教科书背驰完美（红柱面积极度萎缩，远低于85%）</b>，<b>底部以灰带背驰完美（面积89%+DIF背离，靠底分型+破反弹高确认）</b>，随后「下跌→两个月盘整→8月上涨」完成走势连接闭环。区间套的真正用武之地在灰带。</div>
+<div class="chart-card" id="chartD"></div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">图E 一句话：冲顶 82,829 后反弹 80,478→80,642→81,043 全部不过前高，最后冲高红柱面积极度萎缩（图E实时计算，远低于85%阈值）——信号级顶背驰+5/10顶分型=上涨走势完美，-30%下跌开启。</div>
+<div class="chart-card" id="chartE"></div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">图F 一句话：双底 58,030/57,759 仅差 0.47%，DIF -749→-473 抬高但面积 89% 未达标准（灰带）——区间套下钻：底分型→破最后反弹高点=确认，72小时+8%，随后两个月中枢→8月向上突破。</div>
+<div class="chart-card" id="chartF"></div>
+<div class="note">⚠️ 级别精确化：眼前30m反弹若夭折在78,980下方=仅30m级别小二卖（轻仓或放弃）；「4h二卖」需要反弹长成4h规模（数天数笔）再失败——仓位与目标差一个量级。制定于8/26，作废线触发后（过79,556看80,235；过81,271全作废）请回来重算。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/26 快照：数据窗口全部锚定到当日 23:59，之后任何时间打开都是当天看到的样子。</div>
 </div>
 <script>
 "use strict";
@@ -332,9 +340,11 @@ function enableCross(boxId,ks,g){
     [host.querySelector("#"+boxId+"_cv"),host.querySelector("#"+boxId+"_ch"),host.querySelector("#"+boxId+"_pt")].forEach(el=>{if(el)el.setAttribute("opacity",0)})});
 }
 const T=ds=>new Date(ds).getTime();
+const FREEZE=T("2026-08-26T23:59:59");  // 快照冻结:数据窗口锚定到8/26,页面永久保持当日状态
 async function load(){
   try{
-    const now=+(await fetch(`${API}/ticker/price?symbol=BTCUSDT`).then(r=>r.json()).then(d=>d.price));    const k4=await fetchK("4h",80);
+    const now=79100;  // 快照价:8/26收盘状态(冻结)
+    const k4=await fetchK2("4h",T("2026-08-13T00:00:00"),FREEZE);
     const a4=k4.map(k=>[k.t,k.o,k.h,k.l,k.c]);
     const bi4=buildBiM(a4),zs4=buildZS(bi4),segs4=buildSegs(bi4),m4=calcMACD(a4);
     draw("chart4h",k4,[
@@ -347,7 +357,7 @@ async function load(){
               {p:LV.st1,col:"#f0b90b",lab:"80,235 止损参考(最后一个4h高点)"},
               {p:LV.reStart,col:"#8b949e",lab:"78,253 反弹起点/跌破=反弹失败"}],
        macd:m4,struct:{bi:bi4,segs:segs4,zs:zs4,lastPrice:k4[k4.length-1].c}});
-    const k30=await fetchK("30m",140);
+    const k30=await fetchK2("30m",T("2026-08-23T20:00:00"),FREEZE);
     const a30=k30.map(k=>[k.t,k.o,k.h,k.l,k.c]);
     const bi30=buildBiM(a30),zs30=buildZS(bi30),segs30=buildSegs(bi30);
     draw("chart30m",k30,[
@@ -379,7 +389,7 @@ async function load(){
        entries:[{t:T("2026-08-26T03:30"),p:78750,lab:"空",col:"#f6465d"}],
        macd:mR,divAreas:[{i1:rA1,i2:rA2,lab:"a1="+r1.toFixed(0)},{i1:rB1,i2:rB2,lab:"a2="+r2.toFixed(0)+"("+(r2/r1*100).toFixed(0)+"%)"}]});
     // ===== 图四: 受阻梯队图 =====
-    const kT=await fetchK2("4h",null,null,110);
+    const kT=await fetchK2("4h",T("2026-08-07T00:00:00"),FREEZE);
     const aT=kT.map(k=>[k.t,k.o,k.h,k.l,k.c]);
     const biT=buildBiM(aT),zsT=buildZS(biT),segsT=buildSegs(biT);
     draw("chartTiers",kT,[
@@ -391,7 +401,7 @@ async function load(){
        lines:[{p:76837,col:"#2ebd85",lab:"fib23.6% 76,837"},{p:74094,col:"#f0b90b",lab:"fib38.2% 74,094"},{p:71878,col:"#f6465d",lab:"fib50% 71,878"}],
        struct:{bi:biT,segs:segsT,zs:zsT,lastPrice:kT[kT.length-1].c}});
     // ===== 图五: 马后炮时间线+收敛三角 =====
-    const kL=await fetchK2("30m",T("2026-08-25T08:00:00"),null,140);
+    const kL=await fetchK2("30m",T("2026-08-25T08:00:00"),FREEZE);
     const aL=kL.map(k=>[k.t,k.o,k.h,k.l,k.c]);
     const biL=buildBiM(aL),zsL=buildZS(biL),segsL=buildSegs(biL);
     draw("chartTimeline",kL,[
@@ -407,7 +417,7 @@ async function load(){
          {t1:T("2026-08-25T21:30"),p1:78060,t2:T("2026-08-26T09:00"),p2:78200,col:"#2ebd85",lab:"三角下沿(平)"}],
        struct:{bi:biL,segs:segsL,zs:zsL,lastPrice:kL[kL.length-1].c}});
     // ===== 图A/B/C: 三种演化各一张推演图(标号对应步骤) =====
-    const kS=await fetchK2("30m",T("2026-08-25T20:00:00"),null);
+    const kS=await fetchK2("30m",T("2026-08-25T20:00:00"),FREEZE);
     const aS=kS.map(k=>[k.t,k.o,k.h,k.l,k.c]);
     const mS=calcMACD(aS);
     const ixS=ts=>kS.findIndex(k=>k.t>=ts);
@@ -449,7 +459,47 @@ async function load(){
        lines:[{p:79200,col:"#8b949e",lab:"上出口 79,200（去图A）"},
               {p:77808,col:"#8b949e",lab:"下出口 77,808（去图B）",side:"r"}],
        macd:mS});
-    $("updTag").textContent="BTC "+F(now)+" · "+new Date().toLocaleTimeString("zh-CN",{hour12:false});
+    // ===== 图D/E/F: 走势终完美 case =====
+    const kD=await fetchK2("1d",T("2026-04-15T00:00:00"),T("2026-08-25T00:00:00"));
+    const aD=kD.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const biD=buildBiM(aD),zsD=buildZS(biD),segsD=buildSegs(biD),mD=calcMACD(aD);
+    draw("chartD",kD,[
+      {t:T("2026-05-06T00:00:00"),p:82829,col:"#f6465d",txt:"①顶82,829|5/6"},
+      {t:T("2026-07-01T00:00:00"),p:57759,col:"#2ebd85",txt:"②底57,759|7/1",below:true},
+      {t:T("2026-05-20T00:00:00"),p:76000,col:"#8b949e",txt:"③中枢1|76~78k",below:true},
+      {t:T("2026-06-12T00:00:00"),p:63500,col:"#8b949e",txt:"④中枢2|62~65.6k",below:true},
+      {t:T("2026-08-10T00:00:00"),p:63000,col:"#2ebd85",txt:"⑤盘整后|8月突破↑",below:true}
+    ],{title:"图D · 日线全景：下跌趋势(两中枢依次下移)→7/1终完美→两月盘整→8月上涨=走势连接闭环",H:440,now:79000,
+       lines:[{p:65700,col:"#8b949e",lab:"中枢2上沿 65,700"},{p:62230,col:"#8b949e",lab:"中枢2下沿 62,230",side:"r"}],
+       macd:mD,struct:{bi:biD,segs:segsD,zs:zsD,lastPrice:kD[kD.length-1].c}});
+    const kE=await fetchK2("4h",T("2026-04-20T00:00:00"),T("2026-05-15T00:00:00"));
+    const aE=kE.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const mE=calcMACD(aE);
+    const biE=buildBiM(aE);
+    const topsE=biE.filter(b=>b.type==="顶");
+    const tmE=topsE.reduce((a,b)=>b.price>a.price?b:a,topsE[0]);
+    const tlE=topsE[topsE.length-1];
+    const rAr=(i1,i2)=>{let s2=0;for(let i=Math.max(0,i1);i<=i2;i++)if(mE.hist[i]>0)s2+=mE.hist[i];return s2};
+    const eA1=rAr(tmE.i-20,tmE.i),eA2=rAr(Math.max(tlE.i-20,tmE.i),tlE.i);
+    draw("chartE",kE,[
+      {t:tmE.t,p:tmE.price,col:"#f6465d",txt:"①一卖顶 82,829"},
+      {t:T("2026-05-08T20:00:00"),p:80478,col:"#f0b90b",txt:"②反弹1|80,478"},
+      {t:tlE.t,p:tlE.price,col:"#f0b90b",txt:"③最后冲高|81,043(不过前高)"},
+      {t:T("2026-05-10T12:00:00"),p:79900,col:"#f6465d",txt:"④顶分型|确认→下跌",below:true}
+    ],{title:"图E · 顶部教科书背驰：红柱面积 a1→a2="+(eA2/Math.max(1,eA1)*100).toFixed(0)+"%（<85%）+ 反弹全不过前高 + ④顶分型 = 上涨终完美",H:430,now:80500,
+       macd:mE,divAreas:[{i1:Math.max(0,tmE.i-20),i2:tmE.i,lab:"a1="+eA1.toFixed(0)},{i1:Math.max(tlE.i-20,tmE.i),i2:tlE.i,lab:"a2="+eA2.toFixed(0)+"("+(eA2/Math.max(1,eA1)*100).toFixed(0)+"%)"}]});
+    const kF=await fetchK2("4h",T("2026-06-15T00:00:00"),T("2026-07-20T00:00:00"));
+    const aF=kF.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const mF=calcMACD(aF);
+    draw("chartF",kF,[
+      {t:T("2026-06-25T00:00:00"),p:58030,col:"#58a6ff",txt:"①底1 58,030|6/25",below:true},
+      {t:T("2026-07-01T00:00:00"),p:57759,col:"#2ebd85",txt:"②底2 57,759|仅低0.47%",below:true},
+      {t:T("2026-07-02T12:00:00"),p:60800,col:"#f0b90b",txt:"③底分型+破反弹高|灰带确认(Q4三步)"},
+      {t:T("2026-07-08T00:00:00"),p:63000,col:"#2ebd85",txt:"④72h+8%→两月中枢",below:true}
+    ],{title:"图F · 底部灰带背驰：双底0.47% + DIF -749→-473抬高(面积89%未达标)→ 靠③分型+破反弹高确认 = 下跌终完美",H:430,now:64000,
+       lines:[{p:58030,col:"#58a6ff",lab:"① 58,030"},{p:57759,col:"#2ebd85",lab:"② 57,759",side:"r"}],
+       macd:mF});
+    $("updTag").textContent="BTC 快照 @79,100 · 冻结于 8/26";
   }catch(e){$("verdict").innerHTML="加载失败："+e.message;$("verdict").className="verdict r"}
 }
 function $(id){return document.getElementById(id)}
@@ -487,8 +537,6 @@ function renderCards(){
   +row("当前状态","78,253起的反弹笔进行中")
   +`<ul class="tips"><li>对照🔥做空位置地图:本剧本=位置②(破位回抽空)的实时应用</li></ul></div>`;
 }
-$("rfBtn").onclick=load;
-setInterval(()=>{if(!document.hidden)load()},60000);
 load();
 </script>
 </body>
