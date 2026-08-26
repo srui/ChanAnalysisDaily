@@ -173,6 +173,14 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <div class="chart-card" id="chartE"></div>
 <div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">图F 一句话：双底 58,030/57,759 仅差 0.47%，DIF -749→-473 抬高但面积 89% 未达标准（灰带）——区间套下钻：底分型→破最后反弹高点=确认，72小时+8%，随后两个月中枢→8月向上突破。</div>
 <div class="chart-card" id="chartF"></div>
+
+<div class="sec">📊 多币种速览 · ETH / SOL / XAU（合约，4h 快照）</div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">ETH 一句话：4h 顶 2,533 回调 → 底 2,412 反弹中，30m 中枢 2,450~2,472 内；上沿 2,472 / 下沿 2,450 谁先离开定短线方向，大位 2,533 / 2,412。</div>
+<div class="chart-card" id="chartETH"></div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">SOL 一句话：与 BTC 同构——4h 顶 103.3 回调 → 底 95.2 反弹，30m 中枢 96.2~97.5；过 97.5 看回 103.3，破 96.2 看 95.2，大位 103.3 / 95.2。</div>
+<div class="chart-card" id="chartSOL"></div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">XAU 一句话：最弱——双顶区 4,694~4,700 两次压制后回落至区间下部，30m 高点降低（4,673→4,635）；破 4,607 = 4h 回调开启，收复 4,673 才算修复。</div>
+<div class="chart-card" id="chartXAU"></div>
 <div class="note">⚠️ 级别精确化：眼前30m反弹若夭折在78,980下方=仅30m级别小二卖（轻仓或放弃）；「4h二卖」需要反弹长成4h规模（数天数笔）再失败——仓位与目标差一个量级。制定于8/26，作废线触发后（过79,556看80,235；过81,271全作废）请回来重算。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/26 快照：数据窗口全部锚定到当日 23:59，之后任何时间打开都是当天看到的样子。</div>
 </div>
 <script>
@@ -499,6 +507,24 @@ async function load(){
     ],{title:"图F · 底部灰带背驰：双底0.47% + DIF -749→-473抬高(面积89%未达标)→ 靠③分型+破反弹高确认 = 下跌终完美",H:430,now:64000,
        lines:[{p:58030,col:"#58a6ff",lab:"① 58,030"},{p:57759,col:"#2ebd85",lab:"② 57,759",side:"r"}],
        macd:mF});
+    // ===== 多币种速览: ETH/SOL/XAU 4h =====
+    async function fetchSym(sym,iv,s,e){const u=`${API}/klines?symbol=${sym}&interval=${iv}&startTime=${s}&endTime=${e}&limit=300`;const d=await fetch(u).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
+    const symCfg=[
+      {sym:"ETHUSDT",id:"chartETH",name:"ETH",top:2533,bot:2412,now:2450,dec:1,
+       ann:[{t:T("2026-08-25T08:00:00"),p:2533,col:"#f6465d",txt:"①顶2,533"},{t:T("2026-08-26T04:00:00"),p:2412,col:"#2ebd85",txt:"②底2,412",below:true}]},
+      {sym:"SOLUSDT",id:"chartSOL",name:"SOL",top:103.3,bot:95.2,now:96.4,dec:2,
+       ann:[{t:T("2026-08-25T12:00:00"),p:103.3,col:"#f6465d",txt:"①顶103.3"},{t:T("2026-08-26T04:00:00"),p:95.2,col:"#2ebd85",txt:"②底95.2",below:true}]},
+      {sym:"XAUUSDT",id:"chartXAU",name:"XAU",top:4700,bot:4607,now:4623,dec:1,
+       ann:[{t:T("2026-08-25T08:00:00"),p:4700,col:"#f6465d",txt:"①顶4,700"},{t:T("2026-08-26T00:00:00"),p:4694,col:"#f0b90b",txt:"②次顶4,694|双顶压制"},{t:T("2026-08-25T20:00:00"),p:4607,col:"#2ebd85",txt:"③底4,607",below:true}]}
+    ];
+    for(const sc of symCfg){
+      const kX=await fetchSym(sc.sym,"4h",T("2026-08-12T00:00:00"),FREEZE);
+      const aX=kX.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+      const biX=buildBiM(aX),zsX=buildZS(biX),segsX=buildSegs(biX),mX=calcMACD(aX);
+      draw(sc.id,kX,sc.ann,{title:sc.name+" 4小时 · "+(sc.name==="XAU"?"双顶4,694~4,700压制→区间下部(最弱)":"顶"+sc.top+"回调→底"+sc.bot+"反弹中(与BTC同构)"),H:380,now:sc.now,
+        lines:[{p:sc.top,col:"#f6465d",lab:"① "+sc.top},{p:sc.bot,col:"#2ebd85",lab:"② "+sc.bot,side:"r"}],
+        macd:mX,struct:{bi:biX,segs:segsX,zs:zsX,lastPrice:kX[kX.length-1].c}});
+    }
     $("updTag").textContent="BTC 快照 @79,100 · 冻结于 8/26";
   }catch(e){$("verdict").innerHTML="加载失败："+e.message;$("verdict").className="verdict r"}
 }
