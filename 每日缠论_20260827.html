@@ -110,6 +110,29 @@ C'（35%）79,200~80,500 内震荡 → 明天看81,271的选择<br><br>
 💡 <b>本课要点：</b>上午的概率表（B 40%最高）被市场教育了——<b>概率最高≠必然走</b>，而且当反弹规模超出预期时，原有的做空剧本全部作废。这就是为什么昨天的教训说「布局比押注重要」——A/B/C 都要有预案，包括A被碾压的预案。
 </div></div>
 <div class="chart-card" id="chartPM"></div>
+<div class="sec">🔬 区间套修正版 · 从「概率预测」回到「结构定位」（18:50）</div>
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#f0b90b;font-weight:600">👆 上面的三演化是预测思维。下面用正确的缠论区间套，逐级描述当前结构状态——不预测，只定位。</div>
+
+<div class="pcard win" style="grid-column:1/-1"><h3>📐 区间套漏斗 · 四级联立</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
+<table style="border-collapse:collapse;width:100%">
+<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">级别</td><td>当前结构</td><td>结论</td><td>给下一级的指令</td></tr>
+<tr><td style="padding:6px"><b style="color:#f0b90b">日线</b></td><td>62,484→81,271 一笔上涨，无背驰，柱收敛（灰带）</td><td class="g"><b>方向多头</b>，未终完美</td><td>回调是买点候选</td></tr>
+<tr><td style="padding:6px"><b style="color:#58a6ff">4h</b></td><td><b>中枢 ZD=76,510 ZG=77,591</b>；81,271离开后回调77,600 <b>不回中枢</b></td><td class="g"><b>4h三买✓</b></td><td>77,600是支撑，用30m找入场</td></tr>
+<tr><td style="padding:6px"><b style="color:#bc8cff">30m</b></td><td><b>中枢 ZD=78,522 ZG=79,139</b>；80,500离开后回调79,632 <b>不回中枢</b></td><td class="y"><b>30m三买候选</b></td><td>79,139不破=确认，用5m定时机</td></tr>
+<tr><td style="padding:6px"><b style="color:#2ebd85">5m</b></td><td>等待79,139~79,300回踩企稳</td><td class="y"><b>入场时机</b></td><td>底分型确认即进</td></tr>
+</table>
+<br><b>一根线串起来：</b>日线没走完 → 4h三买成立 → 30m三买候选（79,139不破就确认）→ 5m找入场点。<br>
+<b>作废条件：</b>30m跌破79,139 → 三买失败 → 中枢延伸或向下 → 4h三买重新审视。<br><br>
+💡 <b>我之前分析的问题：</b>把「三演化+概率」当框架=在预测哪个会走。正确的缠论是<b>每一级只描述当前结构状态</b>（中枢在哪、离开方向、回不回），由结构自然推导操作——不预测，只应对。
+</div></div>
+
+<div class="sub" style="margin:12px 0 8px;font-size:12.5px;color:#aeb9cf">图D · 4h 中枢与三买：ZD=76,510 ~ ZG=77,591，81,271 离开后回调 77,600 不回中枢 = 4h 三类买点</div>
+<div class="chart-card" id="chart4hZS"></div>
+
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">图E · 30m 中枢与三买候选：ZD=78,522 ~ ZG=79,139，80,500 离开后回调 79,632 不回中枢 = 30m 三类买点候选（79,139 不破 = 确认）</div>
+<div class="chart-card" id="chart30mZS"></div>
+
 <div class="note">⚠️ 日线顶分型确认≠日线趋势反转——只保证日线级别回调（级别传导定律）。62,484以来的日线上涨线段未正式破坏。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/27 快照：数据窗口全部锚定到当日 23:59。</div>
 </div>
 <script>
@@ -352,6 +375,32 @@ async function load(){
               {p:80235,col:"#f0b90b",lab:"80,235 原止损线(已破)"},
               {p:79540,col:"#8b949e",lab:"79,540 前高(变支撑)",side:"r"}],
        macd:mPM});
+    // ===== 区间套修正版: 4h中枢图 + 30m中枢图 =====
+    const k4Z=await fetchK2("4h",T("2026-08-15T00:00:00"),FREEZE);
+    const a4Z=k4Z.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi4Z=buildBiM(a4Z),segs4Z=buildSegs(bi4Z),m4Z=calcMACD(a4Z);
+    draw("chart4hZS",k4Z,[
+      {t:T("2026-08-21T16:00:00"),p:79556,col:"#f0b90b",txt:"①顶79,556"},
+      {t:T("2026-08-23T12:00:00"),p:75588,col:"#58a6ff",txt:"②底75,588"},
+      {t:T("2026-08-25T08:00:00"),p:81271,col:"#f6465d",txt:"③81,271|离开中枢"},
+      {t:T("2026-08-26T20:00:00"),p:77600,col:"#2ebd85",txt:"④底77,600|不回中枢=三买✓",below:true}
+    ],{title:"图D · 4h中枢 ZD=76,510 ZG=77,591：③离开→④回调77,600不回中枢 = 4h三类买点",H:430,now:79632,
+       bands:[{lo:76510,hi:77591,col:"#58a6ff",lab:"4h中枢 ZD=76,510 ~ ZG=77,591（三买成立✓）"}],
+       lines:[{p:81271,col:"#f6465d",lab:"③ 81,271 离开点"},{p:77600,col:"#2ebd85",lab:"④ 77,600 回调不回中枢",side:"r"}],
+       macd:m4Z,struct:{bi:bi4Z,segs:segs4Z,zs:buildZS(bi4Z),lastPrice:k4Z[k4Z.length-1].c}});
+    const k30Z=await fetchK2("30m",T("2026-08-27T00:00:00"),FREEZE);
+    const a30Z=k30Z.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const m30Z=calcMACD(a30Z);
+    draw("chart30mZS",k30Z,[
+      {t:T("2026-08-27T04:00:00"),p:78157,col:"#8b949e",txt:"①底78,157"},
+      {t:T("2026-08-27T07:30:00"),p:79139,col:"#f0b90b",txt:"②顶79,139|ZG"},
+      {t:T("2026-08-27T09:00:00"),p:78522,col:"#58a6ff",txt:"③底78,522|ZD",below:true},
+      {t:T("2026-08-27T17:30:00"),p:80500,col:"#f6465d",txt:"④80,500|暴力离开"},
+      {t:T("2026-08-27T18:00:00"),p:79300,col:"#2ebd85",txt:"⑤79,632|不回中枢=三买候选",below:true}
+    ],{title:"图E · 30m中枢 ZD=78,522 ZG=79,139：④离开→⑤回调79,632不回中枢 = 30m三买候选（79,139不破=确认）",H:420,now:79632,
+       bands:[{lo:78522,hi:79139,col:"#58a6ff",lab:"30m中枢 ZD=78,522 ~ ZG=79,139（三买候选）"}],
+       lines:[{p:80500,col:"#f6465d",lab:"④ 80,500 离开点"},{p:79139,col:"#f0b90b",lab:"② 79,139 ZG（不破=三买确认）"},{p:78522,col:"#58a6ff",lab:"③ 78,522 ZD（跌破=三买失败）",side:"r"}],
+       macd:m30Z});
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @78,704 · 冻结于 8/27";
   }catch(e){document.getElementById("verdict").innerHTML="加载失败："+e.message;document.getElementById("verdict").className="verdict r"}
