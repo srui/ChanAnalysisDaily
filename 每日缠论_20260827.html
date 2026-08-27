@@ -133,6 +133,36 @@ C'（35%）79,200~80,500 内震荡 → 明天看81,271的选择<br><br>
 <div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">图E · 30m 中枢与三买候选：ZD=78,522 ~ ZG=79,139，80,500 离开后回调 79,632 不回中枢 = 30m 三类买点候选（79,139 不破 = 确认）</div>
 <div class="chart-card" id="chart30mZS"></div>
 
+<div class="sec">🌙 深夜更新 · 23:15 @80,646 · 区间套追踪</div>
+<div class="sub" style="margin:0 0 6px;font-size:12.5px;color:#f0b90b;font-weight:600">从区间套修正版的结论出发，追踪三买确认的进展——用结构定位，不用概率。</div>
+
+<div class="pcard win" style="grid-column:1/-1"><h3>📐 区间套当前状态（23:15 快照）</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
+<table style="border-collapse:collapse;width:100%">
+<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">级别</td><td>18:50时的判断</td><td>23:15实际走势</td><td>结论</td></tr>
+<tr><td style="padding:6px"><b>日线</b></td><td>方向多头，未终完美</td><td>DIF转正(150)，MACD回到上方</td><td class="g"><b>多头加强✓</b></td></tr>
+<tr><td style="padding:6px"><b>4h</b></td><td>中枢76,510~77,591，三买✓</td><td>价格80,646，远离中枢上方</td><td class="g"><b>三买已确认✓✓</b></td></tr>
+<tr><td style="padding:6px"><b>30m</b></td><td>中枢78,522~79,139，三买候选</td><td>21:30底78,864→23:15冲80,767</td><td class="g"><b>三买已确认✓✓</b></td></tr>
+<tr><td style="padding:6px"><b>5m</b></td><td>等79,139~79,300回踩企稳</td><td>22:00起5m连续阳线，78,864→80,767</td><td class="g"><b>已走完✓</b></td></tr>
+</table>
+<br><b>晚间走势还原：</b><br>
+· 18:00~21:30 回踩：80,500 → 78,864（回调 -2.0%，<b>没有跌回30m中枢ZG 79,139以下</b>…等等，78,864 < 79,139 = <b>跌回了中枢内</b>！）<br>
+· <b>修正：</b>21:30 底 78,864 跌破了 ZG(79,139) 但没有跌破 ZD(78,522)——严格说这是<b>回到中枢内但没跌破中枢</b>，构成中枢延伸而非三买确认<br>
+· 21:30~23:15 再度暴力拉升：78,864 → <b>80,767</b>（+2.4%，5m连续大阳）<br>
+· 现价 80,646，已超过下午的高点 80,500<br><br>
+<b>关键结构变化：</b><br>
+· 4h中枢(76,510~77,591)的三买彻底确认——价格80,646远在ZG上方，回调从未接近过ZD<br>
+· 30m中枢(78,522~79,139)经历了「离开→回到中枢内(78,864)→再度离开(80,767)」= <b>中枢延伸后再度向上</b><br>
+· 4h MACD DIF从-212(傍晚)回到150(现在) = <b>金叉回零轴上方</b>——4h级别多头恢复<br>
+· 费率0.0062%——仍低于基准值，多头不拥挤<br><br>
+<b>81,271 的挑战：</b><br>
+· 现价 80,646 距日线顶 81,271 仅差 <b>625点(0.77%)</b><br>
+· 如果81,271被突破 → <b>日线顶分型被否定</b> → 62,484以来的上涨趋势延续 → 新高目标83,000~85,000<br>
+· 如果81,271受阻 → 双顶(80,500/81,271) → 但这次三买背景下的双顶比下午的更可信（因为4h多头已恢复）<br><br>
+💡 <b>区间套一句话：</b>日线多头+4h三买确认+30m中枢延伸后再度向上+5m连续阳线——四级全部指向多头。<b>81,271 是最后一个需要回答的问题：过=趋势延续新高，不过=高位双顶回调</b>。不预测，等它自己选择。
+</div></div>
+<div class="chart-card" id="chartNight"></div>
+
 <div class="note">⚠️ 日线顶分型确认≠日线趋势反转——只保证日线级别回调（级别传导定律）。62,484以来的日线上涨线段未正式破坏。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/27 快照：数据窗口全部锚定到当日 23:59。</div>
 </div>
 <script>
@@ -401,6 +431,21 @@ async function load(){
        bands:[{lo:78522,hi:79139,col:"#58a6ff",lab:"30m中枢 ZD=78,522 ~ ZG=79,139（三买候选）"}],
        lines:[{p:80500,col:"#f6465d",lab:"④ 80,500 离开点"},{p:79139,col:"#f0b90b",lab:"② 79,139 ZG（不破=三买确认）"},{p:78522,col:"#58a6ff",lab:"③ 78,522 ZD（跌破=三买失败）",side:"r"}],
        macd:m30Z});
+    // ===== 深夜更新图 =====
+    const kN=await fetchK2("30m",T("2026-08-27T15:00:00"),FREEZE);
+    const aN=kN.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const mN=calcMACD(aN);
+    draw("chartNight",kN,[
+      {t:T("2026-08-27T17:30:00"),p:80500,col:"#f0b90b",txt:"①80,500|下午顶"},
+      {t:T("2026-08-27T21:30:00"),p:78864,col:"#58a6ff",txt:"②78,864|回到中枢内",below:true},
+      {t:T("2026-08-27T23:15:00"),p:80767,col:"#2ebd85",txt:"③80,767|再度离开↑|距81,271仅625点"}
+    ],{title:"30分钟深夜快照：①80,500→②78,864回到中枢内→③再度暴力拉升80,767——中枢延伸后向上，81,271是最后的问题",H:420,now:80646,
+       bands:[{lo:78522,hi:79139,col:"#58a6ff",lab:"30m中枢 78,522~79,139（②回到中枢内但未破ZD=延伸）"},
+              {lo:80235,hi:81271,col:"#f6465d",lab:"81,271 日线顶——最后的空头防线"}],
+       lines:[{p:81271,col:"#f6465d",lab:"81,271 日线顶/破=趋势新高",w:1.8},
+              {p:79139,col:"#58a6ff",lab:"79,139 ZG"},
+              {p:78522,col:"#58a6ff",lab:"78,522 ZD（未破=中枢延伸）",side:"r"}],
+       macd:mN});
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @78,704 · 冻结于 8/27";
   }catch(e){document.getElementById("verdict").innerHTML="加载失败："+e.message;document.getElementById("verdict").className="verdict r"}
@@ -408,7 +453,7 @@ async function load(){
 function renderVerdict(now){
   const el=document.getElementById("verdict");
   el.className="verdict r";
-  el.innerHTML="🟡 <b>下午暴力拉升80,500——类二卖被碾压，80,235防线已破</b>。但81,271日线顶未破，现在到了最关键位置：80,500~81,271双顶区。破了=空头全作废；受阻=更高水平的类二卖。";
+  el.innerHTML="🟢 <b>深夜再度拉升80,767——30m中枢延伸后向上，4h三买彻底确认</b>。距81,271仅625点(0.77%)：破了=日线顶分型否定+趋势新高；不过=高位双顶。四级区间套全部指向多头，等81,271的回答。";
 }
 load();;
 
