@@ -198,6 +198,39 @@ C'（35%）79,200~80,500 内震荡 → 明天看81,271的选择<br><br>
 </div></div>
 <div class="chart-card" id="chartDiv"></div>
 
+<div class="sec">🔬 BTC 30m 精细结构 · + XAU 完整分析 · 13:15</div>
+
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">BTC 30m 一句话：<b>81,500 顶分型已确认</b>（09:30），底 79,659（10:30），现价 79,621 正在<b>测试底分型</b>。MACD DIF(-80) 死叉，30m 级别空头。破 79,659 = 新低开启。</div>
+<div class="chart-card" id="chartBTC30m"></div>
+
+<div class="sub" style="margin:0 0 8px;font-size:12.5px;color:#aeb9cf">XAU 一句话：<b>4h 下跌趋势</b>——高点依次降低(4,701→4,695→4,645→4,621)，低点依次降低(4,607→4,586→4,567)。中枢 4,607~4,695 向下离开。当前 4,582 在测试 4,578~4,579 双底。破 = 看 4,540~4,500。</div>
+<div class="chart-card" id="chartXAU4h"></div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>📐 BTC 30m + XAU 区间套</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
+<b>BTC 30m 精细结构：</b><br>
+分型序列（今日）：底80,091 → <b style="color:#f6465d">顶81,500</b>(09:30) → <b style="color:#2ebd85">底79,659</b>(10:30) → 当前79,621<br>
+· 81,500 顶分型<b>已确认</b>（后续 K 线走低）——4h 一卖的顶分型条件满足了！<br>
+· 79,659 底分型已确认，但现价 79,621 <b>正在测试</b>（仅差38点）<br>
+· 30m MACD DIF(-80) < DEA(9)，柱 -89 = <b>30m 级别空头</b><br>
+· <b style="color:#f6465d">破 79,659 = 30m 底分型被否定 = 下跌延续</b>→ 一卖正式生效<br>
+· 79,659 不破 + 5m 底分型 = 可能反弹回测 80,400<br><br>
+<b>XAU 区间套：</b><br>
+<table style="border-collapse:collapse;width:100%">
+<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">级别</td><td>结构</td><td>状态</td></tr>
+<tr><td style="padding:5px"><b>4h</b></td><td>高点降(4,701→4,695→4,645→4,621) + 低点降(4,607→4,586→4,567)</td><td class="r"><b>下跌趋势</b></td></tr>
+<tr><td style="padding:5px"><b>4h中枢</b></td><td>ZD=4,607 ZG=4,695，价格4,582在中枢<b>下方</b></td><td class="r">向下离开</td></tr>
+<tr><td style="padding:5px"><b>4h MACD</b></td><td>DIF(-5.0) &lt; DEA(3.0)，柱-8.0发散</td><td class="r"><b>空头加强</b></td></tr>
+<tr><td style="padding:5px"><b>30m</b></td><td>双底4,578~4,579(10:00/12:00)反复测试</td><td class="y">方向选择</td></tr>
+</table>
+<br><b>XAU 关键位：</b><br>
+· <b style="color:#f6465d">4,578~4,579</b> = 双底——破 = 加速下看 <b>4,540 → 4,500</b><br>
+· <b>4,607</b> = 4h 中枢 ZD——收复此位 = 回到中枢内<br>
+· <b>4,621</b> = 今日顶——过了才有反弹空间<br>
+· 费率 0.0031%（极低，空头不拥挤——反而说明还没人抄底）<br><br>
+💡 <b>XAU 是四币种中最弱的</b>——4h MACD 在零轴下发散（空头加强），与 BTC 的「灰带」不同，XAU 是<b>明确的下跌趋势</b>。在 BTC 创新高时 XAU 反而跌——说明资金从黄金流向加密。
+</div></div>
+
 <div class="note">⚠️ 日线顶分型确认≠日线趋势反转——只保证日线级别回调（级别传导定律）。62,484以来的日线上涨线段未正式破坏。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/28 快照：数据窗口全部锚定到当日 23:59。</div>
 </div>
 <script>
@@ -442,6 +475,32 @@ async function load(){
               {p:79659,col:"#f0b90b",lab:"79,659 破此=一卖确认",side:"r"},
               {p:77600,col:"#2ebd85",lab:"77,600 三买位/第一目标"}],
        macd:mDiv,struct:{bi:biDiv,segs:segsDiv,zs:buildZS(biDiv),lastPrice:kDiv[kDiv.length-1].c}});
+    // ===== BTC 30m 精细 =====
+    const kB30=await fetchK2("30m",T("2026-08-28T04:00:00"),FREEZE);
+    const aB30=kB30.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const mB30=calcMACD(aB30);
+    draw("chartBTC30m",kB30,[
+      {t:T("2026-08-28T09:30:00"),p:81500,col:"#f6465d",txt:"①顶81,500|顶分型✓"},
+      {t:T("2026-08-28T10:30:00"),p:79659,col:"#2ebd85",txt:"②底79,659|正在测试",below:true},
+      {t:T("2026-08-28T13:00:00"),p:79522,col:"#f0b90b",txt:"③79,621|距②仅38点"}
+    ],{title:"BTC 30m · ①81,500顶分型已确认→②底79,659→③正在测试——破②=一卖正式生效",H:400,now:79621,
+       lines:[{p:81500,col:"#f6465d",lab:"81,500 顶"},{p:79659,col:"#2ebd85",lab:"79,659 底（破=一卖生效）"},{p:80400,col:"#8b949e",lab:"80,400 反弹阻力",side:"r"}],
+       macd:mB30});
+    // ===== XAU 4h =====
+    async function fetchSymX(sym,iv,st){const u=`${API}/klines?symbol=${sym}&interval=${iv}&startTime=${st}&endTime=${FREEZE}&limit=300`;const d=await fetch(u).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
+    const kX4=await fetchSymX("XAUUSDT","4h",T("2026-08-18T00:00:00"));
+    const aX4=kX4.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const biX4=buildBiM(aX4),segsX4=buildSegs(biX4),mX4=calcMACD(aX4);
+    draw("chartXAU4h",kX4,[
+      {t:T("2026-08-25T08:00:00"),p:4701,col:"#f6465d",txt:"①顶4,701"},
+      {t:T("2026-08-26T00:00:00"),p:4695,col:"#f0b90b",txt:"②4,695|降低"},
+      {t:T("2026-08-27T08:00:00"),p:4645,col:"#f0b90b",txt:"③4,645|降低"},
+      {t:T("2026-08-27T20:00:00"),p:4567,col:"#f6465d",txt:"④底4,567",below:true},
+      {t:T("2026-08-28T10:00:00"),p:4578,col:"#2ebd85",txt:"⑤45,78|双底测试",below:true}
+    ],{title:"XAU 4h · 高点依次降低+低点依次降低=下跌趋势 · 中枢4,607~4,695向下 · 当前测试双底4,578",H:430,now:4582,
+       bands:[{lo:4607,hi:4695,col:"#58a6ff",lab:"4h中枢 ZD=4,607~ZG=4,695（价格在中枢下方=向下离开）"}],
+       lines:[{p:4701,col:"#f6465d",lab:"4,701"},{p:4578,col:"#2ebd85",lab:"4,578 双底（破=看4,540→4,500）"},{p:4607,col:"#58a6ff",lab:"4,607 ZD",side:"r"}],
+       macd:mX4,struct:{bi:biX4,segs:segsX4,zs:buildZS(biX4),lastPrice:kX4[kX4.length-1].c}});
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @80,487 · 冻结于 8/28";
   }catch(e){document.getElementById("verdict").innerHTML="加载失败："+e.message;document.getElementById("verdict").className="verdict r"}
