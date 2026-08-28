@@ -231,6 +231,26 @@ C'（35%）79,200~80,500 内震荡 → 明天看81,271的选择<br><br>
 💡 <b>XAU 是四币种中最弱的</b>——4h MACD 在零轴下发散（空头加强），与 BTC 的「灰带」不同，XAU 是<b>明确的下跌趋势</b>。在 BTC 创新高时 XAU 反而跌——说明资金从黄金流向加密。
 </div></div>
 
+<div class="sec">❓ 追问 · 一卖后二卖怎么确认（13:27 @79,648）</div>
+<div class="sub" style="margin:0 0 6px;font-size:12.5px;color:#aeb9cf">BTC 30m 79,659 已被跌破(现价79,648)——下跌笔在延伸。用户问：一卖确认后，二卖什么条件下可以进场？</div>
+
+<div class="chart-card" id="chartSell2"></div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>📐 一卖→二卖的完整链条</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
+<b>当前处于哪一步：</b>一卖(81,500✓) → <b style="color:#f0b90b">下跌笔(进行中·现在)</b> → 反弹笔(未开始) → 二卖(等反弹失败)<br><br>
+<b>二卖确认四步：</b><br>
+<table style="border-collapse:collapse;width:100%">
+<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">步骤</td><td>条件</td><td>级别</td></tr>
+<tr><td style="padding:5px"><b>① 底确认</b></td><td>4h底分型（当前正在延伸，79,648&lt;79,659）</td><td>30m/4h</td></tr>
+<tr><td style="padding:5px"><b>② 反弹有规模</b></td><td>至少2~3根30m笔，回到80,000+</td><td>30m</td></tr>
+<tr><td style="padding:5px"><b>③ 反弹受阻</b></td><td>80,400~81,271区域，30m顶分型+红柱面积萎缩，<b>不过81,500</b></td><td>30m/4h</td></tr>
+<tr><td style="padding:5px"><b>④ 扣扳机</b></td><td>5m跌破反弹自身的回调低点</td><td>5m</td></tr>
+</table>
+<br><b>盈亏比对比：</b>一卖直接追空(79,650/止损81,500)=1.1:1 <b>vs</b> 等二卖(80,400/止损反弹高点)=<b>3.5:1</b>——二卖的止损更近、目标更远。<br>
+💡 <b>一卖是看到的，二卖是等到的。</b>现在挂着🔔等底确认，然后跟踪反弹到阻力区时切5m找入场。
+</div></div>
+
 <div class="note">⚠️ 日线顶分型确认≠日线趋势反转——只保证日线级别回调（级别传导定律）。62,484以来的日线上涨线段未正式破坏。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/28 快照：数据窗口全部锚定到当日 23:59。</div>
 </div>
 <script>
@@ -501,6 +521,17 @@ async function load(){
        bands:[{lo:4607,hi:4695,col:"#58a6ff",lab:"4h中枢 ZD=4,607~ZG=4,695（价格在中枢下方=向下离开）"}],
        lines:[{p:4701,col:"#f6465d",lab:"4,701"},{p:4578,col:"#2ebd85",lab:"4,578 双底（破=看4,540→4,500）"},{p:4607,col:"#58a6ff",lab:"4,607 ZD",side:"r"}],
        macd:mX4,struct:{bi:biX4,segs:segsX4,zs:buildZS(biX4),lastPrice:kX4[kX4.length-1].c}});
+    // ===== 一卖→二卖路径图 =====
+    draw("chartSell2",kS,[
+      {t:T("2026-08-28T09:30:00"),p:81500,col:"#f6465d",txt:"①一卖81,500|顶背驰✓"},
+      {t:T("2026-08-28T10:30:00"),p:79659,col:"#2ebd85",txt:"②底79,659|延伸中",below:true},
+      {t:T("2026-08-28T08:00:00"),p:80431,col:"#f0b90b",txt:"③反弹受阻区|80,400~81,271|二卖位置"}
+    ],{title:"一卖→二卖路径：①81,500顶背驰 → ②下跌笔(现在) → ③反弹受阻(不过81,500) → ④5m确认=二卖进场",H:420,now:79648,
+       bands:[{lo:80400,hi:81271,col:"#f0b90b",lab:"③ 二卖观察区 80,400~81,271（反弹受阻=二卖位置）"}],
+       lines:[{p:81500,col:"#f6465d",lab:"81,500 一卖/铁止损",w:1.8},
+              {p:79659,col:"#2ebd85",lab:"79,659 底（延伸中）"},
+              {p:77600,col:"#8b949e",lab:"77,600 目标",side:"r"}],
+       macd:mS});
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @80,487 · 冻结于 8/28";
   }catch(e){document.getElementById("verdict").innerHTML="加载失败："+e.message;document.getElementById("verdict").className="verdict r"}
