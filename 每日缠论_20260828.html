@@ -170,6 +170,34 @@ C'（35%）79,200~80,500 内震荡 → 明天看81,271的选择<br><br>
 </div></div>
 <div class="chart-card" id="chartNight"></div>
 
+<div class="sec">🚨 下午更新 · 13:05 @79,634 · 81,500 新高 + 4h 顶背驰</div>
+<div class="sub" style="margin:0 0 6px;font-size:12.5px;color:#f6465d;font-weight:600">81,500 > 81,271 = 日线顶分型被否定、创新高。但同时 DIF 从 1,870 减半到 850 = 4h 顶背驰。日线多头 vs 4h 空头的级别冲突。</div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>⚡ 关键事实</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d1d9">
+<table style="border-collapse:collapse;width:100%;margin:6px 0">
+<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">指标</td><td>81,271（8/25 旧顶）</td><td>81,500（8/28 新高）</td><td>结论</td></tr>
+<tr><td style="padding:5px">价格</td><td>81,271</td><td><b>81,500</b></td><td class="g">新高 ✓</td></tr>
+<tr><td style="padding:5px">4h DIF</td><td><b>1,870</b></td><td><b>850</b></td><td class="r"><b>减半！顶背驰</b></td></tr>
+<tr><td style="padding:5px">4h 红柱面积</td><td>—</td><td><b>0</b></td><td class="r">全程零轴下方</td></tr>
+<tr><td style="padding:5px">30m中枢</td><td colspan="2">79,707~80,400，价格跌回中枢内（79,634 &lt; 79,707）</td><td class="r">假突破</td></tr>
+</table>
+<b>含义：</b>创新高的这波上涨（77,600→81,500，+5%）不是动能推动的，是零轴修复的尾声。4h 一类卖点候选。<br><br>
+<b>区间套漏斗（更新版）：</b><br>
+<table style="border-collapse:collapse;width:100%">
+<tr style="color:#8ea0bd;font-size:11.5px"><td style="padding:4px">级别</td><td>结构</td><td>状态</td></tr>
+<tr><td style="padding:5px"><b>日线</b></td><td>62,484→81,500 新高，灰带</td><td class="g">上涨延续但动能减弱</td></tr>
+<tr><td style="padding:5px"><b>4h</b></td><td><b>81,500 顶背驰</b>（价新高+DIF减半）</td><td class="r">⚠️ 一类卖点候选</td></tr>
+<tr><td style="padding:5px"><b>30m</b></td><td>中枢 79,707~80,400，跌回中枢内</td><td class="y">假突破→中枢延伸</td></tr>
+</table>
+<br><b>操作（结构推导，不预测）：</b><br>
+· <b>4h 顶分型确认</b>（81,500 后出顶分型 + 破 79,659）= <b style="color:#f6465d">一卖成立</b>——空单进场，止损 81,500 上方（极近），目标 77,600→76,510，盈亏比极好<br>
+· <b>假突破修复</b>（站回 80,400 上方）= 背驰暂缓<br>
+· <b>中枢向下离开</b>（破 79,707 + 回抽不回）= 30m 三卖<br>
+· <b>背驰被否定</b>（放量再破 81,500 且 DIF 回升）= 多头恢复看 82,829
+</div></div>
+<div class="chart-card" id="chartDiv"></div>
+
 <div class="note">⚠️ 日线顶分型确认≠日线趋势反转——只保证日线级别回调（级别传导定律）。62,484以来的日线上涨线段未正式破坏。重启三单阶段：本页为学习与挂预警工具，不构成执行指令。🔒 本页为 8/28 快照：数据窗口全部锚定到当日 23:59。</div>
 </div>
 <script>
@@ -398,6 +426,22 @@ async function load(){
         lines:[{p:sc.top,col:"#f6465d",lab:"① "+sc.top},{p:sc.bot,col:"#2ebd85",lab:"② "+sc.bot,side:"r"}],
         macd:mX,struct:{bi:biX,segs:segsX,zs:buildZS(biX),lastPrice:kX[kX.length-1].c}});
     }
+    // ===== 下午更新: 4h顶背驰图 =====
+    const kDiv=await fetchK2("4h",T("2026-08-20T00:00:00"),FREEZE);
+    const aDiv=kDiv.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const biDiv=buildBiM(aDiv),segsDiv=buildSegs(biDiv),mDiv=calcMACD(aDiv);
+    draw("chartDiv",kDiv,[
+      {t:T("2026-08-25T08:00:00"),p:81271,col:"#8b949e",txt:"①81,271旧顶|DIF=1,870"},
+      {t:T("2026-08-28T08:00:00"),p:81500,col:"#f6465d",txt:"②81,500新高|DIF=850(减半!)|⚠️顶背驰"},
+      {t:T("2026-08-26T20:00:00"),p:77600,col:"#2ebd85",txt:"③77,600底",below:true}
+    ],{title:"4h · 81,500新高+DIF减半=顶背驰——一类卖点候选（需顶分型确认）",H:440,now:79634,
+       bands:[{lo:79707,hi:80400,col:"#58a6ff",lab:"30m中枢 79,707~80,400（价格跌回=假突破）"},
+              {lo:76510,hi:77591,col:"#8b949e",lab:"4h中枢1 76,510~77,591（三买位77,600上方）"}],
+       lines:[{p:81500,col:"#f6465d",lab:"81,500 新高/铁止损",w:1.8},
+              {p:81271,col:"#8b949e",lab:"81,271 旧顶"},
+              {p:79659,col:"#f0b90b",lab:"79,659 破此=一卖确认",side:"r"},
+              {p:77600,col:"#2ebd85",lab:"77,600 三买位/第一目标"}],
+       macd:mDiv,struct:{bi:biDiv,segs:segsDiv,zs:buildZS(biDiv),lastPrice:kDiv[kDiv.length-1].c}});
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @80,487 · 冻结于 8/28";
   }catch(e){document.getElementById("verdict").innerHTML="加载失败："+e.message;document.getElementById("verdict").className="verdict r"}
@@ -405,7 +449,7 @@ async function load(){
 function renderVerdict(now){
   const el=document.getElementById("verdict");
   el.className="verdict g";
-  el.innerHTML="🟡 <b>中枢上移 · 81,271 最终考验</b>——日线灰带，4h潜在第二中枢(79,707~80,845)形成中，30m中枢上移1,200点=多头。但81,271~80,845双顶区仍是天花板。";
+  el.innerHTML="🚨 <b>81,500 新高 + 4h 顶背驰</b>——日线顶分型被否定（看多），但 DIF 从 1,870 减半到 850（看空）。假突破回到 30m 中枢内。等 4h 顶分型确认或否定。——日线灰带，4h潜在第二中枢(79,707~80,845)形成中，30m中枢上移1,200点=多头。但81,271~80,845双顶区仍是天花板。";
 }
 load();;;
 
