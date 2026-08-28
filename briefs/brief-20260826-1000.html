@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场新闻买入简报 · 2026-08-26 周三刊</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3644;
+    --text:#e6edf3; --muted:#9aa7b5; --accent:#4f9cf9;
+    --buy:#3fb950; --wait:#d29922; --avoid:#f85149; --chip:#30364a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75; padding:32px 16px; font-size:15px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:24px}
+  .kicker{color:var(--accent);font-size:13px;letter-spacing:.2em;margin-bottom:6px}
+  h1{font-size:26px;font-weight:700;margin-bottom:10px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+  .meta .tag{background:var(--chip);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:2px 12px}
+
+  .callout{
+    background:linear-gradient(135deg,#1a2233,#151b28);border:1px solid var(--border);
+    border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--muted);
+  }
+  .callout b{color:var(--text)}
+
+  h2{font-size:20px;margin:34px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:14px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card h3{font-size:17px;margin-bottom:2px}
+  .card .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .card p{margin:8px 0;font-size:14px;color:#c9d4e0}
+  .card p b{color:var(--text)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .badge{border-radius:999px;padding:2px 14px;font-size:13px;font-weight:600;border:1px solid transparent}
+  .badge.judge{font-size:14px}
+  .b-buy{background:rgba(63,185,80,.15);color:var(--buy);border-color:rgba(63,185,80,.4)}
+  .b-wait{background:rgba(210,153,34,.15);color:var(--wait);border-color:rgba(210,153,34,.4)}
+  .b-avoid{background:rgba(248,81,73,.15);color:var(--avoid);border-color:rgba(248,81,73,.4)}
+  .b-chip{background:var(--chip);color:#c9d4e0;border-color:var(--border)}
+
+  ol.rank{list-style:none;counter-reset:rk;display:flex;flex-direction:column;gap:10px}
+  ol.rank li{
+    counter-increment:rk;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:14px 18px 14px 58px;position:relative;font-size:14px
+  }
+  ol.rank li::before{
+    content:counter(rk);position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:var(--chip);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)
+  }
+  ol.rank li b{color:var(--text)}
+
+  ul.plain{list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.plain li{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:14px;color:#c9d4e0}
+  ul.plain li b{color:var(--text)}
+
+  .sources{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .sources a{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:13px}
+
+  footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  .disclaimer{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:#d8a5a1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">US EQUITIES × CRYPTO · MARKET BRIEF</div>
+  <h1>市场新闻买入简报</h1>
+  <div class="meta">
+    <span class="tag">2026-08-26(周三)10:00 CST</span>
+    <span class="tag">信息窗:自上期(周二 10:05)以来约 24h,覆盖周二美股全天</span>
+    <span class="tag">第 5 期 · NVDA 财报夜特辑</span>
+    <a href="index.html">← 简报目录</a> · <a href="../index.html">首页</a>
+  </div>
+</header>
+
+<div class="callout">
+  <b>本期总览(NVDA 财报夜 + 杰克逊霍尔前夜,事件链进入高潮):</b><br>
+  ① 今晚美股盘后(北京时间明晨)<b>NVDA 发布财报</b>,收入预期约 910–920 亿美元(不同口径);明天杰克逊霍尔开幕(Warsh 首秀)。<br>
+  ② 周二美股收高:道指 53,577(+160 点,+0.3%)、标普 7,677(+0.3%)、纳指 26,151(+0.7%)领涨——<b>国债收益率下行 + 油价三连跌</b>是主因(MarketWatch/Yahoo/AP 三源);NVDA 财报前反弹 +2.2% 至 213.05,终结七连跌(Kiplinger/CNBC)。<br>
+  ③ 加密高位回吐进行中:BTC 上探约 81,000 后回落至约 79,000(-2.3%),分析师共识<b>75,000–76,000 为关键支撑</b>(CoinDesk/CryptoTicker 双源);SOL 跌回 100 下方(约 97–98)。油价加速下跌:WTI 80.23(-2.6%)、布伦特 86.23,伊朗传经巴基斯坦向美传递谈判条件(单源)。结论:<b>事件落地前不押注;BTC 回踩确认条件正在测试</b>。
+</div>
+
+<h2>美股</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>指数锚:SPY / QQQ</h3>
+    <div class="sub">周二:道指 +0.3%(53,577)· 标普 +0.3%(7,677)· 纳指 +0.7%(26,151)</div>
+    <p><b>新闻:</b>三大指数收高,纳指领涨;驱动是美债收益率延续回落与油价三连跌(WTI 周三再跌 2.6% 至 80.23 美元),通胀与利率双减压。</p>
+    <p><b>为什么重要:</b>"收益率下行 + 油价下行"若延续,是指数回调的保护垫;但今晚 NVDA 是方向性事件,日内涨跌意义有限。</p>
+    <p><b>理由:</b>①事件前押注胜率差;②周二涨幅温和,未见过热;③加拿大对美报复性关税(15–50%、约 200 亿美元商品)是贸易面新增杂音。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+  <div class="card">
+    <h3>NVDA — 今晚盘后财报(本周期核心事件)</h3>
+    <div class="sub">周二收 213.05(+2.2%,终结七连跌)· 收入预期约 910–920 亿美元</div>
+    <p><b>新闻:</b>财报前反弹 +2.2%(Kiplinger/CNBC 双源);市场上周已知晓高预期(销售增速约 97%),边际定价在指引与中国业务表述。</p>
+    <p><b>为什么重要:</b>结果将同时定价:AI 硬件链(AMD/迈威尔)、纳指短线方向、以及加密市场的高位风险偏好。</p>
+    <p><b>理由:</b>①预期计价极高,beat 非惊喜;②事前反弹反而抬高了"失望门槛";③持有加密高 beta 仓位者应把今晚视为共同风险事件。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:暂不参与,明晨结果落地后顺势</span></div>
+  </div>
+
+  <div class="card">
+    <h3>AAPL / 其他</h3>
+    <div class="sub">8/25 发布新 Mac mini(M6 / M5 Pro,当日开启预购)</div>
+    <p><b>说明:</b>产品周期新闻属常规催化,不足以改变判断;MSFT/TSLA/AMD 无新增,维持前几期结论。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:均观望</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+</div>
+
+<h2>加密货币</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>BTC — 回踩确认进行中</h3>
+    <div class="sub">约 78,900–79,400 美元(三源)· 24h -2.3% · 上方高点约 81,000</div>
+    <p><b>新闻:</b>周二盘中突破 81,000(5 月中以来首次)后回落至 79,000 附近;分析师共识回踩支撑区在 <b>75,000–76,000</b>(CoinDesk/CryptoTicker);警示信号:链上活动降至两年低位(Investing.com,单源定性);周一 ETF 净流入 3.376 亿美元(六连流入),周二数据今晚公布。</p>
+    <p><b>为什么重要:</b>上期设定的"回踩 79,000–80,000 企稳分批"触发条件<b>正在被市场测试</b>:守住并收复 80K 则触发成立;失守 75–76K 支撑则判断作废、回到区间观察。</p>
+    <p><b>理由:</b>①资金面(ETF 六连流入)与叙事(万亿回购)未破坏;②链上活跃度低迷说明上涨依赖 ETF/衍生品资金,回撤弹性大;③今晚 NVDA 是高 beta 品种的外生风险。</p>
+    <div class="badges"><span class="badge judge b-buy">判断:可买(条件:78–79K 企稳并收复 80K;失守 75–76K 作废)</span><span class="badge b-chip">执行:等回踩企稳分批,不预赌财报夜</span></div>
+  </div>
+
+  <div class="card">
+    <h3>SOL — 100 得而复失</h3>
+    <div class="sub">约 97.1–98.2 美元(三源)· 24h -4.6%</div>
+    <p><b>新闻:</b>站上 100 后未能守稳,回撤至 97–98;350ms 出块已上线 + 费销毁提案的基本面催化未变,属技术性回吐。</p>
+    <p><b>理由:</b>①高 beta,回撤深于大盘属正常;②若 BTC 守住回踩区,SOL 企稳后弹性最大;③跌破 95 则短线结构转弱。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:等 95–98 企稳或重新站上 100 再介入</span></div>
+  </div>
+
+  <div class="card">
+    <h3>ETH</h3>
+    <div class="sub">约 2,460–2,476 美元(三源)· 24h 约 -2%</div>
+    <p><b>新闻:</b>跟随回吐但跌幅小于 SOL;ETF 相对强度逻辑未变,2,500 关口仍在争夺。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(偏积极)</span><span class="badge b-chip">执行:等回踩分批</span></div>
+  </div>
+
+  <div class="card">
+    <h3>BNB</h3>
+    <div class="sub">约 696 美元(-2.6%)· 无独立催化</div>
+    <div class="badges"><span class="badge judge b-avoid">判断:不买</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+</div>
+
+<h2>最强买点排行榜</h2>
+<ol class="rank">
+  <li><b>BTC — 可买(条件确认型)</b> · 核心催化:回踩 79K 测试中 + ETF 资金流 + 流动性叙事 · 参与方式:<b>78–79K 企稳并收复 80K 后分批;失守 75–76K 作废</b></li>
+  <li><b>ETH — 观望(偏积极)</b> · 核心催化:ETF 相对强度 + 回吐抗跌 · 参与方式:<b>等回踩分批</b></li>
+  <li><b>SOL — 观望</b> · 核心催化:基本面催化仍在,技术回吐 · 参与方式:<b>等 95–98 企稳或重上 100</b></li>
+  <li><b>NVDA — 观望</b> · 核心催化:今晚财报落地 · 参与方式:<b>明晨结果出来后顺势,不预赌</b></li>
+  <li><b>BNB / TSLA — 不买</b> · 无独立催化 / 信号混沌 · 参与方式:<b>只观察</b></li>
+</ol>
+
+<h2>总结</h2>
+<ul class="plain">
+  <li><b>最值得盯:</b>今晨至明晨的 NVDA 财报与电话会(北京时间周四早晨出结果)——AI 链与加密高位的共同定价事件;明天开幕的杰克逊霍尔(Warsh 首秀,主题"金融创新与支付")。</li>
+  <li><b>最不该碰:</b>财报夜前重仓任何方向;BTC 失守 75–76K 前抄底;追高已回落的高 beta 品种。</li>
+  <li><b>下周期跟踪点:</b>①BTC 在 78–79K 的企稳信号(收复 80K = 触发分批);②今晚 BTC ETF 周二净流入数据;③NVDA 指引及中国业务表述;④伊朗-巴基斯坦谈判通道是否坐实(油价方向)。</li>
+</ul>
+
+<h2>主要来源</h2>
+<div class="sources">
+  <a href="https://www.marketwatch.com/livecoverage/stock-market-today-dow-s-p-500-nasdaq-nvidia-earnings-results-inflation-data" target="_blank" rel="noopener noreferrer">MarketWatch · 周二收盘</a>
+  <a href="https://www.reuters.com/business/us-stock-futures-rise-tech-rebound-before-nvidia-inflation-tests-2026-08-25/" target="_blank" rel="noopener noreferrer">Reuters · 科技反弹</a>
+  <a href="https://www.kiplinger.com/investing/live/nvidia-earnings-live-updates-and-commentary-august-2026" target="_blank" rel="noopener noreferrer">Kiplinger · NVDA 实时</a>
+  <a href="https://www.coindesk.com/markets/2026/08/24/bitcoin-nears-usd80-000-but-analysts-say-the-next-pullback-will-be-key" target="_blank" rel="noopener noreferrer">CoinDesk · 回踩与支撑</a>
+  <a href="https://cryptoticker.io/en/bitcoin-price-80000-pullback-79100-targets" target="_blank" rel="noopener noreferrer">CryptoTicker · 80K 突破后回落</a>
+  <a href="https://sosovalue.com/assets/etf/us-btc-spot" target="_blank" rel="noopener noreferrer">SoSoValue · ETF 资金流</a>
+  <a href="https://www.coingecko.com/zh/比特币" target="_blank" rel="noopener noreferrer">CoinGecko · 行情</a>
+  <a href="https://tradingeconomics.com/commodity/crude-oil" target="_blank" rel="noopener noreferrer">TradingEconomics · 原油</a>
+  <a href="https://www.apple.com/newsroom/2026/08/apple-unveils-a-more-powerful-mac-mini-featuring-the-all-new-m6-and-m5-pro/" target="_blank" rel="noopener noreferrer">Apple · Mac mini</a>
+</div>
+
+<footer>
+  <div class="disclaimer">以上为基于公开信息的研究判断,非投资建议;未使用杠杆假设,亦不构成确定性承诺。数字均经至少两个独立公开来源交叉核验,个别单源数据已标注出处。</div>
+  <div>美股 × 加密新闻买入简报 · 每 6 小时自动更新 · <a href="index.html">简报目录</a> · <a href="../index.html">首页</a></div>
+</footer>
+
+</div>
+<script>
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a');
+  if(a&&a.href&&a.target==='_blank'){
+    e.preventDefault();
+    var w=window.open(a.href,'_blank','noopener');
+    if(!w){location.href=a.href;}
+  }
+});
+</script>
+</body>
+</html>

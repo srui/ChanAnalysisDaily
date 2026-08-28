@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场新闻买入简报 · 2026-08-27 财报后首日</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3644;
+    --text:#e6edf3; --muted:#9aa7b5; --accent:#4f9cf9;
+    --buy:#3fb950; --wait:#d29922; --avoid:#f85149; --chip:#30364a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75; padding:32px 16px; font-size:15px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:24px}
+  .kicker{color:var(--accent);font-size:13px;letter-spacing:.2em;margin-bottom:6px}
+  h1{font-size:26px;font-weight:700;margin-bottom:10px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+  .meta .tag{background:var(--chip);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:2px 12px}
+
+  .callout{
+    background:linear-gradient(135deg,#1a2233,#151b28);border:1px solid var(--border);
+    border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--muted);
+  }
+  .callout b{color:var(--text)}
+
+  h2{font-size:20px;margin:34px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:14px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card h3{font-size:17px;margin-bottom:2px}
+  .card .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .card p{margin:8px 0;font-size:14px;color:#c9d4e0}
+  .card p b{color:var(--text)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .badge{border-radius:999px;padding:2px 14px;font-size:13px;font-weight:600;border:1px solid transparent}
+  .badge.judge{font-size:14px}
+  .b-buy{background:rgba(63,185,80,.15);color:var(--buy);border-color:rgba(63,185,80,.4)}
+  .b-wait{background:rgba(210,153,34,.15);color:var(--wait);border-color:rgba(210,153,34,.4)}
+  .b-avoid{background:rgba(248,81,73,.15);color:var(--avoid);border-color:rgba(248,81,73,.4)}
+  .b-chip{background:var(--chip);color:#c9d4e0;border-color:var(--border)}
+
+  ol.rank{list-style:none;counter-reset:rk;display:flex;flex-direction:column;gap:10px}
+  ol.rank li{
+    counter-increment:rk;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:14px 18px 14px 58px;position:relative;font-size:14px
+  }
+  ol.rank li::before{
+    content:counter(rk);position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:var(--chip);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)
+  }
+  ol.rank li b{color:var(--text)}
+
+  ul.plain{list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.plain li{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:14px;color:#c9d4e0}
+  ul.plain li b{color:var(--text)}
+
+  .sources{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .sources a{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:13px}
+
+  footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  .disclaimer{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:#d8a5a1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">US EQUITIES × CRYPTO · MARKET BRIEF</div>
+  <h1>市场新闻买入简报</h1>
+  <div class="meta">
+    <span class="tag">2026-08-27(周四)22:00 CST</span>
+    <span class="tag">信息窗:自上期(今晨 10:23)约 11.5h,含今晚美股开盘 30 分钟</span>
+    <span class="tag">第 8 期 · NVDA 财报后首日</span>
+    <a href="index.html">← 简报目录</a> · <a href="../index.html">首页</a>
+  </div>
+</header>
+
+<div class="callout">
+  <b>本期总览:</b><br>
+  ① <b>NVDA 财报后首日高开兑现</b>:今晚跳空高开约 6%(首根 K 线约 222),开盘 30 分钟后报 <b>225.04(+7.3%)</b>(Yahoo 实时;WSJ/CNBC/Investopedia 多源确认盘前 6–7%);纳指 +1.24% 领跑、标普 +0.59%。勘误:上期把周二收盘 213.05 误标为周三,<b>周三实际收盘 209.66</b>。<br>
+  ② <b>加密分化</b>:BTC 约 79,500–79,600(+1.4%)仍卡在 8 万下方;<b>SOL 独走 +9.8% 至约 106</b>(周涨超三成,费销毁+350ms+ETF 三重催化发酵);ETH 在 2,500 拉锯。BTC ETF 已连续 7 日净流入(周二 +3.14 亿,IBIT +2.84 亿),<b>周三数据尚未发布,为明日验证点</b>。<br>
+  ③ 逆风未变:PCE 粘性、10 年期收益率约 4.635%(单源)、下月加息预期微升;明晚(美东周五)<b>Warsh 杰克逊霍尔首秀演讲</b>。结论:<b>NVDA"落地后顺势"已激活但 +7% 计价大半,等回踩;BTC 条件不变;SOL 结构最强但短线超买</b>。
+</div>
+
+<h2>美股</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>NVDA — 跳空 +7.3%,缺口已现</h3>
+    <div class="sub">现价 225.04(+7.3%)· 前收 209.66 · 缺口区间约 210–222</div>
+    <p><b>新闻:</b>财报全面超预期后市场以跳空回应,开盘 30 分钟维持高位;"AI 交易焦虑被结果平复"(Investopedia)。</p>
+    <p><b>为什么重要:</b>上期"落地后顺势、不追跳空"的策略进入执行窗口:大缺口(约 6%)回补概率不低,回踩承接才是右侧信号。</p>
+    <p><b>理由:</b>①+7.3% 已计价财报利好的大半,追入盈亏比差;②若今晚收盘守住 5% 以上涨幅,下周初回踩缺口的概率上升而非下降;③利率逆风(PCE 粘性)独立存在。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(积极)</span><span class="badge b-chip">执行:等回踩缺口上沿企稳(约 216–222 区域),不追现价</span></div>
+  </div>
+
+  <div class="card">
+    <h3>指数锚:SPY / QQQ — AI 叙事修复日</h3>
+    <div class="sub">开盘 30 分钟:标普 7,721(+0.59%)· 纳指 26,453(+1.24%)· 周三收盘基本持平</div>
+    <p><b>新闻:</b>芯片板块普涨带动纳指领涨;"科技→价值"轮动暂缓,资金回流 AI 主线;油价小幅反弹(布伦特短线 +0.5 美元后部分回吐,单源)。</p>
+    <p><b>理由:</b>①单日修复不改变"事件密集周"的框架,明晚 Warsh 是下一个方向性变量;②纳指若放量收复本周高点,AI 链回调买入逻辑增强。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:暂不参与,等今晚收盘确认</span></div>
+  </div>
+
+  <div class="card">
+    <h3>AMD / AI 链联动</h3>
+    <div class="sub">NVDA 资本开支指引外溢 · 联动品种同日高开</div>
+    <p><b>理由:</b>①8,000 亿→1.3 万亿的超大规模资本开支指引抬升全链景气;②联动高开后同样不追,回踩介入。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:等回踩</span></div>
+  </div>
+
+</div>
+
+<h2>加密货币</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>BTC — 8 万城下整装</h3>
+    <div class="sub">约 79,500–79,600 美元(CoinGecko+Binance 双源)· 24h +1.4% · ETF 七连流入</div>
+    <p><b>新闻:</b>风险偏好利好(NVDA)与资金面利好(ETF 连续第 7 日净流入、贝莱德 50 亿税务递延互换通道)都在,但价格连续两日卡在 8 万下方——50 周均线(约 81K)与整数关构成复合压力。</p>
+    <p><b>理由:</b>①"可买"条件(收复并站稳 8 万)仍未触发,79K 平台横盘属良性;②今晚美股时段的 ETF 买盘与市场情绪是突破尝试的催化剂;③失守 75–76K 仍是作废线。</p>
+    <div class="badges"><span class="badge judge b-buy">判断:可买(条件不变:收复并站稳 8 万;失守 75–76K 作废)</span><span class="badge b-chip">执行:79K 附近分批,或站稳 8 万后右侧加仓</span></div>
+  </div>
+
+  <div class="card">
+    <h3>SOL — 独走 +9.8%,注意超买</h3>
+    <div class="sub">约 106 美元(双源)· 24h +9.8% · 三日 +17%、周涨超 30%</div>
+    <p><b>新闻:</b>八日涨超 40%、突破 100–102 前压力区:驱动为<b>空头挤压 + ETF 创纪录流入</b>(8/24 单日 +3,350 万美元为年内最大,累计约 12.2 亿)+ 通缩治理(加速通胀衰减,估算削减约 15 亿美元增发)+ 350ms 落地;全网周交易量达 13.2 亿笔(多源综合)。</p>
+    <p><b>理由:</b>①结构最强、催化最实,但单日近 10% 涨幅后追高风险报酬比恶化;②100 关口由阻力转为支撑的第一次回踩测试是最佳观察点(谨慎方看回踩 90,看多方目标 120);③若 BTC 突破 8 万带动,SOL 是弹性首选。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(结构最强,短线超买)</span><span class="badge b-chip">执行:等回踩 100–102 企稳介入</span></div>
+  </div>
+
+  <div class="card">
+    <h3>ETH / BNB</h3>
+    <div class="sub">ETH 约 2,497–2,505(2,500 拉锯)· BNB 约 708</div>
+    <p><b>理由:</b>ETH 相对强度延续但被 SOL 抢走风头;2,500 收复确认前维持分批思路;BNB 无独立催化。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:ETH 观望(偏积极)/ BNB 不买</span><span class="badge b-chip">执行:ETH 等回踩分批</span></div>
+  </div>
+
+</div>
+
+<h2>最强买点排行榜</h2>
+<ol class="rank">
+  <li><b>BTC — 可买(条件确认型)</b> · 三重利好待最后一步:站稳 8 万 · 参与方式:<b>79K 分批或站稳 8 万右侧</b></li>
+  <li><b>SOL — 观望(结构最强)</b> · 三重催化发酵但短线超买 · 参与方式:<b>等回踩 100–102</b></li>
+  <li><b>NVDA — 观望(积极)</b> · 落地后顺势进入执行窗口 · 参与方式:<b>等回踩缺口 216–222,不追现价</b></li>
+  <li><b>ETH — 观望(偏积极)</b> · 2,500 拉锯 · 参与方式:<b>等回踩分批</b></li>
+  <li><b>BNB / TSLA — 不买</b> · 无独立催化 · 只观察</li>
+</ol>
+
+<h2>总结</h2>
+<ul class="plain">
+  <li><b>最值得盯:</b>今晚美股收盘(NVDA 涨幅能否守住、纳指本周高点得失);明晚美东周五 Warsh 演讲——通胀粘性背景下鹰鸽选择将定调下周;BTC 对 8 万的第三次挑战。</li>
+  <li><b>最不该碰:</b>追高 +7% 的 NVDA 与 +10% 的 SOL;BTC 未站稳 8 万前重仓;忽视明晚 Warsh 的双向波动风险。</li>
+  <li><b>下周期跟踪点:</b>①明晨发布的周三 ETF 净流入(第八日连续?);②BTC 80,000–81,000 突破与否;③SOL 回踩 100 的承接;④NVDA 缺口回补节奏;⑤Warsh 讲稿中金融创新/支付相关表述。</li>
+</ul>
+
+<h2>主要来源</h2>
+<div class="sources">
+  <a href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-08-27-2026" target="_blank" rel="noopener noreferrer">WSJ · 今日行情</a>
+  <a href="https://www.cnbc.com/2026/08/26/stock-market-today-live-updates.html" target="_blank" rel="noopener noreferrer">CNBC · 开盘实时</a>
+  <a href="https://www.investopedia.com/stock-market-today-dow-jones-s-and-p-500-08272026-12069234" target="_blank" rel="noopener noreferrer">Investopedia · 财报后行情</a>
+  <a href="https://www.kiplinger.com/investing/live/nvidia-earnings-live-updates-and-commentary-august-2026" target="_blank" rel="noopener noreferrer">Kiplinger · NVDA 财报</a>
+  <a href="https://finance.yahoo.com/quote/NVDA/" target="_blank" rel="noopener noreferrer">Yahoo · NVDA/指数实时</a>
+  <a href="https://sosovalue.com/assets/etf/us-btc-spot" target="_blank" rel="noopener noreferrer">SoSoValue · ETF 资金流</a>
+  <a href="https://www.coingecko.com/zh/比特币" target="_blank" rel="noopener noreferrer">CoinGecko · 行情</a>
+  <a href="https://www.binance.com/zh-CN/price/bitcoin" target="_blank" rel="noopener noreferrer">Binance · 行情</a>
+  <a href="https://www.reuters.com/business/anxious-investors-hope-clarity-warshs-fed-plan-jackson-hole-2026-08-26/" target="_blank" rel="noopener noreferrer">Reuters · Warsh 前瞻</a>
+</div>
+
+<footer>
+  <div class="disclaimer">以上为基于公开信息的研究判断,非投资建议;未使用杠杆假设,亦不构成确定性承诺。数字均经至少两个独立公开来源交叉核验,个别单源数据已标注出处。说明:今日 12:00/18:00 两次定时运行因执行中断未产出,本期合并覆盖约 12 小时窗口;开盘 30 分钟数据为盘中快照,收盘请以明日简报为准。</div>
+  <div>美股 × 加密新闻买入简报 · 每 6 小时自动更新 · <a href="index.html">简报目录</a> · <a href="../index.html">首页</a></div>
+</footer>
+
+</div>
+<script>
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a');
+  if(a&&a.href&&a.target==='_blank'){
+    e.preventDefault();
+    var w=window.open(a.href,'_blank','noopener');
+    if(!w){location.href=a.href;}
+  }
+});
+</script>
+</body>
+</html>

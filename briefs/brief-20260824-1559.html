@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场新闻买入简报 · 2026-08-24 下午刊</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3644;
+    --text:#e6edf3; --muted:#9aa7b5; --accent:#4f9cf9;
+    --buy:#3fb950; --wait:#d29922; --avoid:#f85149; --chip:#30364a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75; padding:32px 16px; font-size:15px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:24px}
+  .kicker{color:var(--accent);font-size:13px;letter-spacing:.2em;margin-bottom:6px}
+  h1{font-size:26px;font-weight:700;margin-bottom:10px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+  .meta .tag{background:var(--chip);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:2px 12px}
+
+  .callout{
+    background:linear-gradient(135deg,#1a2233,#151b28);border:1px solid var(--border);
+    border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--muted);
+  }
+  .callout b{color:var(--text)}
+
+  h2{font-size:20px;margin:34px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:14px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card h3{font-size:17px;margin-bottom:2px}
+  .card .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .card p{margin:8px 0;font-size:14px;color:#c9d4e0}
+  .card p b{color:var(--text)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .badge{border-radius:999px;padding:2px 14px;font-size:13px;font-weight:600;border:1px solid transparent}
+  .badge.judge{font-size:14px}
+  .b-buy{background:rgba(63,185,80,.15);color:var(--buy);border-color:rgba(63,185,80,.4)}
+  .b-wait{background:rgba(210,153,34,.15);color:var(--wait);border-color:rgba(210,153,34,.4)}
+  .b-avoid{background:rgba(248,81,73,.15);color:var(--avoid);border-color:rgba(248,81,73,.4)}
+  .b-chip{background:var(--chip);color:#c9d4e0;border-color:var(--border)}
+
+  ol.rank{list-style:none;counter-reset:rk;display:flex;flex-direction:column;gap:10px}
+  ol.rank li{
+    counter-increment:rk;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:14px 18px 14px 58px;position:relative;font-size:14px
+  }
+  ol.rank li::before{
+    content:counter(rk);position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:var(--chip);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)
+  }
+  ol.rank li b{color:var(--text)}
+
+  ul.plain{list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.plain li{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:14px;color:#c9d4e0}
+  ul.plain li b{color:var(--text)}
+
+  .sources{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .sources a{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:13px}
+
+  footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  .disclaimer{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:#d8a5a1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">US EQUITIES × CRYPTO · MARKET BRIEF</div>
+  <h1>市场新闻买入简报</h1>
+  <div class="meta">
+    <span class="tag">2026-08-24(周一)15:59 CST</span>
+    <span class="tag">信息窗:自上期(08:51)以来约 7h,美股今晚 21:30 开盘</span>
+    <span class="tag">第 3 期</span>
+    <a href="index.html">← 简报目录</a> · <a href="../index.html">首页</a>
+  </div>
+</header>
+
+<div class="callout">
+  <b>本期总览:</b><br>
+  ① 本期最强增量在 Solana:<b>主网已于 8/21 激活 350ms 出块</b>(官方+多家媒体双源核验),是 Alpenglow 性能路线图 400→200ms 的第一步,预期催化开始变成已兑现事实。<br>
+  ② 风险偏好边际缓和:油价转跌——WTI 跌 1.7% 至 85.57 美元、布伦特跌 1.2% 至 93.22 美元(CNBC/TradingEconomics 双源),市场等待美国对伊"最严厉制裁"落地;美股期货早盘高开迹象收敛至基本平开(盘初纳指期货一度跌近 1%)。<br>
+  ③ 事件周框架不变(8/26 NVDA、8/27–29 杰克逊霍尔、PCE),加密横盘等验证:BTC 在 7.7 万上方持稳待今晚 ETF 复牌。结论:<b>维持观望为主,SOL 回踩仍是首选介入点</b>。
+</div>
+
+<h2>美股</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>指数锚:SPY / QQQ</h3>
+    <div class="sub">期货基本平开(早盘高开迹象已收敛)· 上周五标普 7,674(+0.43%)</div>
+    <p><b>新闻:</b>欧洲时段美股期货涨跌互现、基本持平(Markets Insider,单源定性);早盘道指 +0.9% 的高开指示已收敛,纳指 100 期货盘初一度跌近 1%。今晚开盘前无新增宏观数据。</p>
+    <p><b>为什么重要:</b>期货由强转平说明资金不愿在 NVDA/杰克逊霍尔之前抢跑,高开兑现为日内涨幅的确定性下降。</p>
+    <p><b>理由:</b>①五天事件链风险未释放;②油价回落是边际利好但幅度有限;③ Ross Stores 等今日盘前财报个股风险与大盘无关。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+  <div class="card">
+    <h3>NVDA — 8/26 17:00 ET 盘后电话会</h3>
+    <div class="sub">上季营收 681 亿美元创纪录(FY26 全年 2,159 亿,+65%,官方 IR)</div>
+    <p><b>新闻:</b>财报电话会时间确认(美东 8/26 下午 5 点);股价财报前小幅回落(周五收跌约 1%,Yahoo 单源);有分析认为其相对同业存在明显估值折价(Yahoo 引述,单源、定性);中国业务表现是核心观察项(IBD)。</p>
+    <p><b>为什么重要:</b>市场对 Q2 收入指引约 910 亿美元的预期建立在 +65% 的年度基数上,指引边际变化将决定 AI 板块一周的方向。</p>
+    <p><b>理由:</b>①预期计价极高,beat 非惊喜;②事前回落反而略改善了事件日的起点;③二元事件,方向赌注胜率差。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:暂不参与(不赌财报,落地后顺势)</span></div>
+  </div>
+
+  <div class="card">
+    <h3>AMD / 芯片 · 油价关联板块</h3>
+    <div class="sub">芯片无独立增量 · 油价回落利好运输/航空链</div>
+    <p><b>新闻:</b>盘前芯片股延续小幅偏强(Micron、Intel 微涨,单源);油价回落若持续,对通胀预期与利率敏感型资产是边际减压。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:AMD 等回踩</span></div>
+  </div>
+
+  <div class="card">
+    <h3>TSLA / MSFT / AAPL</h3>
+    <div class="sub">本周期无新增催化</div>
+    <p><b>说明:</b>与前两期判断一致(信号混沌 / 利好计价),无增量不展开,维持观察。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:均观望</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+</div>
+
+<h2>加密货币</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>SOL — 催化从预期变为落地</h3>
+    <div class="sub">约 93.7–95.5 美元(多源)· 周涨约 25%</div>
+    <p><b>新闻:</b>Solana 基金会官方确认性能路线图:主网 8/21 起出块时间从 400ms 降至 350ms(网络上线以来首次),后续按 50ms 步进至 200ms,testnet 已推进至 300/250ms——官方文档+crypto.news/Cryptorank 等多源核验。价格上,90 美元突破后站稳,93.7–95.5 多源一致(Yahoo/CoinGecko/Binance/Kraken)。</p>
+    <p><b>为什么重要:</b>升级不再是"Q3 预期"而是"已发生+仍有后续阶段",基本面与价格的验证链最完整;叠加现货 ETF 连续多周净流入。</p>
+    <p><b>理由:</b>①催化真实且持续,中期逻辑增强;②但周涨 25% 后短线追高盈亏比差;③若今晚美股 ETF 复牌首日资金不及预期,高 beta 回撤更深。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(相对最优,介入优先级上调)</span><span class="badge b-chip">执行:等回踩 90–91 企稳分批</span></div>
+  </div>
+
+  <div class="card">
+    <h3>BTC</h3>
+    <div class="sub">约 77,100–77,600 美元(5 源一致)· 市值约 1.55 万亿</div>
+    <p><b>新闻:</b>日内持稳微涨(Kraken 77,551 +1.0%、Binance 77,106 +1.28%、CoinGecko 77,330 +1.33%),周涨约 21–23%;仍在 8 万关口下方整固,今晚现货 ETF 复牌是第一个真实买盘验证。</p>
+    <p><b>理由:</b>①监管利多(SEC Reg Crypto 提案)与贬值叙事已被部分计价;②连续多日未能突破 8 万,上方套牢/获利盘压制;③事件周风险偏好可能反复。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:等放量站稳 8 万或回踩企稳</span></div>
+  </div>
+
+  <div class="card">
+    <h3>ETH</h3>
+    <div class="sub">约 2,437–2,449 美元(3 源)· 日内持平</div>
+    <p><b>新闻:</b>CoinGecko/CoinMarketCap/crypto.news 报价一致,横盘整理;ETF 连续净流入趋势(上期核验)待今晚数据延续验证。</p>
+    <p><b>理由:</b>①真实资金面支撑仍在;②涨幅已大,等回踩优于追高。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(偏积极)</span><span class="badge b-chip">执行:等回踩分批</span></div>
+  </div>
+
+  <div class="card">
+    <h3>BNB</h3>
+    <div class="sub">约 696 美元 · 无独立催化</div>
+    <p><b>理由:</b>与上期一致,动量跟随品种,不参与。</p>
+    <div class="badges"><span class="badge judge b-avoid">判断:不买</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+</div>
+
+<h2>最强买点排行榜</h2>
+<ol class="rank">
+  <li><b>SOL — 观望(首选)</b> · 核心催化:350ms 出块已上线 + 后续步进路线 + ETF 流入 · 参与方式:<b>等回踩 90–91 企稳分批</b></li>
+  <li><b>ETH — 观望(偏积极)</b> · 核心催化:ETF 真实净流入待延续 · 参与方式:<b>等回踩分批</b></li>
+  <li><b>NVDA — 观望</b> · 核心催化:8/26 财报,预期高度计价 · 参与方式:<b>等落地后顺势</b></li>
+  <li><b>BTC — 观望</b> · 核心催化:今晚 ETF 复牌资金流 + 8 万关口 · 参与方式:<b>等站稳 8 万或回踩企稳</b></li>
+  <li><b>BNB / TSLA — 不买</b> · 无独立催化 / 信号混沌 · 参与方式:<b>只观察</b></li>
+</ol>
+
+<h2>总结</h2>
+<ul class="plain">
+  <li><b>最值得盯:</b>今晚 21:30 美股开盘与 BTC 现货 ETF 复牌首日净流入;8/26 NVDA 电话会对 AI 资本开支的表述;对伊"最严厉制裁"的落地形式(军事 vs 经济手段)。</li>
+  <li><b>最不该碰:</b>财报前重仓 NVDA 单边;8 万关口前追高 BTC;SOL 现价追涨。</li>
+  <li><b>下周期跟踪点:</b>①SOL 回踩 90–91 是否企稳(首选介入触发);②BTC ETF 今晚净流入规模;③油价是否延续回落(通胀减压链);④杰克逊霍尔前 Warsh 相关吹风。</li>
+</ul>
+
+<h2>主要来源</h2>
+<div class="sources">
+  <a href="https://solana.com/upgrades/reduced-slot-times" target="_blank" rel="noopener noreferrer">Solana 官方 · Reduced Slot Times</a>
+  <a href="https://crypto.news/solana-cuts-slot-time-to-350ms-for-first-time-since-network-launch/" target="_blank" rel="noopener noreferrer">crypto.news · 350ms 上线</a>
+  <a href="https://www.cnbc.com/2026/08/24/oil-price-today-wti-brent-us-sanctions-iran.html" target="_blank" rel="noopener noreferrer">CNBC · 油价与对伊制裁</a>
+  <a href="https://www.kraken.com/cn/prices/bitcoin" target="_blank" rel="noopener noreferrer">Kraken · BTC</a>
+  <a href="https://www.coingecko.com/zh/比特币" target="_blank" rel="noopener noreferrer">CoinGecko · BTC/ETH</a>
+  <a href="https://finance.yahoo.com/quote/NVDA/" target="_blank" rel="noopener noreferrer">Yahoo · NVDA</a>
+  <a href="http://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-fourth-quarter-and-fiscal-2026" target="_blank" rel="noopener noreferrer">NVDA 官方 · FY26 业绩</a>
+  <a href="https://edition.cnn.com/markets/premarkets" target="_blank" rel="noopener noreferrer">CNN · 盘前期货</a>
+</div>
+
+<footer>
+  <div class="disclaimer">以上为基于公开信息的研究判断,非投资建议;未使用杠杆假设,亦不构成确定性承诺。数字均经至少两个独立公开来源交叉核验,个别单源数据已标注出处。</div>
+  <div>美股 × 加密新闻买入简报 · 每 6 小时自动更新 · <a href="index.html">简报目录</a> · <a href="../index.html">首页</a></div>
+</footer>
+
+</div>
+<script>
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a');
+  if(a&&a.href&&a.target==='_blank'){
+    e.preventDefault();
+    var w=window.open(a.href,'_blank','noopener');
+    if(!w){location.href=a.href;}
+  }
+});
+</script>
+</body>
+</html>
