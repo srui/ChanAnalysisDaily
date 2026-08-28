@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>背驰学习 · K线与MACD</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b111e;color:#cdd6e6;font:14px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:14px 16px 30px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+h1{font-size:19px;color:#f0b90b;margin-right:auto}
+h1 small{font-size:12px;color:#7b8aa5;font-weight:400;margin-left:8px}
+.btn{background:#161f33;border:1px solid #2a3852;color:#cdd6e6;border-radius:7px;padding:5px 12px;cursor:pointer;font-size:13px}
+.btn:hover{border-color:#f0b90b;color:#f0b90b}
+.btn.on{background:#f0b90b;color:#111;border-color:#f0b90b;font-weight:600}
+.main{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.chart-card{flex:1;min-width:640px;background:#0e1626;border:1px solid #223049;border-radius:12px;padding:10px 12px}
+.chart-head{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;margin-bottom:6px;color:#8ea0bd}
+.chart-head b{color:#e8eefb;font-size:15px}
+.up{color:#2ebd85}.dn{color:#f6465d}
+.chart-box{position:relative}
+svg{display:block;width:100%;height:auto;cursor:crosshair}
+.tip{position:absolute;pointer-events:none;background:rgba(10,16,28,.95);border:1px solid #33445f;border-radius:8px;padding:7px 10px;font-size:12px;line-height:1.7;display:none;z-index:5;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.tip b{color:#f0b90b}
+aside{width:420px;max-width:100%;display:flex;flex-direction:column;gap:12px}
+.panel{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:12px 14px}
+.panel h3{font-size:14px;color:#f0b90b;margin-bottom:8px}
+.jrow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #223049;font-size:13px}
+.jrow:last-of-type{border-bottom:none}
+.jrow .v{text-align:right;color:#e8eefb}
+.ok{color:#2ebd85}.no{color:#f6465d}.mid{color:#f0b90b}
+.verdict{margin-top:8px;border-radius:8px;padding:9px 11px;font-size:13px;line-height:1.7}
+.verdict.g{background:rgba(46,189,133,.1);border:1px solid rgba(46,189,133,.4)}
+.verdict.r{background:rgba(246,70,93,.1);border:1px solid rgba(246,70,93,.4)}
+.verdict.y{background:rgba(240,185,11,.1);border:1px solid rgba(240,185,11,.4)}
+.know{font-size:13px;line-height:1.8;color:#aeb9cf}
+.know h4{color:#e8eefb;font-size:13px;margin:10px 0 3px}
+.know h4:first-child{margin-top:0}
+.know .hl{color:#f0b90b}
+.tag{display:inline-block;background:#1a2438;border-radius:5px;padding:0 6px;font-size:12px;color:#8ea0bd;margin-left:6px}
+#cmpPanel .cbtn{float:right;background:none;border:none;color:#8ea0bd;cursor:pointer;font-size:14px}
+.legend{display:flex;gap:14px;font-size:12px;color:#7b8aa5;margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:16px;height:3px;vertical-align:middle;margin-right:4px;border-radius:2px}
+.err{color:#f6465d;font-size:13px;padding:20px;text-align:center}
+/* 形态图解 */
+.patterns{margin-top:14px}
+.patterns h2{font-size:16px;color:#f0b90b;margin:20px 0 4px}
+.patterns .psub{font-size:12.5px;color:#8ea0bd;margin-bottom:10px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.pcard{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:12px 14px}
+.pcard h4{font-size:13.5px;color:#e8eefb;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pbadge{font-size:10.5px;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
+.pbadge.g{background:rgba(46,189,133,.15);color:#2ebd85}
+.pbadge.y{background:rgba(240,185,11,.15);color:#f0b90b}
+.pbadge.r{background:rgba(246,70,93,.15);color:#f6465d}
+.pbadge.b{background:rgba(88,166,255,.15);color:#58a6ff}
+.pwin{font-size:11px;color:#7b8aa5;margin-bottom:6px}
+.ptips{margin-top:8px;padding-left:18px;font-size:12.5px;color:#aeb9cf;line-height:1.7}
+.pnote{margin-top:10px;color:#66748f;font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📖 背驰学习 <small>K线 · 成交量 · MACD 黄白线 实时对照（币安合约）</small></h1>
+    <span id="symBtns"></span>
+    <span id="perBtns"></span>
+    <button class="btn" id="arBtn">自动刷新：开</button>
+    <button class="btn" id="rfBtn">↻ 刷新</button>
+    <span class="tag" id="updTag">—</span>
+  </header>
+  <div class="main">
+    <div class="chart-card">
+      <div class="chart-head" id="chartHead"></div>
+      <div class="chart-box">
+        <svg id="chart" viewBox="0 0 1160 740" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:#e8e8e8"></i>白线 DIF（快）</span>
+        <span><i style="background:#f0b90b"></i>黄线 DEA（慢）</span>
+        <span><i style="background:#f6465d"></i>红柱＝多头动能</span>
+        <span><i style="background:#2ebd85"></i>绿柱＝空头动能</span>
+        <span>▼顶分型 / ▲底分型</span>
+        <span>黄色虚框＝中枢</span>
+        <span>红色虚线＝前高对照线</span>
+        <span>💡 点击任意两根K线，对比「价格 vs DIF vs 量」学背驰形态</span>
+      </div>
+    </div>
+    <aside>
+      <div class="panel" id="judgePanel"><h3>⚖️ 背驰判定 · 实时计算</h3><div id="judgeBody">加载中…</div></div>
+      <div class="panel" id="cmpPanel" style="display:none"><h3>🔍 两根K线对比 <button class="cbtn" onclick="clearCmp()">✕</button></h3><div id="cmpBody"></div></div>
+      <div class="panel know">
+        <h3>📚 知识点</h3>
+        <h4>① 背驰成立的四个条件（缺一不可）</h4>
+        同级别<b>两段同向走势</b>（中间隔中枢）比较：<span class="hl">a. 后段创新高</span>；b. 新高处 DIF 比前段高点走低；c. 红柱总面积萎缩（&lt;85%）；d. 量能萎缩。<b>没创新高，就谈不上背驰。</b>
+        <h4>② 「价涨 + 黄白线降」≠ 背驰</h4>
+        大涨之后 DIF 位置太高，市场用横盘/回踩把黄白线<b>洗回零轴</b>，这叫<span class="hl">指标修复</span>，是健康的中枢构建过程。反例：本轮 DIF(≈420) 甚至还高于前高顶那根的 DIF(≈324)——插针冲顶时 MACD 是滞后跟涨的，「黄白线在降」可能只是从更高的峰值回归，并未低于前高。
+        <h4>③ 背驰成立意味着什么</h4>
+        对应<span class="hl">一类卖点（一卖）</span>预警：多单离场/落袋，而不是立刻反手做空。通常伴随顶分型确认才生效。
+        <h4>④ 当前两种演化</h4>
+        <b>演化A（背驰）</b>：放量新高，但 DIF 走低＋红柱面积缩小＋缩量 → 一卖，多单跑。<br>
+        <b>演化B（二买）</b>：反抽不过前高就掉头 → 顶分型 → 回踩中枢下沿企稳 → 给出<b>二类买点</b>，是等待者要的位置。
+        <h4>口诀</h4>
+        「<span class="hl">没新高，不背驰；新高三条件，缺一都算强；柱缩价新高，一卖要落袋</span>」
+        <div style="margin-top:10px;color:#66748f;font-size:12px">数据：币安合约 API · 仅供学习，不构成投资建议</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="patterns">
+    <h2>🎯 买点形态图解 · 胜率排序</h2>
+    <div class="psub">顺序 = 动作顺序：背驰（预警）→ 分型确认（转折）→ 买点（入场）。确认信息越多胜率越高，代价是价格越差。</div>
+    <div class="pgrid" id="buyCards"></div>
+
+    <h2>🕯️ 入场K线 · 12金K体系（转折 / 进攻 / 警示）</h2>
+    <div class="psub">K线形态只在「关键位置」才有意义：配合上面的买点位置使用。同一根锤子线，在支撑位是机会，在半空是接飞刀。 <a href="index.html" style="color:#f0b90b;font-weight:600">🔍 真实K线案例库（大图·含真实胜率统计）→</a></div>
+    <div class="pgrid" id="kCards"></div>
+    <div class="pnote">参考：12金K形态体系（转折型/进攻型/警示型三大类，各周期通用）与价格行为学「信号K / 入场K」概念。</div>
+  </div>
+</div>
+<script>
+"use strict";
+const SYMS={BTCUSDT:"BTC",ETHUSDT:"ETH",SOLUSDT:"SOL",DOGEUSDT:"DOGE"};
+const PERS=["5m","15m","1h","4h"];
+const VIS=120;                       // 展示最近120根
+let curSym="BTCUSDT",curPer="15m";
+let K=[],M=[],FR=[],ZS=null;         // K线 / MACD / 分型 / 中枢
+let selA=-1,selB=-1;
+let autoOn=localStorage.getItem("beiChiAuto")!=="off";
+
+const $=id=>document.getElementById(id);
+const F=(v,d=2)=>(+v).toFixed(d);
+const fmtT=(t,per)=>{const d=new Date(t);const p=n=>String(n).padStart(2,"0");
+  return (d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes())};
+function ema(a,n){const k=2/(n+1);let e=a[0];return a.map(v=>e=v*k+e*(1-k))}
+function calcMacd(ks){const c=ks.map(k=>k.c);const e12=ema(c,12),e26=ema(c,26);
+  const dif=e12.map((v,i)=>v-e26[i]);const dea=ema(dif,9);
+  return dif.map((v,i)=>({dif:v,dea:dea[i],hist:v-dea[i]}))}
+function findFr(ks){const out=[];
+  for(let i=2;i<ks.length-2;i++){const k=ks[i];
+    if(k.h>ks[i-1].h&&k.h>ks[i-2].h&&k.h>ks[i+1].h&&k.h>ks[i+2].h)out.push({i,type:"top",p:k.h});
+    if(k.l<ks[i-1].l&&k.l<ks[i-2].l&&k.l<ks[i+1].l&&k.l<ks[i+2].l)out.push({i,type:"bot",p:k.l})}
+  const m=[];for(const f of out){const l=m[m.length-1];
+    if(l&&l.type===f.type){if(l.type==="top"?f.p>l.p:f.p<l.p)m[m.length-1]=f}else m.push(f)}
+  return m}
+function findZS(fr){ // 最近3笔重叠区
+  for(let k=fr.length-1;k>=2;k--){
+    const a=fr[k-2],b=fr[k-1],c=fr[k];
+    const lo=Math.max(Math.min(a.p,b.p),Math.min(b.p,c.p),Math.min(a.p,c.p));
+    const hi=Math.min(Math.max(a.p,b.p),Math.max(b.p,c.p),Math.max(a.p,c.p));
+    if(hi>lo)return{x1:a.i,x2:c.i,zd:lo,zg:hi}}
+  return null}
+
+async function load(){
+  try{
+    const r=await fetch("https://fapi.binance.com/fapi/v1/klines?symbol="+curSym+"&interval="+curPer+"&limit=200");
+    const raw=await r.json();
+    K=raw.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5]}));
+    M=calcMacd(K);FR=findFr(K);ZS=findZS(FR);
+    $("updTag").textContent="更新 "+new Date().toLocaleTimeString("zh-CN",{hour12:false});
+    render();
+  }catch(e){$("chart").innerHTML="";$("chartHead").innerHTML='<span class="err">加载失败：'+e.message+"（检查网络后点刷新）</span>"}
+}
+
+/* ---------- 判定逻辑：当前上涨段 vs 前一段 ---------- */
+function judge(){
+  const tops=FR.filter(f=>f.type==="top");
+  if(!tops.length)return null;
+  const topA=tops[tops.length-1];                      // 最近一个顶分型=前高A
+  const topB=tops.length>1?tops[tops.length-2]:null;   // 更前高B
+  const bots=FR.filter(f=>f.type==="bot"&&f.i>topA.i);
+  const segStart=bots.length?bots[bots.length-1]:null; // 前高之后最近底分型=当前段起点
+  const last=K.length-1;
+  // 前一段上涨：topA 前面最近的底分型 → topA
+  const prevBot=FR.filter(f=>f.type==="bot"&&f.i<topA.i).pop();
+  if(!prevBot||!segStart)return null;
+  const segHigh=Math.max(...K.slice(segStart.i,last+1).map(k=>k.h));
+  const hiIdx=K.findIndex((k,i)=>i>=segStart.i&&k.h===segHigh);
+  const areaOf=(s,e)=>M.reduce((a,m,i)=>i>=s&&i<=e&&m.hist>0?a+m.hist:a,0);
+  const volAvg=(s,e)=>{let v=0,n=0;for(let i=s;i<=e;i++){v+=K[i].v;n++}return n?v/n:0};
+  return{
+    topA,topB,segStart,segHigh,hiIdx,last,
+    difCur:M[hiIdx].dif,difTopA:M[topA.i].dif,difTopB:topB?M[topB.i].dif:null,
+    areaCur:areaOf(segStart.i,last),areaPrev:areaOf(prevBot.i,topA.i),
+    volCur:volAvg(segStart.i,last),volPrev:volAvg(prevBot.i,topA.i),
+    prevBot}
+}
+
+function render(){
+  const j=judge();
+  renderHead(j);
+  drawChart(j);
+  renderJudge(j);
+}
+
+function renderHead(j){
+  const k=K[K.length-1],k0=K[K.length-VIS];
+  const ch=(k.c/k0.o-1)*100,cls=ch>=0?"up":"dn";
+  let h='<b>'+SYMS[curSym]+'/'+curPer+'</b> <b class="'+cls+'">'+F(k.c,curSym==="DOGEUSDT"?5:curSym==="BTCUSDT"?0:2)+'</b>'
+    +' <span class="'+cls+'">'+(ch>=0?"+":"")+F(ch)+'% ('+VIS+'根)</span>';
+  if(j){
+    h+=' <span>前高A <b>'+F(j.topA.p,0)+'</b> · DIF '+F(j.difTopA,1)+'</span>';
+    if(j.topB)h+=' <span>更前高B <b>'+F(j.topB.p,0)+'</b> · DIF '+F(j.difTopB,1)+'</span>';
+    if(ZS)h+=' <span>中枢 '+F(ZS.zd,0)+' ~ '+F(ZS.zg,0)+'</span>';
+  }
+  $("chartHead").innerHTML=h;
+}
+
+/* ---------- SVG 绘图 ---------- */
+function drawChart(j){
+  const W=1160,H=740,L=8,R=76;
+  const plotW=W-L-R;
+  const n=Math.min(VIS,K.length),i0=K.length-n;
+  const PX={y:14,h:380},VX={y:428,h:78},MX={y:548,h:150},AX=700;
+  const X=i=>L+(i-i0+0.5)*plotW/n;
+  const bw=Math.max(2,plotW/n*0.62);
+  const ks=K.slice(i0);
+  const pMin=Math.min(...ks.map(k=>k.l)),pMax=Math.max(...ks.map(k=>k.h));
+  const pPad=(pMax-pMin)*0.06;
+  const Y=p=>PX.y+PX.h-( (p-(pMin-pPad))/((pMax+pPad)-(pMin-pPad)) )*PX.h;
+  const vMax=Math.max(...ks.map(k=>k.v));
+  const VY=v=>VX.y+VX.h-(v/vMax)*VX.h;
+  const mAbs=Math.max(...ks.map((k,i)=>Math.max(Math.abs(M[i0+i].dif),Math.abs(M[i0+i].dea),Math.abs(M[i0+i].hist))))*1.1;
+  const MY=v=>MX.y+MX.h/2-(v/mAbs)*(MX.h/2);
+  const dec=curSym==="DOGEUSDT"?5:curSym==="BTCUSDT"?0:2;
+  let s='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#0e1626" rx="10"/>';
+
+  // 网格+价格刻度
+  for(let g=0;g<=4;g++){const p=(pMin-pPad)+((pMax+pPad)-(pMin-pPad))*g/4;const y=Y(p);
+    s+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#1b2740" stroke-width="1"/>';
+    s+='<text x="'+(W-R+6)+'" y="'+(y+4)+'" fill="#66748f" font-size="11">'+F(p,dec)+'</text>'}
+  // 时间刻度
+  for(let i=i0+((i0%10));i<K.length;i+=10){
+    s+='<text x="'+X(i)+'" y="'+(AX+16)+'" fill="#66748f" font-size="10" text-anchor="middle">'+fmtT(K[i].t,curPer)+'</text>'}
+
+  // 中枢
+  if(ZS&&ZS.x2>=i0){
+    const x1=Math.max(L,X(ZS.x1)-plotW/n/2),x2=Math.min(W-R,X(ZS.x2)+plotW/n/2);
+    s+='<rect x="'+x1+'" y="'+Y(ZS.zg)+'" width="'+(x2-x1)+'" height="'+(Y(ZS.zd)-Y(ZS.zg))+'" fill="rgba(240,185,11,.07)" stroke="#f0b90b" stroke-dasharray="5 4" stroke-width="1" opacity=".8"/>';
+    s+='<text x="'+(x1+4)+'" y="'+(Y(ZS.zg)-4)+'" fill="#f0b90b" font-size="11">中枢 '+F(ZS.zd,dec)+' ~ '+F(ZS.zg,dec)+'</text>';
+  }
+  // 前高对照线
+  if(j){
+    const lines=[{p:j.topA.p,d:j.difTopA,lab:"前高A"},j.topB?{p:j.topB.p,d:j.difTopB,lab:"更前高B"}:null].filter(Boolean);
+    lines.forEach((o,q)=>{
+      const y=Y(o.p);if(y<PX.y||y>PX.y+PX.h)return;
+      s+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#f6465d" stroke-width="1" stroke-dasharray="7 5" opacity=".75"/>';
+      s+='<text x="'+(L+4+q*110)+'" y="'+(y-5)+'" fill="#f6465d" font-size="11">'+o.lab+' '+F(o.p,dec)+' · DIF '+F(o.d,1)+'</text>';
+    });
+    // 当前段下划线
+    if(j.segStart.i>=i0){
+      s+='<line x1="'+X(j.segStart.i)+'" y1="'+(VX.y+VX.h+8)+'" x2="'+X(K.length-1)+'" y2="'+(VX.y+VX.h+8)+'" stroke="#2ebd85" stroke-width="2"/>';
+      s+='<text x="'+X(j.segStart.i)+'" y="'+(VX.y+VX.h+22)+'" fill="#2ebd85" font-size="10">▲ 当前段（起点 '+F(j.segStart.p,dec)+'）</text>';
+    }
+  }
+  // K线+量
+  for(let i=i0;i<K.length;i++){const k=K[i],x=X(i),up=k.c>=k.o,col=up?"#2ebd85":"#f6465d";
+    s+='<line x1="'+x+'" y1="'+Y(k.h)+'" x2="'+x+'" y2="'+Y(k.l)+'" stroke="'+col+'" stroke-width="1"/>';
+    const y1=Y(Math.max(k.o,k.c)),y2=Y(Math.min(k.o,k.c));
+    s+='<rect x="'+(x-bw/2)+'" y="'+y1+'" width="'+bw+'" height="'+Math.max(1,y2-y1)+'" fill="'+col+'"/>';
+    s+='<rect x="'+(x-bw/2)+'" y="'+VY(k.v)+'" width="'+bw+'" height="'+(VX.y+VX.h-VY(k.v))+'" fill="'+col+'" opacity=".55"/>';
+  }
+  // MACD
+  s+='<line x1="'+L+'" y1="'+MY(0)+'" x2="'+(W-R)+'" y2="'+MY(0)+'" stroke="#33445f" stroke-width="1"/>';
+  s+='<text x="'+(W-R+6)+'" y="'+(MY(0)+4)+'" fill="#66748f" font-size="11">0</text>';
+  s+='<text x="'+L+'" y="'+(MX.y-4)+'" fill="#8ea0bd" font-size="11">MACD(12,26,9)</text>';
+  for(let i=i0;i<K.length;i++){const x=X(i),m=M[i],h=m.hist;
+    const y1=MY(Math.max(h,0)),y2=MY(Math.min(h,0));
+    s+='<rect x="'+(x-bw/2)+'" y="'+y1+'" width="'+bw+'" height="'+Math.max(1,y2-y1)+'" fill="'+(h>=0?"#f6465d":"#2ebd85")+'" opacity=".8"/>'}
+  let pd="",pe="";
+  for(let i=i0;i<K.length;i++){const x=X(i);pd+=F(x,1)+","+F(MY(M[i].dif),1)+" ";pe+=F(x,1)+","+F(MY(M[i].dea),1)+" "}
+  s+='<polyline points="'+pd+'" fill="none" stroke="#e8e8e8" stroke-width="1.5"/>';
+  s+='<polyline points="'+pe+'" fill="none" stroke="#f0b90b" stroke-width="1.5"/>';
+  const lm=M[K.length-1];
+  s+='<text x="'+(W-R+6)+'" y="'+MY(lm.dif)+'" fill="#e8e8e8" font-size="11">DIF '+F(lm.dif,1)+'</text>';
+  s+='<text x="'+(W-R+6)+'" y="'+MY(lm.dea)+'" fill="#f0b90b" font-size="11">DEA '+F(lm.dea,1)+'</text>';
+  // 分型标记
+  FR.filter(f=>f.i>=i0).forEach(f=>{const x=X(f.i);
+    if(f.type==="top")s+='<text x="'+x+'" y="'+(Y(f.p)-8)+'" fill="#f6465d" font-size="11" text-anchor="middle">▼'+F(f.p,dec)+'</text>';
+    else s+='<text x="'+x+'" y="'+(Y(f.p)+16)+'" fill="#2ebd85" font-size="11" text-anchor="middle">▲'+F(f.p,dec)+'</text>'});
+  // 选中对比标记
+  [selA,selB].forEach((idx,q)=>{if(idx>=i0&&idx<K.length){
+    const k=K[idx],x=X(idx);
+    s+='<circle cx="'+x+'" cy="'+Y(k.c)+'" r="9" fill="none" stroke="#f0b90b" stroke-width="2"/>';
+    s+='<text x="'+x+'" y="'+(Y(k.c)-14)+'" fill="#f0b90b" font-size="12" text-anchor="middle" font-weight="bold">'+(q===0?"A":"B")+'</text>'}});
+  s+='<rect id="cross" x="-99" y="'+PX.y+'" width="1" height="'+(AX-PX.y)+'" stroke="#66748f" stroke-width="1" opacity="0"/>';
+  s+='<line id="crossH" x1="8" y1="-99" x2="1152" y2="-99" stroke="#66748f" stroke-width="1" opacity="0"/>';
+  $("chart").innerHTML=s;
+  window._geo={i0,n,plotW,L,W,R,dec};
+}
+
+/* ---------- 背驰判定面板 ---------- */
+function renderJudge(j){
+  const el=$("judgeBody");
+  if(!j){el.innerHTML='<div class="jrow">分型结构不足，等待更多K线…</div>';return}
+  const newHigh=j.segHigh>j.topA.p;
+  const gapP=(j.segHigh/j.topA.p-1)*100;
+  const difLower=j.difCur<j.difTopA;
+  const areaValid=j.areaPrev>0&&j.areaCur>0;   // 两段都有红柱才可比（都在零轴下方时不可比）
+  const areaRatio=j.areaPrev?j.areaCur/j.areaPrev:0;
+  const volRatio=j.volPrev?j.volCur/j.volPrev:0;
+  const dec=curSym==="DOGEUSDT"?5:curSym==="BTCUSDT"?0:2;
+  const row=(name,val,st)=>'<div class="jrow"><span>'+name+'</span><span class="v">'+val+' <b class="'+st.c+'">'+st.t+'</b></span></div>';
+  let h="";
+  h+=row("① 本段高点 vs 前高A",F(j.segHigh,dec)+" / "+F(j.topA.p,dec)+"（"+(gapP>=0?"+":"")+F(gapP)+"%）",newHigh?{c:"no",t:"已新高"}:{c:"ok",t:"未新高"});
+  h+=row("② 本段高点DIF vs 前高A时DIF",F(j.difCur,1)+" / "+F(j.difTopA,1),difLower?{c:"no",t:"走低"}:{c:"ok",t:"未走低"});
+  h+=row("③ 红柱面积 本段/前段",areaValid?F(j.areaCur,0)+" / "+F(j.areaPrev,0)+"（"+F(areaRatio*100,0)+"%）":F(j.areaCur,0)+" / "+F(j.areaPrev,0)+"（零轴下方，无红柱可比）",!areaValid?{c:"mid",t:"不可比"}:areaRatio<0.85?{c:"no",t:"萎缩"}:{c:"ok",t:"仍强"});
+  h+=row("④ 段均量 本段/前段",F(j.volCur,0)+" / "+F(j.volPrev,0)+"（"+F(volRatio*100,0)+"%）",volRatio<0.85?{c:"no",t:"萎缩"}:{c:"ok",t:"放量"});
+  let v,cls;
+  if(!newHigh){
+    cls="g";v="✅ <b>背驰不成立</b>——价格未过前高 "+F(j.topA.p,dec)+"，当前这段只是反弹/修复。黄白线下降属于<b>指标修复</b>（DIF 向零轴回归），不是背离信号。";
+    if(!difLower)v+="<br>💡 且当前 DIF("+F(j.difCur,1)+") 高于前高A时的 DIF("+F(j.difTopA,1)+")，连「指标走低」这半个条件都没有——只是从更高峰值回落而已。";
+    v+="<br>盯两个位置：反抽<b>不过前高</b>→顶分型→演化B（回踩中枢等二买）；<b>放量过前高</b>→再看②③④是否同时恶化。";
+  }else if(difLower&&areaValid&&areaRatio<0.85&&volRatio<0.85){
+    cls="r";v="🚨 <b>背驰四条件全部满足：一类卖点（一卖）预警</b>——多单落袋/离场，等顶分型确认，不急反手做空。";
+  }else if(difLower&&!areaValid){
+    cls="y";v="⚠️ <b>创新高 + DIF走低，但两段 MACD 都在零轴下方（无红柱可比）</b>——只算<b>盘整背驰雏形</b>，力度有限。常见于大跌/深调后的弱反弹，等 DIF 回抽零轴上方、红柱放出后再定性。";
+  }else{
+    cls="y";v="⚠️ <b>已创新高但动能未同步衰竭</b>（四条件未同时满足）——暂不判背驰，趋势仍在，持仓者移动止损护利润。";
+  }
+  h+='<div class="verdict '+cls+'">'+v+'</div>';
+  el.innerHTML=h;
+}
+
+/* ---------- 交互：悬浮 + 点击对比 ---------- */
+const svgEl=$("chart"),tip=$("tip");
+svgEl.addEventListener("mousemove",e=>{
+  const g=window._geo;if(!g)return;
+  const r=svgEl.getBoundingClientRect();
+  const fx=(e.clientX-r.left)/r.width*1160;
+  const idx=g.i0+Math.floor((fx-g.L)/(g.plotW/g.n));
+  if(idx<g.i0||idx>=K.length){tip.style.display="none";return}
+  const k=K[idx],m=M[idx],up=k.c>=k.o;
+  const dec=curSym==="DOGEUSDT"?5:curSym==="BTCUSDT"?0:2;
+  const cross=svgEl.querySelector("#cross"),crossH=svgEl.querySelector("#crossH");
+  if(cross){cross.setAttribute("x",(g.L+(idx-g.i0+0.5)*g.plotW/g.n).toFixed(1));cross.setAttribute("opacity",".6")}
+  if(crossH){crossH.setAttribute("y1",((e.clientY-r.top)/r.height*740).toFixed(1));crossH.setAttribute("y2",((e.clientY-r.top)/r.height*740).toFixed(1));crossH.setAttribute("opacity",".5")}
+  tip.innerHTML="<b>"+fmtT(k.t,curPer)+"</b><br>O "+F(k.o,dec)+" H "+F(k.h,dec)+"<br>L "+F(k.l,dec)+" C <b class='"+(up?"up":"dn")+"'>"+F(k.c,dec)+"</b><br>量 "+F(k.v,0)+"<br>DIF "+F(m.dif,1)+" DEA "+F(m.dea,1)+"<br>柱 "+F(m.hist,1)+(m.hist>=0?"（多头）":"（空头）");
+  tip.style.display="block";
+  const bx=r.width+20,by=e.clientY-r.top;
+  tip.style.left=Math.min(e.clientX-r.left+14,r.width-170)+"px";
+  tip.style.top=Math.max(4,Math.min(by-40,r.height-140))+"px";
+});
+svgEl.addEventListener("mouseleave",()=>{tip.style.display="none";const c=svgEl.querySelector("#cross"),ch=svgEl.querySelector("#crossH");if(c)c.setAttribute("opacity","0");if(ch)ch.setAttribute("opacity","0")});
+svgEl.addEventListener("click",e=>{
+  const g=window._geo;if(!g)return;
+  const r=svgEl.getBoundingClientRect();
+  const fx=(e.clientX-r.left)/r.width*1160;
+  const idx=g.i0+Math.floor((fx-g.L)/(g.plotW/g.n));
+  if(idx<g.i0||idx>=K.length)return;
+  if(selA<0)selA=idx;else if(selB<0&&idx!==selA)selB=idx;else{selA=idx;selB=-1}
+  drawChart(judge());renderCmp();
+});
+function clearCmp(){selA=-1;selB=-1;$("cmpPanel").style.display="none";drawChart(judge())}
+function renderCmp(){
+  if(selA<0||selB<0){$("cmpPanel").style.display="none";return}
+  $("cmpPanel").style.display="";
+  const a=selA,b=selB,dec=curSym==="DOGEUSDT"?5:curSym==="BTCUSDT"?0:2;
+  const pd=(K[b].h/K[a].h-1)*100, dd=M[b].dif-M[a].dif, vd=(K[b].v/K[a].v-1)*100;
+  let verdict,cls;
+  if(K[b].h>K[a].h&&M[b].dif<M[a].dif){verdict="价格新高 + DIF走低 → 这是<b>背驰的骨架形态</b>（还需③红柱面积萎缩、④缩量同时成立，才升级为一卖信号）";cls="r"}
+  else if(K[b].h<=K[a].h&&M[b].dif<M[a].dif){verdict="价格未新高 + DIF走低 → 只是<b>反弹/指标修复</b>，不构成背驰";cls="g"}
+  else if(K[b].h>K[a].h&&M[b].dif>=M[a].dif){verdict="价格新高 + DIF同步走高 → 动能健康，<b>趋势延续</b>，不是背驰";cls="y"}
+  else{verdict="价格走低 + DIF走高 → 下跌动能衰竭（绿柱背驰雏形），留意底分型/二买机会";cls="y"}
+  $("cmpBody").innerHTML=
+    '<div class="jrow"><span>A '+fmtT(K[a].t,curPer)+'</span><span class="v">高 '+F(K[a].h,dec)+' · DIF '+F(M[a].dif,1)+' · 量 '+F(K[a].v,0)+'</span></div>'
+   +'<div class="jrow"><span>B '+fmtT(K[b].t,curPer)+'</span><span class="v">高 '+F(K[b].h,dec)+' · DIF '+F(M[b].dif,1)+' · 量 '+F(K[b].v,0)+'</span></div>'
+   +'<div class="jrow"><span>B相对A</span><span class="v">价格 '+(pd>=0?"+":"")+F(pd)+'% · DIF '+(dd>=0?"+":"")+F(dd,1)+' · 量 '+(vd>=0?"+":"")+F(vd)+'%</span></div>'
+   +'<div class="verdict '+cls+'">'+verdict+'</div>';
+}
+window.clearCmp=clearCmp;
+
+/* ---------- 控件 ---------- */
+function buildBtns(){
+  $("symBtns").innerHTML=Object.keys(SYMS).map(s=>'<button class="btn'+(s===curSym?" on":"")+'" data-s="'+s+'">'+SYMS[s]+'</button>').join("");
+  $("perBtns").innerHTML=PERS.map(p=>'<button class="btn'+(p===curPer?" on":"")+'" data-p="'+p+'">'+p+'</button>').join("");
+  $("symBtns").querySelectorAll("button").forEach(b=>b.onclick=()=>{curSym=b.dataset.s;selA=-1;selB=-1;buildBtns();load()});
+  $("perBtns").querySelectorAll("button").forEach(b=>b.onclick=()=>{curPer=b.dataset.p;selA=-1;selB=-1;buildBtns();load()});
+}
+function syncAuto(){$("arBtn").textContent="自动刷新："+(autoOn?"开":"关");$("arBtn").classList.toggle("on",autoOn)}
+$("arBtn").onclick=()=>{autoOn=!autoOn;localStorage.setItem("beiChiAuto",autoOn?"on":"off");syncAuto()};
+$("rfBtn").onclick=load;
+setInterval(()=>{if(autoOn&&!document.hidden)load()},60000);
+
+/* ---------- 买点形态 & 入场K线 静态示意图 ---------- */
+function mkChart(w,h,cs,padT,padB){
+  const pT=padT||16,pB=padB||16,n=cs.length;
+  const min=Math.min(...cs.map(c=>c.l)),max=Math.max(...cs.map(c=>c.h));
+  const span=(max-min)||1,step=(w-2*16)/n,bw=Math.min(14,step*0.6);
+  const Y=v=>pT+((max-v)/span)*(h-pT-pB);
+  const X=i=>16+step*(i+0.5);
+  let s="";
+  cs.forEach((c,i)=>{const x=X(i),up=c.c>=c.o,col=up?"#2ebd85":"#f6465d";
+    s+='<line x1="'+x+'" y1="'+Y(c.h)+'" x2="'+x+'" y2="'+Y(c.l)+'" stroke="'+col+'" stroke-width="1.2"/>';
+    s+='<rect x="'+(x-bw/2)+'" y="'+Y(Math.max(c.o,c.c))+'" width="'+bw+'" height="'+Math.max(2,Y(Math.min(c.o,c.c))-Y(Math.max(c.o,c.c)))+'" fill="'+col+'" rx="1"/>';});
+  return{s,Y,X,step,bw};
+}
+function pcard(title,cls,svg,win,pts){
+  return '<div class="pcard"><h4><span class="pbadge '+cls.c+'">'+cls.t+'</span>'+title+'</h4>'
+   +(win?'<div class="pwin">'+win+'</div>':"")
+   +svg+'<ul class="ptips">'+pts.map(p=>'<li>'+p+'</li>').join("")+'</ul></div>';
+}
+const dline=(y,x1,x2,col,lab,labY)=>'<line x1="'+x1+'" y1="'+y+'" x2="'+x2+'" y2="'+y+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="6 4" opacity=".85"/>'
+ +(lab?'<text x="'+x1+'" y="'+(labY||y-4)+'" fill="'+col+'" font-size="10">'+lab+'</text>':"");
+const arrow=(x,y,txt,col)=>'<text x="'+x+'" y="'+y+'" fill="'+col+'" font-size="11" font-weight="bold" text-anchor="middle">▲</text><text x="'+x+'" y="'+(y+13)+'" fill="'+col+'" font-size="9.5" text-anchor="middle">'+txt+'</text>';
+
+function buildPatterns(){
+  /* --- 三买 --- */
+  {const cs=[{o:100,c:112,h:114,l:98},{o:112,c:124,h:127,l:110},{o:124,c:140,h:146,l:126},{o:140,c:130,h:142,l:128},{o:130,c:148,h:150,l:128},{o:148,c:134,h:150,l:132},{o:134,c:150,h:154,l:132},{o:150,c:138,h:152,l:136},{o:138,c:168,h:172,l:137},{o:168,c:158,h:170,l:155},{o:158,c:156,h:162,l:153},{o:156,c:172,h:178,l:154}];
+  const g=mkChart(340,200,cs);
+  const x1=g.X(2)-g.step/2,x2=g.X(7)+g.step/2;
+  let ov='<text x="18" y="24" fill="#8ea0bd" font-size="10">1h趋势 ↑</text>';
+  ov+='<rect x="'+x1+'" y="'+g.Y(152)+'" width="'+(x2-x1)+'" height="'+(g.Y(128)-g.Y(152))+'" fill="rgba(240,185,11,.08)" stroke="#f0b90b" stroke-dasharray="4 3"/>';
+  ov+='<text x="'+x1+'" y="'+(g.Y(152)-4)+'" fill="#f0b90b" font-size="10">中枢</text>';
+  ov+='<text x="'+g.X(8)+'" y="'+(g.Y(172)-6)+'" fill="#f0b90b" font-size="10" text-anchor="middle">突破↑</text>';
+  ov+=dline(g.Y(150),g.X(9)-g.step,g.X(11)+g.step/2,"#f6465d","止损：回踩低点下方");
+  ov+=dline(g.Y(181),16,324,"#2ebd85","目标：前高 / 中枢高度向上测量");
+  ov+=arrow(g.X(10.5),g.Y(153)+16,"买入·底分型确认","#2ebd85");
+  $("buyCards").innerHTML+=pcard("三买（中枢突破回踩）",{c:"g",t:"胜率最高"},
+    '<svg viewBox="0 0 340 200" style="width:100%;height:auto;background:#0a101c;border-radius:8px">'+g.s+ov+'</svg>',
+    "胜率 ★★★ ｜ 止损最小 → 正常仓位 ｜ 前提：大周期同向（周期联立）",
+    ["价格突破中枢上沿后<b>回踩不回中枢</b>：两次确认+位置明确","入场：回踩处 15m 底分型收阳（或破信号K高点）","止损：回踩低点下方——错了马上知道，亏损最小","目标：前高，或中枢高度(ZG−ZD)向上测量"]);}
+
+  /* --- 二买 --- */
+  {const cs=[{o:160,c:140,h:163,l:138},{o:140,c:118,h:142,l:114},{o:118,c:116,h:124,l:95},{o:116,c:136,h:140,l:113},{o:136,c:147,h:150,l:134},{o:147,c:126,h:149,l:123},{o:126,c:106,h:128,l:102},{o:106,c:116,h:120,l:103},{o:116,c:138,h:141,l:114}];
+  const g=mkChart(340,200,cs,16,42);
+  let ov=dline(g.Y(95),16,324,"#66748f","L1 前低");
+  ov+=dline(g.Y(102),16,324,"#2ebd85","L2 低点抬高 ✓",g.Y(102)-4);
+  ov+=arrow(g.X(7),g.Y(102)+16,"买入","#2ebd85");
+  ov+='<rect x="'+(g.X(0)-8)+'" y="168" width="'+(g.step*2.6)+'" height="16" fill="#2ebd85" opacity=".4" rx="2"/>';
+  ov+='<text x="'+(g.X(0)-8)+'" y="196" fill="#8ea0bd" font-size="9">回调① 绿柱大</text>';
+  ov+='<rect x="'+(g.X(5)-8)+'" y="176" width="'+(g.step*2.4)+'" height="8" fill="#2ebd85" opacity=".4" rx="2"/>';
+  ov+='<text x="'+(g.X(5)-8)+'" y="196" fill="#8ea0bd" font-size="9">② 萎缩＝次级别背驰</text>';
+  $("buyCards").innerHTML+=pcard("二买（低点抬高+次级别背驰）",{c:"y",t:"最常用"},
+    '<svg viewBox="0 0 340 200" style="width:100%;height:auto;background:#0a101c;border-radius:8px">'+g.s+ov+'</svg>',
+    "胜率 ★★☆ ｜ 盈亏比均衡 ｜ 止损小",
+    ["一买反弹后回踩：<b>低点不破前低</b>（哪怕只高一点）+ 15m 绿柱面积萎缩","低点抬高＝有买盘愿意在更高位置接货，这是胜率的核心来源","入场：二买处底分型收阳确认","止损：L1（一买低点）下方"]);}
+
+  /* --- 一买·二次背驰 --- */
+  {const cs=[{o:170,c:132,h:173,l:129},{o:132,c:100,h:135,l:97},{o:100,c:84,h:103,l:70},{o:84,c:102,h:106,l:82},{o:102,c:80,h:105,l:77},{o:80,c:62,h:83,l:59},{o:62,c:60,h:66,l:55},{o:60,c:76,h:79,l:58},{o:76,c:90,h:93,l:74}];
+  const g=mkChart(340,200,cs,16,42);
+  let ov=dline(g.Y(70),16,324,"#66748f","L1");
+  ov+='<text x="'+g.X(1)+'" y="'+(g.Y(70)+24)+'" fill="#8ea0bd" font-size="9">第一次背驰(别急)</text>';
+  ov+='<text x="'+(g.X(6))+'" y="'+(g.Y(55)+30)+'" fill="#f0b90b" font-size="9.5" text-anchor="middle">二次背驰：价新低</text>';
+  ov+='<text x="'+(g.X(6))+'" y="'+(g.Y(55)+42)+'" fill="#f0b90b" font-size="9.5" text-anchor="middle">动能未新低</text>';
+  ov+=arrow(g.X(7.5),g.Y(58)+18,"5m底分型确认入场","#2ebd85");
+  ov+=dline(g.Y(52),g.X(6),324,"#f6465d","止损：新低下方");
+  ov+='<rect x="'+(g.X(0)-8)+'" y="168" width="'+(g.step*2.6)+'" height="16" fill="#2ebd85" opacity=".4" rx="2"/>';
+  ov+='<text x="'+(g.X(0)-8)+'" y="196" fill="#8ea0bd" font-size="9">绿柱面积① 大</text>';
+  ov+='<rect x="'+(g.X(4)-8)+'" y="176" width="'+(g.step*2.4)+'" height="8" fill="#2ebd85" opacity=".4" rx="2"/>';
+  ov+='<text x="'+(g.X(4)-8)+'" y="196" fill="#8ea0bd" font-size="9">② 更小（弹簧压得更死）</text>';
+  $("buyCards").innerHTML+=pcard("一买（趋势背驰抄底）",{c:"r",t:"盈亏比最大"},
+    '<svg viewBox="0 0 340 200" style="width:100%;height:auto;background:#0a101c;border-radius:8px">'+g.s+ov+'</svg>',
+    "胜率 ★☆☆ ｜ 止损大 → 轻仓（1/2 甚至 1/3）",
+    ["第一次背驰<b>别进</b>——常见「背了又背」，死在黎明前的都是这里","等<b>二次背驰</b>：价格再创新低，但绿柱面积/DIF 比第一次背驰时更高","再等次级别（如5m）底分型确认才入场＝<b>区间套</b>：大级别定方向、小级别定入场","抄到就是最低点，盈亏比最大；用轻仓+宽止损换生存率"]);}
+
+  /* --- 入场K线 --- */
+  const K=[];
+  function kcard(title,cls,cs,ov,pts){const g=mkChart(300,150,cs);
+    K.push(pcard(title,cls,'<svg viewBox="0 0 300 150" style="width:100%;height:auto;background:#0a101c;border-radius:8px">'+g.s+ov(g)+'</svg>',null,pts))}
+  kcard("锤子线 / Pin bar",{c:"g",t:"转折型"},
+    [{o:80,c:72,h:82,l:62},{o:72,c:62,h:74,l:58},{o:62,c:68,h:70,l:30},{o:68,c:84,h:88,l:66}],
+    g=>dline(g.Y(70),g.X(2)-g.step,g.X(3)+g.step/2,"#2ebd85","破高买入")+arrow(g.X(3),g.Y(88)+14,"确认","#2ebd85"),
+    ["长下影≥实体2倍，出现在<b>支撑/中枢下沿</b>","下影=下探被拒绝；收盘确认后挂破锤子高点买入","止损：影线下方"]);
+  kcard("看涨吞没（阳包阴）",{c:"g",t:"转折型"},
+    [{o:95,c:78,h:97,l:76},{o:78,c:60,h:80,l:57},{o:57,c:82,h:85,l:55},{o:82,c:94,h:97,l:80}],
+    g=>dline(g.Y(78),g.X(1)-g.step,g.X(3)+g.step/2,"#f0b90b","收复前阴开盘价"),
+    ["阳线实体<b>完全包住</b>前阴线实体，力度强于锤子","收盘即确认，不需要等破高（激进者直接进）","止损：吞没K低点下方"]);
+  kcard("启明星",{c:"g",t:"转折型"},
+    [{o:100,c:68,h:103,l:65},{o:66,c:64,h:69,l:60},{o:64,c:92,h:96,l:62},{o:92,c:104,h:107,l:90}],
+    g=>dline(g.Y(84),g.X(0)-g.step,g.X(3)+g.step/2,"#2ebd85","大阳收复大阴实体过半"),
+    ["三根结构：大阴 → 星线（缩量停顿）→ 大阳收复过半","底部可靠度高的转折形态，常出现在一买位置","止损：星线低点下方"]);
+  kcard("红三兵",{c:"y",t:"进攻型"},
+    [{o:36,c:56,h:59,l:34},{o:54,c:72,h:75,l:52},{o:70,c:88,h:91,l:68}],
+    g=>'',
+    ["三根实体相近的阳线依次抬高＝趋势延续","用于<b>顺势加仓/突破后跟进</b>，回调结束出现=二买确认","别在逆势位置当抄底信号用——那是半山腰"]);
+  kcard("两阳夹一阴",{c:"y",t:"进攻型"},
+    [{o:36,c:58,h:61,l:34},{o:56,c:46,h:58,l:43},{o:48,c:70,h:74,l:46}],
+    g=>dline(g.Y(50),g.X(0)-g.step,g.X(2)+g.step/2,"#66748f","阴线回踩不破一阳实体")+arrow(g.X(2),g.Y(74)+14,"进攻确认","#f0b90b"),
+    ["中间阴线缩量回踩、不破第一阳实体＝洗盘","第三阳突破＝进攻确认","15m <b>二买位置</b>高频形态，胜率好"]);
+  kcard("光头大阳突破",{c:"y",t:"进攻型"},
+    [{o:62,c:60,h:65,l:58},{o:60,c:63,h:66,l:59},{o:63,c:61,h:67,l:59},{o:61,c:92,h:95,l:60}],
+    g=>dline(g.Y(67),16,284,"#f0b90b","中枢上沿/前高"),
+    ["收盘价≈最高价（光头）＝多方完全控盘","突破关键位的<b>入场K</b>：常是三买的启动K线","止损：该K低点；若已拉出长影/大段涨幅就别追"]);
+  kcard("十字星",{c:"r",t:"警示型"},
+    [{o:36,c:52,h:55,l:34},{o:52,c:68,h:71,l:50},{o:68,c:69,h:76,l:61},{o:69,c:58,h:71,l:55}],
+    g=>'<circle cx="'+g.X(2)+'" cy="'+g.Y(68)+'" r="14" fill="none" stroke="#f6465d" stroke-dasharray="3 2"/>'+'<text x="'+g.X(2)+'" y="'+(g.Y(76)+14)+'" fill="#f6465d" font-size="9.5" text-anchor="middle">开收同价</text>',
+    ["多空力量持平、方向不明——<b>等待，不入场</b>","高位/中枢内部出现尤其要警惕（变盘窗口）","次日破哪边跟哪边（配合分型确认）"]);
+  kcard("射击之星（长上影）",{c:"r",t:"警示型"},
+    [{o:38,c:54,h:57,l:36},{o:54,c:68,h:71,l:52},{o:68,c:70,h:96,l:66},{o:70,c:58,h:72,l:55}],
+    g=>'<text x="'+g.X(2)+'" y="'+(g.Y(96)-4)+'" fill="#f6465d" font-size="9.5" text-anchor="middle">长上影＝上方抛压重</text>',
+    ["上影≥实体2倍：冲高被打回，<b>别追多</b>","常出现在背驰段末端（上冲乏力）","持多单者应上移止损"]);
+  kcard("大阴吞没",{c:"r",t:"警示型"},
+    [{o:44,c:70,h:73,l:42},{o:70,c:40,h:74,l:38}],
+    g=>'<text x="'+g.X(1)+'" y="'+(g.Y(74)-6)+'" fill="#f6465d" font-size="9.5" text-anchor="middle">阴包阳＝转弱</text>',
+    ["阴线包住前阳实体，出现在高位＝<b>多单离场信号</b>","与看涨吞没互为镜像；做空仍需顺大级别趋势","配合顶分型确认使用"]);
+  kcard("信号K → 入场K（挂单法）",{c:"b",t:"概念"},
+    [{o:70,c:58,h:72,l:55},{o:58,c:62,h:64,l:40},{o:62,c:80,h:84,l:60}],
+    g=>dline(g.Y(64.5),16,284,"#2ebd85","买入止损单：挂在信号K高点上方")
+      +dline(g.Y(37),16,284,"#f6465d","止损单：信号K低点下方",g.Y(37)+12)
+      +'<text x="'+g.X(1)+'" y="142" fill="#8ea0bd" font-size="9.5" text-anchor="middle">信号K（锤子）</text>'
+      +'<text x="'+g.X(2)+'" y="142" fill="#8ea0bd" font-size="9.5" text-anchor="middle">入场K（触发挂单）</text>',
+    ["<b>信号K</b>＝底分型第三根K线：反转的证据","<b>入场K</b>＝触发你挂单的那根：确认后的跟随","先有信号、再挂单——<b>不预测，只跟随</b>","这就是缠论「分型确认」的挂单化表达，止损天然明确"]);
+  $("kCards").innerHTML=K.join("");
+}
+
+buildBtns();syncAuto();load();buildPatterns();
+</script>
+</body>
+</html>
