@@ -522,7 +522,10 @@ async function load(){
        lines:[{p:4701,col:"#f6465d",lab:"4,701"},{p:4578,col:"#2ebd85",lab:"4,578 双底（破=看4,540→4,500）"},{p:4607,col:"#58a6ff",lab:"4,607 ZD",side:"r"}],
        macd:mX4,struct:{bi:biX4,segs:segsX4,zs:buildZS(biX4),lastPrice:kX4[kX4.length-1].c}});
     // ===== 一卖→二卖路径图 =====
-    draw("chartSell2",kS,[
+    const kS2=await fetchK2("30m",T("2026-08-28T02:00:00"),FREEZE);
+    const aS2=kS2.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const mS2=calcMACD(aS2);
+    draw("chartSell2",kS2,[
       {t:T("2026-08-28T09:30:00"),p:81500,col:"#f6465d",txt:"①一卖81,500|顶背驰✓"},
       {t:T("2026-08-28T10:30:00"),p:79659,col:"#2ebd85",txt:"②底79,659|延伸中",below:true},
       {t:T("2026-08-28T08:00:00"),p:80431,col:"#f0b90b",txt:"③反弹受阻区|80,400~81,271|二卖位置"}
@@ -531,7 +534,7 @@ async function load(){
        lines:[{p:81500,col:"#f6465d",lab:"81,500 一卖/铁止损",w:1.8},
               {p:79659,col:"#2ebd85",lab:"79,659 底（延伸中）"},
               {p:77600,col:"#8b949e",lab:"77,600 目标",side:"r"}],
-       macd:mS});
+       macd:mS2});
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @80,487 · 冻结于 8/28";
   }catch(e){document.getElementById("verdict").innerHTML="加载失败："+e.message;document.getElementById("verdict").className="verdict r"}
