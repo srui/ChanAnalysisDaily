@@ -192,6 +192,15 @@ footer{text-align:center;color:var(--sub);font-size:11px;margin-top:30px;padding
 <div class="bei"><b>例3 · 下跌同样终完美：</b>8/2–8/12 ETH 的下跌段最终在 1,862 见底——不是有人预测到的，是下跌走势自己走完了（底背驰+底分型确认）。「不预测，等走势把它自己走完」。</div>
 <div id="zwExamples" style="margin-top:10px"><div style="font-size:12px;color:var(--sub)">⏳ 正在生成真实K线图例…</div></div>
 </div>
+<div class="bc-example-box" style="border-color:rgba(232,179,57,.4)">
+<div class="bel">📊 实战案例 · BTC 8/24–8/26 · 15分钟「上涨走势」终完美（两个依次上移的中枢 + 末段背驰）</div>
+<div class="bei"><b>① 走势识别：</b>8/24 起 15m 走势依次走出 <b>中枢①（76,832~77,790）→ 中枢②（78,580~79,013）</b>——两中枢不重叠、依次上移 = <b>15分钟级别上涨趋势</b>（不是盘整）。结构记法：a（进入段）+ 中枢① + b（连接段）+ 中枢② + c（末段）。</div>
+<div class="bei"><b>② 完成的证据：</b>c 段 78,520→81,271（8/25 10:15）创新高，但 MACD 红柱面积 <b>1,804→765（只剩 42%）</b>、DIF <b>522→352</b> 走低——<b>双条件顶背驰，一类卖点</b>。上涨走势在此"完美"。</div>
+<div class="bei"><b>③ 完成的验证：</b>其后走势跌回 77,808（8/26 05:00）、77,600（8/26 23:00）——把 b、c 两段涨幅<b>全部回吐</b>，并在顶下方走出顶后中枢③（78,827~79,461），上涨转化为下跌。没有人预测到 81,271——是走势自己走完的。</div>
+<div class="bei"><b>④ 级别联立（1h 对照）：</b>同一段行情在 1h 上只是 <b>76,649→81,271 的一段上涨（两笔）</b>，1h 连自己的中枢都没形成——<b>大级别一笔＝小级别完整走势</b>；15m 终完美之时，就是 1h 这段一笔完成之时。这就是区间套的根基。</div>
+<div class="bei"><b>⑤ 两个防误读注脚：</b>(a) 8/26 的底 77,600 <b>不是</b> 15m 背驰底（绿柱面积 99%、DIF 创新低）——它的反转由更大级别结构驱动，转折不必来自本级别背驰；(b) 三天后 81,500（8/28）的新高背驰发生在 <b>4h</b>（DIF 减半）而非 15m——背驰要看驱动级别的证据，各自承诺各自级别的回调。</div>
+<div id="zwBtcCase" style="margin-top:10px"><div style="font-size:12px;color:var(--sub)">⏳ 正在生成案例图（BTC 15m 主图 + 1h 对照）…</div></div>
+</div>
 <div class="info-row">
 <div class="info-box meaning"><div class="il">🎯 实战意义</div><div class="iv">①等待的底气：任何极端行情终会完美，所以永远不追 ②完成的判断标准就是全部技术：背驰/三买卖点/中枢破坏 ③级别自相似：30m 完美组成 4h 完美，环环相扣</div></div>
 <div class="info-box tool"><div class="il">🛠 工具应用</div><div class="iv"><a href="每日缠论_20260828.html" style="color:var(--gold)">末期检查表</a>=逐条检测"上涨是否正在走向完成"；<a href="每日缠论_20260828.html" style="color:var(--gold)">位置分析</a>的4h动能对比=完成进度的温度计</div></div>
@@ -660,6 +669,130 @@ async function loadTjfExamples(){
   }catch(e){box.innerHTML='<div style="color:#f85149;font-size:12.5px;padding:10px">案例加载失败：'+e.message+"</div>"}
 }
 loadTjfExamples();
+</script>
+<script>
+"use strict";
+/* ===== 修复: _zwChart 定义(此前缺失导致上方ETH图例一直加载失败) ===== */
+function _zwChart(kls,bi,w0,w1,o){
+  o=o||{};
+  const n=w1-w0+1,W=880,H=310,pad=10,ph=H-26;
+  const seg=kls.slice(w0,w1+1);
+  const lo=Math.min(...seg.map(k=>k[3])),hi=Math.max(...seg.map(k=>k[2]));
+  const Y=p=>pad+((hi-p)/((hi-lo)||1))*(ph-2*pad);
+  const X=i=>pad+((i-w0)/((w1-w0)||1))*(W-2*pad);
+  const bw=Math.max(1.2,(W-2*pad)/n*0.6);
+  let s='<svg viewBox="0 0 '+W+" "+H+'" style="width:100%;height:auto;background:#0a0e14;border-radius:8px">';
+  seg.forEach((k,q)=>{const x=X(w0+q),up=k[4]>=k[1],col=up?"#26a69a":"#ef5350";
+    s+='<line x1="'+x.toFixed(1)+'" y1="'+Y(k[2]).toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+Y(k[3]).toFixed(1)+'" stroke="'+col+'" stroke-width="0.8"/>';
+    s+='<rect x="'+(x-bw/2).toFixed(1)+'" y="'+Y(Math.max(k[1],k[4])).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.8,Math.abs(Y(k[4])-Y(k[1]))).toFixed(1)+'" fill="'+col+'"/>';});
+  const pts=bi.filter(p=>p.i>=w0&&p.i<=w1);
+  if(pts.length>1)s+='<polyline points="'+pts.map(p=>X(p.i).toFixed(1)+","+Y(p.price).toFixed(1)).join(" ")+'" fill="none" stroke="#58a6ff" stroke-width="1.3" opacity="0.8"/>';
+  if(o.zs){const z=o.zs,x1=X(z.startI),x2=X(Math.min(z.endI,w1));
+    s+='<rect x="'+x1.toFixed(1)+'" y="'+Y(z.ZG).toFixed(1)+'" width="'+(x2-x1).toFixed(1)+'" height="'+(Y(z.ZD)-Y(z.ZG)).toFixed(1)+'" fill="#bc8cff" opacity="0.15" stroke="#bc8cff" stroke-width="1" stroke-dasharray="4,3" rx="3"/>';}
+  if(o.seg){const g=o.seg;
+    s+='<line x1="'+X(g.from.i).toFixed(1)+'" y1="'+Y(g.from.price).toFixed(1)+'" x2="'+X(g.to.i).toFixed(1)+'" y2="'+Y(g.to.price).toFixed(1)+'" stroke="#f6465d" stroke-width="3" opacity="0.75" stroke-linecap="round"/>';}
+  (o.marks||[]).forEach(m=>{const x=X(m.i),y=Y(m.p);
+    s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="none" stroke="'+m.col+'" stroke-width="2"/>';
+    s+='<text x="'+x.toFixed(1)+'" y="'+(m.below?y+22:y-13).toFixed(1)+'" fill="'+m.col+'" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0e14;stroke-width:3px">'+m.txt+"</text>";});
+  s+='<text x="'+pad+'" y="'+(H-7)+'" font-size="11">'+(o.cap||"")+"</text>";
+  s+="</svg>";
+  return s;
+}
+/* ===== 走势终完美·实战案例: BTC 8/24-8/26 15m 双中枢上涨趋势+末段背驰(窗口冻结) ===== */
+function _mEma2(a,n){const k=2/(n+1);let e=a[0];return a.map(v=>e=v*k+e*(1-k))}
+function _macd2(arr){const c=arr.map(k=>k[4]);const d12=_mEma2(c,12),d26=_mEma2(c,26);const dif=d12.map((v,i)=>v-d26[i]);const dea=_mEma2(dif,9);return{dif,dea,hist:dif.map((v,i)=>v-dea[i])}}
+async function loadZwBtcCase(){
+  const box=document.getElementById("zwBtcCase");
+  try{
+    const ST=new Date("2026-08-23T12:00:00").getTime(),EN=new Date("2026-08-27T00:30:00").getTime();
+    const API="https://fapi.binance.com/fapi/v1";
+    const [raw15,raw1]=await Promise.all([
+      fetch(`${API}/klines?symbol=BTCUSDT&interval=15m&startTime=${ST}&endTime=${EN}&limit=500`).then(r=>r.json()),
+      fetch(`${API}/klines?symbol=BTCUSDT&interval=1h&startTime=${ST}&endTime=${EN}&limit=100`).then(r=>r.json())
+    ]);
+    const kls=raw15.map(k=>[+k[0],+k[1],+k[2],+k[3],+k[4],+k[5]]);
+    const k1=raw1.map(k=>[+k[0],+k[1],+k[2],+k[3],+k[4],+k[5]]);
+    const bi=_buildBiM(kls),zsL=_buildZS(bi),m=_macd2(kls);
+    const n=kls.length;
+    const TM=ds=>new Date(ds).getTime();
+    const tOf=i=>kls[Math.max(0,Math.min(i,n-1))][0];
+    const inWin=(z,tm)=>tOf(z.startI)<=tm&&tm<=tOf(z.endI);
+    const z1=zsL.find(z=>inWin(z,TM("2026-08-24T18:00:00")));   // 中枢①76,832~77,790
+    const z2=zsL.find(z=>inWin(z,TM("2026-08-25T04:00:00")));   // 中枢②78,580~79,013(区间末端=81,271顶)
+    const near=(arr,t)=>arr.reduce((a,b)=>Math.abs(b.t-t)<Math.abs(a.t-t)?b:a);
+    const tops=bi.filter(b=>b.type==="顶"),bots=bi.filter(b=>b.type==="底");
+    const tA=near(tops,TM("2026-08-24T23:15:00"));   // 79,975
+    const tB=near(tops,TM("2026-08-25T10:15:00"));   // 81,271 趋势完美点
+    const z3=zsL.find(z=>z.startI>tB.i);             // 顶后中枢(新走势的第一个中枢)
+    const bC=near(bots,TM("2026-08-25T04:00:00"));   // 78,520 c段起点
+    const bEnd=near(bots,TM("2026-08-26T23:00:00")); // 77,600 完成后回吐底
+    const midB=bots.filter(b=>b.i>tA.i&&b.i<tB.i)[0];
+    const prevB=bots.filter(b=>b.i<tA.i).slice(-1)[0];
+    const area=(i1,i2,sg)=>{let s2=0;for(let i=Math.max(0,i1);i<=Math.min(n-1,i2);i++){if((m.hist[i]>0)===(sg>0))s2+=Math.abs(m.hist[i])}return s2};
+    const a1=area(prevB.i,tA.i,1),a2=area(midB.i,tB.i,1);
+    // ===== 15m 主图(价格+MACD背驰面积) =====
+    const W=940,Hp=330,Hm=110,pad=10,gap=8,H=Hp+gap+Hm+22;
+    const lo=Math.min(...kls.map(k=>k[3])),hi=Math.max(...kls.map(k=>k[2]));
+    const Y=p=>pad+((hi-p)/((hi-lo)||1))*(Hp-2*pad);
+    const X=i=>pad+(i/(n-1))*(W-2*pad);
+    const bw=Math.max(1.2,(W-2*pad)/n*0.6);
+    let s='<svg viewBox="0 0 '+W+" "+H+'" style="width:100%;height:auto;background:#0a0e14;border-radius:8px">';
+    kls.forEach((k,i)=>{const x=X(i),up=k[4]>=k[1],col=up?"#26a69a":"#ef5350";
+      s+='<line x1="'+x.toFixed(1)+'" y1="'+Y(k[2]).toFixed(1)+'" x2="'+x.toFixed(1)+'" y2="'+Y(k[3]).toFixed(1)+'" stroke="'+col+'" stroke-width="0.8"/>';
+      s+='<rect x="'+(x-bw/2).toFixed(1)+'" y="'+Y(Math.max(k[1],k[4])).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.8,Math.abs(Y(k[4])-Y(k[1]))).toFixed(1)+'" fill="'+col+'"/>';});
+    s+='<polyline points="'+bi.map(p=>X(p.i).toFixed(1)+","+Y(p.price).toFixed(1)).join(" ")+'" fill="none" stroke="#58a6ff" stroke-width="1.2" opacity="0.8"/>';
+    [[z1,"中枢①"],[z2,"中枢②"],[z3,"顶后中枢③"]].forEach(pr=>{
+      const z=pr[0];if(!z)return;
+      const x1=X(z.startI),x2=X(Math.min(z.endI,n-1));
+      s+='<rect x="'+x1.toFixed(1)+'" y="'+Y(z.ZG).toFixed(1)+'" width="'+(x2-x1).toFixed(1)+'" height="'+(Y(z.ZD)-Y(z.ZG)).toFixed(1)+'" fill="#bc8cff" opacity="0.15" stroke="#bc8cff" stroke-width="1.1" stroke-dasharray="4,3" rx="3"/>';
+      s+='<text x="'+(x1+5).toFixed(1)+'" y="'+(Y(z.ZG)-4).toFixed(1)+'" fill="#bc8cff" font-size="10.5" font-weight="700">'+pr[1]+" "+z.ZD.toFixed(0)+"~"+z.ZG.toFixed(0)+"</text>";});
+    // 完成后区域着色
+    s+='<rect x="'+X(tB.i).toFixed(1)+'" y="'+pad+'" width="'+(X(n-1)-X(tB.i)).toFixed(1)+'" height="'+(Hp-2*pad).toFixed(1)+'" fill="#f6465d" opacity="0.06"/>';
+    // 背驰连线(两顶)
+    s+='<line x1="'+X(tA.i).toFixed(1)+'" y1="'+Y(tA.price).toFixed(1)+'" x2="'+X(tB.i).toFixed(1)+'" y2="'+Y(tB.price).toFixed(1)+'" stroke="#f6465d" stroke-width="1.6" stroke-dasharray="5,3"/>';
+    // 标注
+    [[tA,"顶79,975|DIF=522","#8b949e",0],[tB,"81,271|c段新高+背驰|走势终完美","#f6465d",0],[bC,"c段起点|78,520","#58a6ff",1],[bEnd,"完成后回吐|底77,600","#2ea043",1]].forEach(mk=>{
+      const p=mk[0],x=X(p.i),y=Y(p.price),below=mk[3];
+      s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="8" fill="none" stroke="'+mk[2]+'" stroke-width="2"/>';
+      mk[1].split("|").forEach((ln,li)=>{s+='<text x="'+x.toFixed(1)+'" y="'+((below?y+24:y-30)+li*13).toFixed(1)+'" fill="'+mk[2]+'" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0e14;stroke-width:3px">'+ln+"</text>";});});
+    // ===== MACD 副图(背驰面积对比) =====
+    const mTop=Hp+gap,mMid=mTop+Hm/2;
+    const mv=Math.max(...m.hist.map(Math.abs),...m.dif.map(Math.abs))*1.15||1;
+    const MY=v=>mMid-(v/mv)*(Hm/2-4);
+    s+='<rect x="'+pad+'" y="'+mTop+'" width="'+(W-2*pad)+'" height="'+Hm+'" fill="#070b12" rx="6"/>';
+    s+='<line x1="'+pad+'" y1="'+mMid+'" x2="'+(W-pad)+'" y2="'+mMid+'" stroke="#2a3348" stroke-width="0.7"/>';
+    const mcw=Math.max(1,(W-2*pad)/n*0.5);
+    for(let i=0;i<n;i++){const h=m.hist[i];if(Math.abs(h)<mv*0.002)continue;const x=X(i);
+      s+='<rect x="'+(x-mcw/2).toFixed(1)+'" y="'+Math.min(mMid,MY(h)).toFixed(1)+'" width="'+mcw.toFixed(1)+'" height="'+Math.max(0.5,Math.abs(MY(h)-mMid)).toFixed(1)+'" fill="'+(h>=0?"#26a69a":"#ef5350")+'" opacity="0.8"/>';}
+    // 两段红柱面积阴影(a1淡/a2深)
+    const sh=(i1,i2,op)=>{const x1=X(Math.max(0,i1)),x2=X(Math.min(n-1,i2));
+      s+='<rect x="'+x1.toFixed(1)+'" y="'+(mTop+2)+'" width="'+(x2-x1).toFixed(1)+'" height="'+(Hm-4)+'" fill="#f6465d" opacity="'+op+'"/>';};
+    sh(prevB.i,tA.i,0.10);sh(midB.i,tB.i,0.22);
+    let df="";for(let i=0;i<n;i++)df+=(i===0?"M":"L")+X(i).toFixed(1)+" "+MY(m.dif[i]).toFixed(1);
+    s+='<path d="'+df+'" fill="none" stroke="#e8b339" stroke-width="1"/>';
+    const t1x=(X(prevB.i)+X(tA.i))/2,t2x=(X(midB.i)+X(tB.i))/2;
+    s+='<text x="'+t1x.toFixed(1)+'" y="'+(mTop+Hm-5).toFixed(1)+'" fill="#f6465d" font-size="9.5" text-anchor="middle">a₁='+a1.toFixed(0)+'</text>';
+    s+='<text x="'+t2x.toFixed(1)+'" y="'+(mTop+Hm-5).toFixed(1)+'" fill="#f6465d" font-size="9.5" font-weight="700" text-anchor="middle">a₂='+a2.toFixed(0)+'('+(a2/a1*100).toFixed(0)+'%)</text>';
+    s+='<line x1="'+X(tA.i).toFixed(1)+'" y1="'+MY(m.dif[tA.i]).toFixed(1)+'" x2="'+X(tB.i).toFixed(1)+'" y2="'+MY(m.dif[tB.i]).toFixed(1)+'" stroke="#f6465d" stroke-width="1.4"/>';
+    s+='<text x="'+pad+'" y="'+(mTop+11)+'" fill="#8b949e" font-size="9.5">MACD(12,26,9) · DIF连线走低+红柱面积萎缩=双条件背驰</text>';
+    s+='<text x="'+pad+'" y="'+(H-7)+'" font-size="11" fill="#c9d1d9">BTC 15m · 8/24–8/26 · <tspan fill="#bc8cff">中枢①→②依次上移=上涨趋势</tspan> · <tspan fill="#f6465d" font-weight="700">c段81,271新高+背驰(红柱'+a1.toFixed(0)+'→'+a2.toFixed(0)+'='+((a2/a1*100).toFixed(0))+'%)=走势终完美</tspan> · 其后回吐至77,600</text>';
+    s+="</svg>";
+    // ===== 1h 对照图 =====
+    const bi1=_buildBiM(k1);
+    const n1=k1.length;
+    const near1=(arr,t)=>arr.reduce((a,b)=>Math.abs(b.t-t)<Math.abs(a.t-t)?b:a);
+    const hB=near1(bi1.filter(b=>b.type==="底"),TM("2026-08-24T12:00:00"));
+    const hT=near1(bi1.filter(b=>b.type==="顶"),TM("2026-08-25T10:00:00"));
+    const s1=_zwChart(k1,bi1,0,n1-1,{seg:{from:hB,to:hT},
+      marks:[{i:hB.i,p:hB.price,col:"#2ea043",txt:"76,649",below:true},{i:hT.i,p:hT.price,col:"#f6465d",txt:"81,271 走势完成"}],
+      cap:'<tspan fill="#58a6ff">1h对照 · 同一段行情＝76,649→81,271的一段上涨(两笔,无1h中枢)</tspan> — <tspan fill="#e8b339">15m终完美之时,就是1h这笔完成之时(大级别一笔=小级别完整走势)</tspan>'});
+    box.innerHTML='<div style="border:1px solid rgba(232,179,57,.4);border-radius:10px;padding:8px;margin-bottom:8px">'+s+"</div>"
+      +'<div style="border:1px solid rgba(88,166,255,.3);border-radius:10px;padding:8px">'+s1+"</div>";
+  }catch(e){box.innerHTML='<div style="color:#f85149;font-size:12.5px;padding:10px">案例加载失败：'+e.message+"</div>"}
+}
+loadZwBtcCase();
+/* 重跑上方ETH图例(修复_zwChart缺失后恢复) */
+if(typeof loadZwExamples==="function")loadZwExamples();
 </script>
 </body>
 </html>
