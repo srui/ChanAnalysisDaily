@@ -124,6 +124,8 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 
 <div class="sub" style="margin:2px 0 4px;font-size:12.5px;color:#e8eefb"><b>一句推演 · 30m：</b>小中枢骑在大中枢下沿上——白天磨了一天的这个口子，夜盘选边。</div>
 <div class="chart-card" id="chart30mNight"></div>
+<div class="sub" style="margin:2px 0 4px;font-size:12.5px;color:#e8eefb"><b>一句推演 · 15m：</b>下午小中枢（77,471~77,692）的上沿就在脚下（77,693），DIF 刚上零轴——上破 77,730 回踩不破 = 15m 三买（B 剧本先手）；下破 77,471 = 夜盘空触发。</div>
+<div class="chart-card" id="chart15mNight"></div>
 <div class="sub" style="margin:2px 0 4px;font-size:12.5px;color:#e8eefb"><b>一句推演 · 4h：</b>灰带越来越厚（绿柱42%、DIF 未抬高）——下跌在衰减但没亮出底背驰，别猜底，等它自己走完。</div>
 <div class="chart-card" id="chart4hNight"></div>
 
@@ -433,6 +435,24 @@ async function load(){
               {p:77600,col:"#f0b90b",lab:"77,600 4h ZD",w:1.6},{p:77353,col:"#58a6ff",lab:"77,353 30m ZD"},
               {p:77211,col:"#f6465d",lab:"77,211",side:"r"},{p:76853,col:"#f6465d",lab:"76,853",side:"r"}],
        macd:calcMACD(a30N),struct:{bi:bi30N,segs:buildSegs(bi30N),zs:buildZS(bi30N),lastPrice:k30N[k30N.length-1].c}});
+    // ===== 15m 晚间细分 =====
+    const k15N=await fetchK2("15m",T("2026-08-29T00:00:00"),FREEZE);
+    const a15N=k15N.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi15N=buildBiM(a15N);
+    draw("chart15mNight",k15N,[
+      {t:T("2026-08-29T00:15:00"),p:76853,col:"#2ebd85",txt:"①76,853|闪崩低",below:true},
+      {t:T("2026-08-29T01:15:00"),p:78099,col:"#8b949e",txt:"②78,099|夜盘反抽高"},
+      {t:T("2026-08-29T05:45:00"),p:77211,col:"#2ebd85",txt:"③77,211",below:true},
+      {t:T("2026-08-29T08:15:00"),p:77920,col:"#8b949e",txt:"④77,920|A进场区上沿"},
+      {t:T("2026-08-29T17:30:00"),p:77729,col:"#f0b90b",txt:"⑤77,729"},
+      {t:T("2026-08-29T22:00:00"),p:77693,col:"#f0b90b",txt:"⑥77,693|贴中枢上沿|DIF上零轴"}
+    ],{title:"BTC 15m · 白天两个中枢收敛(晨77,243~77,591→午77,471~77,692)——现价贴下午中枢ZG:上破77,730回踩不破=15m三买,下破77,471=空触发",H:400,now:77693,
+       bands:[{lo:77471,hi:77692,col:"#58a6ff",lab:"15m下午中枢 77,471~77,692"},
+              {lo:77243,hi:77591,col:"#8b949e",lab:"15m晨间中枢 77,243~77,591"}],
+       lines:[{p:78100,col:"#2ebd85",lab:"78,100 B门槛"},{p:77920,col:"#8b949e",lab:"77,920"},
+              {p:77730,col:"#f0b90b",lab:"77,730 三买确认线",w:1.6},{p:77471,col:"#58a6ff",lab:"77,471 15m ZD"},
+              {p:77353,col:"#8b949e",lab:"77,353 30m ZD",side:"r"}],
+       macd:calcMACD(a15N),struct:{bi:bi15N,segs:buildSegs(bi15N),zs:buildZS(bi15N),lastPrice:k15N[k15N.length-1].c}});
     const k4N=await fetchK2("4h",T("2026-08-26T00:00:00"),FREEZE);
     const a4N=k4N.map(k=>[k.t,k.o,k.h,k.l,k.c]);
     const bi4N=buildBiM(a4N);
