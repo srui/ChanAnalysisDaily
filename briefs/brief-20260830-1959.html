@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场新闻买入简报 · 2026-08-30 周日刊</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3644;
+    --text:#e6edf3; --muted:#9aa7b5; --accent:#4f9cf9;
+    --buy:#3fb950; --wait:#d29922; --avoid:#f85149; --chip:#30364a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75; padding:32px 16px; font-size:15px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:24px}
+  .kicker{color:var(--accent);font-size:13px;letter-spacing:.2em;margin-bottom:6px}
+  h1{font-size:26px;font-weight:700;margin-bottom:10px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+  .meta .tag{background:var(--chip);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:2px 12px}
+
+  .callout{
+    background:linear-gradient(135deg,#1a2233,#151b28);border:1px solid var(--border);
+    border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--muted);
+  }
+  .callout b{color:var(--text)}
+
+  h2{font-size:20px;margin:34px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:14px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card h3{font-size:17px;margin-bottom:2px}
+  .card .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .card p{margin:8px 0;font-size:14px;color:#c9d4e0}
+  .card p b{color:var(--text)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .badge{border-radius:999px;padding:2px 14px;font-size:13px;font-weight:600;border:1px solid transparent}
+  .badge.judge{font-size:14px}
+  .b-buy{background:rgba(63,185,80,.15);color:var(--buy);border-color:rgba(63,185,80,.4)}
+  .b-wait{background:rgba(210,153,34,.15);color:var(--wait);border-color:rgba(210,153,34,.4)}
+  .b-avoid{background:rgba(248,81,73,.15);color:var(--avoid);border-color:rgba(248,81,73,.4)}
+  .b-chip{background:var(--chip);color:#c9d4e0;border-color:var(--border)}
+
+  ol.rank{list-style:none;counter-reset:rk;display:flex;flex-direction:column;gap:10px}
+  ol.rank li{
+    counter-increment:rk;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:14px 18px 14px 58px;position:relative;font-size:14px
+  }
+  ol.rank li::before{
+    content:counter(rk);position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:var(--chip);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)
+  }
+  ol.rank li b{color:var(--text)}
+
+  ul.plain{list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.plain li{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:14px;color:#c9d4e0}
+  ul.plain li b{color:var(--text)}
+
+  .sources{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .sources a{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:13px}
+
+  footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  .disclaimer{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:#d8a5a1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">US EQUITIES × CRYPTO · MARKET BRIEF</div>
+  <h1>市场新闻买入简报</h1>
+  <div class="meta">
+    <span class="tag">2026-08-30(周日)19:59 CST</span>
+    <span class="tag">信息窗:自上期(周六 14:00)约 30h · 美股休市,以周五收盘+周末加密为主</span>
+    <span class="tag">第 11 期 · 周日刊</span>
+    <a href="index.html">← 简报目录</a> · <a href="../index.html">首页</a>
+  </div>
+</header>
+
+<div class="callout">
+  <b>本期总览:</b><br>
+  ① <b>BTC ETF 九连流入终结</b>:周五(8/28)12 只美国现货 BTC ETF 净流出约 <b>2.02 亿美元</b>(Satsintel/Cryptorank/Cointelegraph 三源核验),此前九日累计流入超 30 亿美元;但 <b>ETH ETF 同日逆势净流入约 1.02 亿美元</b>,九日累计约 14.2 亿美元、贝莱德持续大买(crypto.news/Cryptorank)——资金在币种间轮动而非离场。<br>
+  ② <b>周末加密企稳迹象</b>:BTC 从周六 77,600 回升至约 78,130–78,170(双源,24h +0.7%),在 75–76K 支撑上方站稳;SOL 回到约 105(+1.4%),<b>连续守住 100 关口</b>;ETH 约 2,458–2,460(+0.9%)。恐惧贪婪指数 67(贪婪)。<br>
+  ③ 美股无交易,周五收盘(标普 -0.25%、Warsh 鹰派)与 NVDA 缺口区 216–222 的攻防留待<b>明晚开盘验证</b>;明周一为 8 月收官日 + 9 月季节性开局。结论:<b>观望为主,SOL/ETH 的相对强度是暗线;等明晚美股与 ETF 复牌定方向</b>。
+</div>
+
+<h2>美股</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>指数锚:SPY / QQQ — 收官日前夜</h3>
+    <div class="sub">周五收盘:标普 7,712(-0.25%)· 纳指 26,402(-0.52%)· 道指 53,560(-0.02%)</div>
+    <p><b>新闻:</b>美股周末休市;周五 Warsh 鹰派信号(10 年期 4.31%)压制收盘,但全周仍收涨;无周末宏观增量。</p>
+    <p><b>为什么重要:</b>明晚开盘即 8 月收官(月度机构调仓窗口)+ 9 月历史上是季节性偏弱月,且利率锚(4.31%)未回落——三重背景都不支持追高。</p>
+    <p><b>理由:</b>①鹰派联储 + 季节性逆风的组合下,指数回调风险大于踏空风险;②月度收官日的资金流常与基本面无关,信号噪音大。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:暂不参与,明晚收盘后再定节奏</span></div>
+  </div>
+
+  <div class="card">
+    <h3>NVDA — 缺口区攻防,明晚验证</h3>
+    <div class="sub">周五收 217.55(-4.6%)· 预设介入区 216–222 · 缺口下沿 210</div>
+    <p><b>新闻:</b>财报后涨幅回吐近半,但收盘仍高于缺口上沿 216 与财报前收盘 209.66;本周无新增公司层面消息。</p>
+    <p><b>为什么重要:</b>介入区已到,但"企稳信号"未确认——需要看到放量止跌或收复 220;明晚开盘对周五跌势的承接是第一个验证点。</p>
+    <p><b>理由:</b>①位置理想(缺口上沿),盈亏比修复中;②4.31% 收益率对高估值 AI 链持续施压;③9 月季节性背景下左侧介入宜小不宜大。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(积极,介入区已到)</span><span class="badge b-chip">执行:等企稳信号(止跌+收复 220)小仓分批</span></div>
+  </div>
+
+  <div class="card">
+    <h3>AMD / MSFT / AAPL / TSLA</h3>
+    <div class="sub">周末无增量 · 维持既有判断</div>
+    <p><b>说明:</b>联动品种节奏由 NVDA 与利率决定;本周期无可验证新增催化,不展开。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:均观望</span><span class="badge b-chip">执行:等回踩</span></div>
+  </div>
+
+</div>
+
+<h2>加密货币</h2>
+<div class="grid">
+
+  <div class="card">
+    <h3>BTC — 九连流入终结后的方向选择</h3>
+    <div class="sub">约 78,130–78,170 美元(CoinGecko+Binance 双源)· 24h +0.7% · 周末区间 77–78.5K</div>
+    <p><b>新闻:</b>周五 ETF 净流出 2.02 亿美元终结九连流入(累计 +30 亿);8 月月度流入仍达约 +31.2 亿美元(Satsintel);周末价格在 75–76K 支撑上方整固回升,恐惧贪婪指数 67。</p>
+    <p><b>为什么重要:</b>单日流出是情绪转折信号还是月末获利了结,取决于明晚(周一)ETF 复牌后的数据——连续第二日流出将确认资金退潮,重回流入则属月末噪音。</p>
+    <p><b>理由:</b>①技术区间未破(75–76K 支撑在,79–80K 压力在),方向未选;②资金面从"单边流入"转为"观察确认";③明晚美股收官日的风险偏好会外溢到加密。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(维持降级后判断)</span><span class="badge b-chip">执行:等 75–76K 支撑测试结果或收复 79–80K 再评估;明晚 ETF 数据是关键</span></div>
+  </div>
+
+  <div class="card">
+    <h3>ETH — 逆势资金流的相对强度</h3>
+    <div class="sub">约 2,458–2,460 美元(双源)· 24h +0.9% · ETF 逆势 +1.02 亿</div>
+    <p><b>新闻:</b>BTC ETF 流出当日 ETH ETF 逆势净流入 1.02 亿美元;九日累计约 14.2 亿美元、贝莱德持续增持——连续多期的"ETH 资金面强于 BTC"信号进一步强化。</p>
+    <p><b>为什么重要:</b>当 BTC 在 8 万关口反复拉锯时,ETH 的资金相对强度是本轮最有韧性的暗线;2,400–2,450 企稳+ETF 延续流入的组合将构成介入理由。</p>
+    <p><b>理由:</b>①资金面证据链完整且方向一致;②价格仍在 2,500 下方,未过热;③若 BTC 失守 75K 会被动拖累——大盘风险是主要逆风。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(偏积极,强度上调)</span><span class="badge b-chip">执行:等 2,400–2,450 企稳 + 周一 ETF 流入延续,分批</span></div>
+  </div>
+
+  <div class="card">
+    <h3>SOL — 100 关口连续守住,介入区边缘</h3>
+    <div class="sub">约 105 美元(双源)· 24h +1.4% · 回到介入区 100–104 上方</div>
+    <p><b>新闻:</b>上期设定"等回踩 100–104 企稳介入":价格最低触及约 100 后连续两日守住并回升至 105,企稳雏形出现但尚需一根确认(周一不破 101 即基本成立);嘉信上线、通缩治理、350ms 三重催化仍在兑现途中。</p>
+    <p><b>理由:</b>①企稳结构接近确认,是当前加密端最可执行的介入候选;②若 BTC 明晚被 ETF 第二日流出砸破 75K,SOL 会补跌,这是唯一需要等待的原因;③追入仍以回踩不破 100 为前提。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(介入条件接近触发)</span><span class="badge b-chip">执行:周一确认不破 101 后分批;失守 100 则撤回等 95</span></div>
+  </div>
+
+  <div class="card">
+    <h3>BNB</h3>
+    <div class="sub">约 692 美元(+0.5%)· 无独立催化</div>
+    <div class="badges"><span class="badge judge b-avoid">判断:不买</span><span class="badge b-chip">执行:暂不参与</span></div>
+  </div>
+
+</div>
+
+<h2>最强买点排行榜</h2>
+<ol class="rank">
+  <li><b>ETH — 观望(偏积极,强度上调)</b> · ETF 逆势流入+九日 14.2 亿+贝莱德增持 · 参与方式:<b>等 2,400–2,450 企稳分批</b></li>
+  <li><b>SOL — 观望(介入条件接近触发)</b> · 100 连续守住,回到 105 · 参与方式:<b>周一确认不破 101 分批</b></li>
+  <li><b>NVDA — 观望(积极)</b> · 缺口区 216–222 攻防 · 参与方式:<b>等止跌+收复 220 小仓分批</b></li>
+  <li><b>BTC — 观望</b> · 九连流入终结,区间 75–80K 未选向 · 参与方式:<b>等支撑测试或收复 79–80K</b></li>
+  <li><b>BNB / TSLA — 不买</b> · 无独立催化 · 只观察</li>
+</ol>
+
+<h2>总结</h2>
+<ul class="plain">
+  <li><b>最值得盯:</b>明晚(周一)美股 8 月收官日开盘——NVDA 缺口区承接、BTC ETF 复牌首日流量(连续第二日流出与否);SOL 对 101 的确认。</li>
+  <li><b>最不该碰:</b>在 ETF 流出趋势未明朗前重仓 BTC;追高周末反弹中的 SOL/ETH;9 月开局阶段使用杠杆。</li>
+  <li><b>下周期跟踪点:</b>①周一 BTC ETF 净流向(退潮确认 vs 月末噪音);②BTC 75–76K 支撑与 79–80K 压力的区间突破方向;③SOL 101 确认;④ETH ETF 流入的连续性(暗线转明线的可能);⑤9 月联储会议预期的市场定价。</li>
+</ul>
+
+<h2>主要来源</h2>
+<div class="sources">
+  <a href="https://www.satsintel.io/en/etfs/flows" target="_blank" rel="noopener noreferrer">Satsintel · ETF 日度流向</a>
+  <a href="https://lcx.com/en/cryptonews/bitcoin-etfs-end-9-day-inflow-streak-as-btc-dips-below-78k" target="_blank" rel="noopener noreferrer">Cointelegraph/LCX · 九连流入终结</a>
+  <a href="https://crypto.news/ethereum-etf-blackrock-1-42-billion-nine-day-streak/" target="_blank" rel="noopener noreferrer">crypto.news · ETH ETF 九日 14.2 亿</a>
+  <a href="https://coinstats.app/ai/a/latest-news-for-bitcoin" target="_blank" rel="noopener noreferrer">CoinStats · BTC 日度分析</a>
+  <a href="https://www.kucoin.com/news/trends/BTC/6a92eb47dd2c0d0007d544e5" target="_blank" rel="noopener noreferrer">KuCoin · ETF 周五数据</a>
+  <a href="https://www.coingecko.com/zh/比特币" target="_blank" rel="noopener noreferrer">CoinGecko · 行情</a>
+  <a href="https://www.binance.com/zh-CN/price/bitcoin" target="_blank" rel="noopener noreferrer">Binance · 行情</a>
+  <a href="https://www.federalreserve.gov/newsevents/speech/warsh20260828a.htm" target="_blank" rel="noopener noreferrer">美联储 · Warsh 讲稿</a>
+</div>
+
+<footer>
+  <div class="disclaimer">以上为基于公开信息的研究判断,非投资建议;未使用杠杆假设,亦不构成确定性承诺。数字均经至少两个独立公开来源交叉核验,个别单源数据已标注出处。说明:今日 00:00/06:00/12:00/18:00 定时运行因会话中断未产出,本期手动生成,信息窗约 30 小时。</div>
+  <div>美股 × 加密新闻买入简报 · 每 6 小时自动更新 · <a href="index.html">简报目录</a> · <a href="../index.html">首页</a></div>
+</footer>
+
+</div>
+<script>
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('a');
+  if(a&&a.href&&a.target==='_blank'){
+    e.preventDefault();
+    var w=window.open(a.href,'_blank','noopener');
+    if(!w){location.href=a.href;}
+  }
+});
+</script>
+</body>
+</html>
