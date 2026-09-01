@@ -101,6 +101,19 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <div class="sub" style="margin:2px 0 4px;font-size:12.5px;color:#e8eefb"><b>XAU 4h：</b>⚠️ 破位——8/31 夜跌破 4,452 双底，新低 <b>4,421</b>，依次新低结构延续；"破 4,452 看 4,400"兑现中，四币最弱不变。</div>
 <div class="chart-card" id="chartXAU"></div>
 
+<div class="sec">🌤 中午更新 · 13:19 @78,824 · 先插针后上推——A 的前置步骤进行中</div>
+<div class="sub" style="margin:0 0 6px;font-size:12.5px;color:#aeb9cf">上午走势：10:00 一根针砸到 <b style="color:#f6465d">78,150</b>（击穿 30m ZD 78,362 和 4h 三买确认线 78,315，<b>秒收回</b>=本周第五次下沿类假破）→ 中枢扩张下移（30m 中枢变为 78,150~78,774）→ 拉回站上 ZG → 13:00 冲 <b style="color:#2ebd85">78,947</b>。C 的触发被假破，A 的推进正在路上。</div>
+
+<div class="sub" style="margin:2px 0 4px;font-size:12.5px;color:#e8eefb"><b>一句推演 · 30m：</b>78,150 插针不破=下沿又验了一次货；78,947 已过 ZG——现在向 79,229（第一关）→ 79,384（裁决位）推进，15m 红柱还在扩张（动能未衰竭）。</div>
+<div class="chart-card" id="chartNoon"></div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>🎯 概率更新（13:19）</h3>
+<div class="jrow"><span>A · 过 79,384 三角上破</span><span class="v">40% → <b class="g">45%</b>（下沿第五次验货成功 + 反弹动能未衰竭，第一关 79,229 距 405 点）</span></div>
+<div class="jrow"><span>B · 四不过回踩 78,315</span><span class="v">40% → <b class="y">35%</b>（78,315 上午被插针击穿过一次，三买位的"纯净度"受损——再回踩时确认要求更严）</span></div>
+<div class="jrow"><span>C · 直接回落</span><span class="v">20% 不变（78,150 假破已演示过触发即失败）</span></div>
+<div class="tips">💡 观察位不变：<b>79,229</b>（昨夜高·第一关）→ <b>79,384</b>（三角上沿·裁决位）→ 过了看 79,800/80,400；回落先看 78,774（30m ZG 回抽）→ 78,150（新 ZD）。⚠️ 注意：79,229~79,384 之间只有 155 点的空间——<b>今天下午很可能就在这两个点之间给答案</b>。挂好预警，别盯盘赌方向。</div>
+</div>
+
 <div class="note">⚠️ 收敛三角末梢的等待价值：波动压缩一周后，79,384 的第四测就是三角的裁决——过与不过都是新趋势的起点。4h 新中枢三买（回踩 78,315 不破）是多头在本结构里<b>赔率最好的进场位</b>。走势终完美：震荡也终会选择方向——本周已演示四次下沿被买，等上沿给答案。🔒 本页为 9/1 快照：数据窗口全部锚定到当日 23:59。</div>
 </div>
 <script>
@@ -384,8 +397,22 @@ async function load(){
     ],{title:"XAU 4h · 破位:跌破4452双底→新低4,421——'破4452看4400'兑现中,四币最弱",H:400,now:4452,
        lines:[{p:4490,col:"#8b949e",lab:"4,490"},{p:4452,col:"#f0b90b",lab:"4,452(已破)"},{p:4400,col:"#2ebd85",lab:"4,400",side:"r"}],
        macd:calcMACD(aX),struct:{bi:biX,segs:buildSegs(biX),zs:buildZS(biX),lastPrice:kX[kX.length-1].c}});
+    // ===== 中午更新 13:19 =====
+    const kN=await fetchK2("30m",T("2026-09-01T00:00:00"),FREEZE);
+    const aN=kN.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const biN=buildBiM(aN);
+    draw("chartNoon",kN,[
+      {t:T("2026-09-01T03:00:00"),p:79229,col:"#8b949e",txt:"①79,229|昨夜高"},
+      {t:T("2026-09-01T07:00:00"),p:78362,col:"#2ebd85",txt:"②78,362",below:true},
+      {t:T("2026-09-01T10:00:00"),p:78150,col:"#f6465d",txt:"③78,150|插针|破78,315/78,362秒收回|第五次假破",below:true},
+      {t:T("2026-09-01T13:00:00"),p:78947,col:"#2ebd85",txt:"④78,947|过ZG|→79,229"}
+    ],{title:"BTC 30m · 上午:③插针78,150验下沿→④过ZG上推——中枢扩张为78,150~78,774,向79,229/79,384推进中",H:410,now:78824,
+       bands:[{lo:78150,hi:78774,col:"#58a6ff",lab:"30m中枢（扩张后）78,150~78,774"}],
+       lines:[{p:79229,col:"#f0b90b",lab:"79,229 第一关"},{p:78774,col:"#58a6ff",lab:"78,774 ZG"},
+              {p:78362,col:"#8b949e",lab:"78,362"},{p:78150,col:"#2ebd85",lab:"78,150 新ZD"},{p:77663,col:"#8b949e",lab:"77,663",side:"r"}],
+       macd:calcMACD(aN),struct:{bi:biN,segs:buildSegs(biN),zs:buildZS(biN),lastPrice:kN[kN.length-1].c}});
     renderVerdict(now);
-    document.getElementById("updTag").textContent="BTC 快照 @78,503 · 冻结于 9/1";
+    document.getElementById("updTag").textContent="BTC 快照 @78,824 · 冻结于 9/1";
   }catch(e){
     document.getElementById("verdict").innerHTML="加载失败："+e.message;
     document.getElementById("verdict").className="verdict r";
