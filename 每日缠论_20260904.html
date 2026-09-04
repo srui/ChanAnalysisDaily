@@ -45,6 +45,16 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 <div class="sub"><a class="back" href="index.html">← 主页</a> ｜ 昨夜：9/3 白天在 76,927~78,144 磨了一天后，<b>20:00（美股盘）一根 92,253 手巨量 4h 阳线</b>（前 4 根均量的 5.4 倍）从 77,909 直拉 81,333，9/4 凌晨最高 <b>82,282</b>——一举突破 4h 中枢上轨 79,555 和日线前顶 81,500 双重关卡。现回踩 <b>80,646</b>。<b style="color:#f0b90b">区间套二式·发射台三买成立：突破大中枢上轨（放量✓）+ 小级别新结构站上轨上方 + 回踩 80,640 未跌回。今天的问题是：回踩是上车机会，还是三买失败的前奏。</b></div>
 <div class="verdict" id="verdict">加载中…</div>
 
+<div class="sec">📰 消息面 · 昨夜暴涨的燃料（9/3 美股时段 20:00 起）</div>
+<div class="pcard fix" style="grid-column:1/-1"><h3>利率/美元/监管三重驱动 —— 不是降息周期，是流动性行情</h3>
+<div class="jrow"><span>主驱动 · 利率下行</span><span class="v">CoinDesk 实时博客标题：<b>"Bitcoin jumps above $81,000 as rates fall"</b>——美债收益率下行 + 财政部长端美债<b>回购扩容</b>（Bernstein 策略师：这是本轮启动的扳机）</span></div>
+<div class="jrow"><span>美元走弱</span><span class="v">全球基金的美元对冲仓位降至 <b>2015 年以来最低</b>（CoinDesk 9/3）——美元贬值为 BTC 估值抬底</span></div>
+<div class="jrow"><span>监管利好</span><span class="v">SEC 主席预期 <b>Clarity Act（加密市场清晰法案）两周内通过</b>（The Nation Thailand 援引）</span></div>
+<div class="jrow"><span>机构动向</span><span class="v"><b>Druckenmiller 家族办公室 1.256 亿美元投资比特币矿企</b>（CoinDesk）；BTC 站上 81,000 = <b>三个月新高</b></span></div>
+<div class="jrow"><span>技术共振</span><span class="v">突破 <b>50 周均线 81,041</b>；CoinDesk/KuCoin 提示下一阻力 <b>83,000</b>——与本页 A 剧节目标 82,300/83,500 同区。⚠️ 现价 80,646 已跌回 50 周线下方——<b>收回 81,041 = A 剧本加分项</b></span></div>
+<div class="tips">时段验证（老唐规则）：暴涨发生在美股时段——亚洲盘还在 77,308 磨，美股时段直接拉升（BitPinas）。<br>⚠️ <b>保持清醒的矛盾点</b>：CPI 约 4.2% 偏热、市场对 2026 年加息的定价约 72% 概率（8 月底）——这轮上涨是"美元流动性+美债回购+监管"驱动，<b>不是降息周期</b>，燃料的持续性取决于美元指数与回购节奏；下周 CPI 是下一个测试。<br>🔗 <b>缠论视角</b>：消息面解释"为什么是昨夜"，但结构在消息前已就位（30m 底背驰 + 76,927 精确防守 + 收敛一整天）——<b>量能是消息的体，结构是行情的骨</b>；消息只是加速了注定要选边的收敛。来源：<a href="https://www.coindesk.com/" style="color:#58a6ff">CoinDesk</a> ｜ <a href="https://www.facebook.com/TheNationThailand/posts/1500303802122949/" style="color:#58a6ff">The Nation Thailand</a> ｜ <a href="https://finance.yahoo.com/markets/article/why-bitcoin-prices-are-suddenly-rallying-big-time-094451450.html" style="color:#58a6ff">Yahoo/Bernstein</a> ｜ <a href="https://coinstats.app/ai/a/latest-news-for-bitcoin" style="color:#58a6ff">CoinStats</a></div>
+</div>
+
 <div class="sec">📖 昨日复盘 · 9/3 剧本（诚实打分）</div>
 <div class="cards">
 <div class="pcard win"><h3>✓ A · 二买确认·反弹升级（40%）— 兑现，超额近 4,000 点</h3>
@@ -324,7 +334,7 @@ async function load(){
     ],{title:"BTC 15m · 82,282以来的回调在80,000~80,600找到第一笔承接——等30m底分型认领",H:400,now,
        bands:[{lo:80000,hi:80600,col:"#2ebd85",lab:"初步承接区 80,000~80,600"}],
        lines:[{p:82282,col:"#8b949e",lab:"82,282"},{p:80843,col:"#8b949e",lab:"80,843"},
-              {p:80000,col:"#f6465d",lab:"80,000 破=回调升级",w:1.8},{p:79555,col:"#e8b339",lab:"79,555",side:"r"}],
+              {p:81041,col:"#bc8cff",lab:"81,041 50周均线(收回=A加分)"},{p:80000,col:"#f6465d",lab:"80,000 破=回调升级",w:1.8},{p:79555,col:"#e8b339",lab:"79,555",side:"r"}],
        macd:calcMACD(a15),struct:{bi:bi15,segs:buildSegs(bi15),zs:buildZS(bi15),lastPrice:k15[k15.length-1].c}});
     // 演化A
     const kA=await fetchK2("30m",T("2026-09-03T12:00:00"),FREEZE);
