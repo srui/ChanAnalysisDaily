@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>市场新闻买入简报 · 2026-09-08 周二刊</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --border:#2d3644;
+    --text:#e6edf3; --muted:#9aa7b5; --accent:#4f9cf9;
+    --buy:#3fb950; --wait:#d29922; --avoid:#f85149; --chip:#30364a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75; padding:32px 16px; font-size:15px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header{border-bottom:1px solid var(--border);padding-bottom:20px;margin-bottom:24px}
+  .kicker{color:var(--accent);font-size:13px;letter-spacing:.2em;margin-bottom:6px}
+  h1{font-size:26px;font-weight:700;margin-bottom:10px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+  .meta .tag{background:var(--chip);color:var(--text);border:1px solid var(--border);border-radius:999px;padding:2px 12px}
+
+  .callout{
+    background:linear-gradient(135deg,#1a2233,#151b28);border:1px solid var(--border);
+    border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px;color:var(--muted);
+  }
+  .callout b{color:var(--text)}
+
+  h2{font-size:20px;margin:34px 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));gap:14px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .card h3{font-size:17px;margin-bottom:2px}
+  .card .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .card p{margin:8px 0;font-size:14px;color:#c9d4e0}
+  .card p b{color:var(--text)}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+  .badge{border-radius:999px;padding:2px 14px;font-size:13px;font-weight:600;border:1px solid transparent}
+  .badge.judge{font-size:14px}
+  .b-buy{background:rgba(63,185,80,.15);color:var(--buy);border-color:rgba(63,185,80,.4)}
+  .b-wait{background:rgba(210,153,34,.15);color:var(--wait);border-color:rgba(210,153,34,.4)}
+  .b-avoid{background:rgba(248,81,73,.15);color:var(--avoid);border-color:rgba(248,81,73,.4)}
+  .b-chip{background:var(--chip);color:#c9d4e0;border-color:var(--border)}
+
+  ol.rank{list-style:none;counter-reset:rk;display:flex;flex-direction:column;gap:10px}
+  ol.rank li{
+    counter-increment:rk;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:14px 18px 14px 58px;position:relative;font-size:14px
+  }
+  ol.rank li::before{
+    content:counter(rk);position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:50%;background:var(--chip);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)
+  }
+  ol.rank li b{color:var(--text)}
+
+  ul.plain{list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.plain li{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:14px;color:#c9d4e0}
+  ul.plain li b{color:var(--text)}
+
+  .sources{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .sources a{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:13px}
+
+  footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  .disclaimer{background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:10px;padding:12px 16px;margin-bottom:14px;color:#d8a5a1}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">US EQUITIES × CRYPTO · MARKET BRIEF</div>
+  <h1>市场新闻买入简报</h1>
+  <div class="meta">
+    <span class="tag">2026-09-08(周二)11:00 CST</span>
+    <span class="tag">信息窗:自上期(8/30 19:59)约 9 天 · 含劳动节长周末</span>
+    <span class="tag">第 12 期 · 复刊(9/1-9/7 断更,本期覆盖 9/3 以来主线)</span>
+    <a href="index.html">← 简报目录</a> · <a href="../index.html">首页</a>
+  </div>
+</header>
+<div class="callout">
+  <b>本期总览(全部北京时间):</b><br>
+  ① <b>劳动节长周末低波动</b>:9/7(周一)美股休市(NYE 官方日历),BTC 在假日夜三针探底(21:00 高 79,614 → 23:30 低 78,636,-1.2%),<b>三次下探止步 78,611 非农低上方(差 25 点)</b>;9/8 亚盘缩量修复至 79,300+(无一根 30m 超 ±0.4%——技术性收敛,无消息催化)。<br>
+  ② <b>宏观主线切换到本周数据</b>:9/4(20:30)非农 +162K(3 倍超预期)把 <b>9 月加息概率推至 59.5%</b>(CoinDesk 9/7),压制反弹高度;但 <b>9/9(明)美债回购计划生效</b>→长端收益率下行+美元走弱=风险资产潜在顺风;<b>9/11(周五)20:30 八月 CPI + 9/15-16 FOMC 带点阵图</b>=宏观密集周。<br>
+  ③ <b>山寨冲高回落</b>:ZEC 一周 +45%(CoinDesk 9/7 盘点)后,9/8 06:30 低 1,104 回调进入评估区;TAO 同步回调;CoinDesk 9/7 标题"<b>山寨行情到头</b>"(Altcoin rally runs out of road)。<br>
+  ④ <b>矿工囤币</b>:9/8 晨 Bitfinex 报矿工持仓指数 <b>-1.2</b>(低于年均值=矿工持有供应,背景利多)。
+</div>
+<h2>美股</h2>
+<div class="grid">
+  <div class="card">
+    <h3>指数 — 劳动节休市,本周 CPI+FOMC 双雷</h3>
+    <div class="sub">9/7(周一)美股休市 · 周二恢复交易 · 本周五 20:30 CPI · 9/15-16 FOMC+点阵图</div>
+    <p><b>新闻:</b>9/7 劳动节(NYSE 官方日历,美股与期货均休);此前主线——9/3 沃勒表态缓解加息担忧(新浪财经,当日 BTC 美股早盘 +4% 至 80,400),9/4 强非农(+162K)把利率预期拉回鹰派,9 月加息概率 59.5%。</p>
+    <p><b>为什么重要:</b>利率预期一鸽一鹰来回拉扯,是 8 月末以来一切风险资产区间的根源;本周 CPI 与带点阵图的 FOMC 接连落地,方向选择大概率在这两周完成。</p>
+    <p><b>理由:</b>①CPI 前押方向=赌数据,盈亏比差;②债回购(9/9 生效)与加息概率(59.5%)方向相反,矛盾未解前区间震荡是基准情形。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望</span><span class="badge b-chip">执行:CPI 落地前不押方向;数据夜纪律=发布瞬间不交易,等第一根 30m 收完</span></div>
+  </div>
+  <div class="card">
+    <h3>利率与美元 — 债回购是本周隐藏变量</h3>
+    <div class="sub">9/9 美债回购生效 → 长端收益率下行 · 美元走弱</div>
+    <p><b>新闻:</b>9/9(周三)起美债回购计划生效(新浪财经此前报道),市场预期长端收益率大幅下行、美元走弱。</p>
+    <p><b>为什么重要:</b>美元走弱历来是加密与黄金的顺风;若 9/9-9/10 收益率明显回落,可能在本周五 CPI 前先走一波风险偏好修复——与 9/8 晨加密全面反弹(修复日)同一方向。</p>
+    <p><b>理由:</b>①机制明确(回购=压低长端);②但非农 162K 的鹰派定价仍在,单靠回购难以反转利率预期;③观察点:10Y 收益率与 DXY 在 9/9 后的实际反应。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:关注(潜在顺风)</span><span class="badge b-chip">执行:9/9 后盯 10Y/DXY,若同步回落=加密反弹的宏观确认</span></div>
+  </div>
+</div>
+<h2>加密货币</h2>
+<div class="grid">
+  <div class="card">
+    <h3>BTC — 三针不破 78,611,等 79,556 表态</h3>
+    <div class="sub">79,332(Binance 9/8 10:50)· 假日夜区间 78,636~79,614 · 九段升级:4h 中枢延伸 12 段</div>
+    <p><b>新闻:</b>隔夜无单一催化=技术性收敛;CoinDesk 9/7"BTC 守 79,300,加息概率 59.5%";Bitfinex 9/8 晨矿工持仓指数 -1.2(囤币)。</p>
+    <p><b>为什么重要:</b>9/7 夜三针(79,125/78,939/78,636)全部止步 78,611 上方+4h/30m 双级别底分型共振+30m 跌段力度 67% 衰竭——结构上修复已完成一半(差站上 79,556);且 4h 中枢已延伸 12 段≥9=九段升级为日线级别中枢,离开判定按日线级别边沿。</p>
+    <p><b>理由:</b>①结构修复+矿工囤币+费率转正(空头拥挤解除)偏多;②加息概率 59.5%+82,300 两次拒绝压制高度;③CPI 前只有 3 天兑现窗口。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望偏多(结构修复中)</span><span class="badge b-chip">执行:A 剧本=30m 放量站上 79,556 回踩不破做多(T1 80,536/T2 82,283);破 79,125 转 B 第四次下探</span></div>
+  </div>
+  <div class="card">
+    <h3>ETH — 七币最标准的 4h 一买结构</h3>
+    <div class="sub">2,499 · 4h 中枢 2,404~2,534 体内上部 · 底分型 2,459+跌段力度 49% 衰竭</div>
+    <p><b>新闻:</b>无单一消息;CoinDesk 9/7"山寨行情到头"标题下 ETH 相对抗跌(非农夜低 2,457 三度不破)。</p>
+    <p><b>为什么重要:</b>底分型 2,459 确认+末两跌段 179→88(49% 强衰竭)+DIF 未随价新低=4h 一买三要素齐;距确认线 2,534 仅 1.4%,是结构最先行的一个。</p>
+    <p><b>理由:</b>①结构最标准但剩余利润 1.4% 不够 3% 线——只配右侧;②与 BTC 同批风险偏好,BTC 破 78,636 联动作废;③30m 中枢 [2,473~2,511] 收敛待选向。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(积极)</span><span class="badge b-chip">执行:放量过 2,534=一买确认看 2,600;回踩 2,473~2,480=类二买带;4h 收破 2,457=失败</span></div>
+  </div>
+  <div class="card">
+    <h3>SOL — 针刺 102.78,三买确认进行时</h3>
+    <div class="sub">104.1 · 9/7 23:30 低 102.78(距假突破判定线 0.02) · 4h 中枢上沿 102.8 精确回踩</div>
+    <p><b>新闻:</b>无单一消息;9/6 创新高 107.3 后连续两日回踩。</p>
+    <p><b>为什么重要:</b>突破后回踩确认位被精确测试(0.02 的误差)且收回=突破后三买确认中;这是七币中唯一"可参与+等确认"的现成结构。</p>
+    <p><b>理由:</b>①结构位精度两次验证;②弹性大于 BTC(突破确认时);③4h 收盘跌破 102.8=假突破回中枢,止损清晰。</p>
+    <div class="badges"><span class="badge judge b-buy">判断:可参与(右侧)</span><span class="badge b-chip">执行:4h 收守 102.8 看新高 107.4→110;跌破 102.8 离场</span></div>
+  </div>
+  <div class="card">
+    <h3>ZEC / TAO — 冲高后的回调评估区</h3>
+    <div class="sub">ZEC 1,142(一周 +45% 后回调,9/8 06:30 低 1,104) · TAO 261(277 顶后回调)</div>
+    <p><b>新闻:</b>CoinDesk 9/7:ZEC 一周 +45%(十年新高),"山寨行情到头";驱动=Grayscale ETF+逼空(空头清算 $22.9M)。</p>
+    <p><b>为什么重要:</b>ZEC 回调低 1,104 进入预设评估区 1,120~1,160(差 16 点);TAO 回踩 246 未到、中枢上方 6% 悬空——两个高波动品种都在"等回踩结构位"阶段。</p>
+    <p><b>理由:</b>①4h 力度临界衰竭(ZEC 99%/TAO 强生长后首回调);②追高禁令——逼空式离开的品种回踩不到位不参与;③CoinDesk"到头"标题与结构衰竭同框,回调深度可能超预期。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(追高禁令)</span><span class="badge b-chip">执行:ZEC 评估区出 30m 底分型再评估;TAO 等回踩 246~256 三买带</span></div>
+  </div>
+  <div class="card">
+    <h3>XAU — 假动作向下后 V 型收回</h3>
+    <div class="sub">4,441 · 9/7 19:30 低 4,385(变盘向下)后 39% 强背驰 → 9/8 晨 4,444 站上窄中枢</div>
+    <p><b>新闻:</b>非农后三天最弱(唯一下跌·生长),9/7 夜向下变盘一波(-1.1%)后强力收回;CPI 前黄金波动或放大。</p>
+    <p><b>为什么重要:</b>"六币唯一下跌·生长"今晨逆转为 4h 底分型+上涨笔——空头预案 9/8 晨按作废线处理;现在贴新中枢 [4,385~4,442] 上沿。</p>
+    <p><b>理由:</b>①方向刚逆转,双方向都只做右侧;②CPI(周五)是黄金本周主变量;③债回购压低实际利率=潜在顺风。</p>
+    <div class="badges"><span class="badge judge b-wait">判断:观望(右侧)</span><span class="badge b-chip">执行:放量过 4,444=向上离开看 4,490;跌回 4,414 下=假离开</span></div>
+  </div>
+</div>
+<h2>本周宏观日历(北京时间)</h2>
+<ol class="rank">
+  <li><b>9/9(周三)美债回购生效</b> — 长端收益率/美元的反应是 CPI 前最后一个方向线索(顺风则加密修复加速)</li>
+  <li><b>9/11(周五)20:30 八月 CPI</b> — 加息概率 59.5% 的重新定价窗口;数据夜纪律:发布瞬间不交易,等第一根 30m 收完</li>
+  <li><b>9/15-16(下周二三)FOMC+点阵图(SEP)</b> — 本轮宏观密集周的终点,也是 9 月行情的总判定</li>
+  <li><b>盘面优先级</b> — BTC 79,556 表态 > SOL 102.8 三买确认 > ETH 2,534 一买确认 > ZEC 评估区 > XAU 4,444 离开确认</li>
+</ol>
+<footer style="margin-top:28px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px">
+  数据:Binance/OKX(9/8 10:50) · 新闻:CoinDesk/Yahoo Finance/新浪财经/Bitfinex/NYSE(均标注时间) · 结构判定:每日缠论 2026-09-08 · 本简报为学习记录,不构成投资建议
+</footer>
+</div>
+</body>
+</html>
