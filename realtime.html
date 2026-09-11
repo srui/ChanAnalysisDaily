@@ -514,9 +514,10 @@ function mergeK(kls){
       const dir=prev?(m.h>prev.h?1:-1):(h>=m.h?1:-1);
       const nh=dir>0?Math.max(m.h,h):Math.min(m.h,h);
       const nl=dir>0?Math.max(m.l,l):Math.min(m.l,l);
+      const oh=m.h,ol=m.l;
       m.h=nh;m.l=nl;m.i1=i;
-      m.hi=nh===m.h?m.hi:i;   // 极值来自哪根原始K线(用于画图定位)
-      m.lo=nl===m.l?m.lo:i;
+      m.hi=nh>oh?i:m.hi;   // 极值来自哪根原始K线(修复:原写法 nh===m.h 恒真,hi/lo 停留在组首根)
+      m.lo=nl<ol?i:m.lo;
     }else{
       out.push({h,l,t:kls[i][0],i0:i,i1:i,hi:i,lo:i});
     }
@@ -639,6 +640,7 @@ function calcKDJ(kls,n){
 }
 // 闯关模式(《缠论自动交易之闯关模式》策略卡): 多头六关流水线,逐关检测当前条件状态
 // 规则: ①一买抄底→②二买确认→③三买突破→④止盈一→⑤止盈二/⑥止损; 不可跳关; 顶背驰只止盈不开空
+let gateAnchor=null;  // 闯关锚点=一买底(时序记忆:关1触发时记录,关2对着锚点判;session级,刷新重置)
 function levelGates(kls,bi,macd,zs,kdj,now){
   const n=kls.length,f=v=>v.toFixed(0);
   const area=(i1,i2,sg)=>{let s=0;for(let i=Math.max(0,i1);i<=Math.min(n-1,i2);i++){if((macd.hist[i]>0)===(sg>0))s+=Math.abs(macd.hist[i])}return s};
@@ -648,15 +650,16 @@ function levelGates(kls,bi,macd,zs,kdj,now){
   const last=bi[bi.length-1];
   const lastZs=zs[zs.length-1];
   const rows=[];
-  const G=(name,conds,action)=>rows.push({name,conds,action,ok:conds.every(c=>c[0])});
+  const G=(name,conds,action,any)=>rows.push({name,conds,action,ok:any?conds.some(c=>c[0]):conds.every(c=>c[0])});
   // 关1 一买抄底: 底背驰+绿柱1/3+J<0+底分型确认K
   if(b1&&b2){
     const midT=tops.find(t=>t.i>b1.i&&t.i<b2.i);
     const prevB=bots[bots.length-3];
     const a1=prevB?area(prevB.i,b1.i,-1):area(Math.max(0,b1.i-20),b1.i,-1);
     const a2=midT?area(midT.i,b2.i,-1):area(b1.i,b2.i,-1);
+    if(b2.price<b1.price&&macd.dif[b2.i]>macd.dif[b1.i])gateAnchor={price:b2.price,i:b2.i};  // 新低+DIF抬升=记录/刷新锚点
     G("一买抄底",[
-      [b2.price<b1.price,`价格新低 ${f(b1.price)}→${f(b2.price)}`],
+      [gateAnchor?true:b2.price<b1.price,gateAnchor?`一买锚点 ${f(gateAnchor.price)} 已记录(时序记忆)`:`价格新低 ${f(b1.price)}→${f(b2.price)}`],
       [macd.dif[b2.i]>macd.dif[b1.i],`DIF低点抬高 ${f(macd.dif[b1.i])}→${f(macd.dif[b2.i])}`],
       [a2<a1/3,`绿柱面积 ${f(a1)}→${f(a2)} (需<1/3)`],
       [kdj.j[n-1]<0,`KDJ J=${kdj.j[n-1].toFixed(1)} (需<0)`],
@@ -667,8 +670,9 @@ function levelGates(kls,bi,macd,zs,kdj,now){
   if(b1&&b2){
     const midT2=tops.find(t=>t.i>b1.i&&t.i<b2.i);
     const green=midT2?area(midT2.i,b2.i,-1):0,red=midT2?area(b1.i,midT2.i,1):0;
+    const ref1=gateAnchor||b1;   // 有关1锚点用锚点(时序),否则退化为同帧对照
     G("二买确认",[
-      [b2.price>b1.price,`回调底${f(b2.price)}不破一买底${f(b1.price)}`],
+      [b2.price>ref1.price,`回调底${f(b2.price)}不破一买${gateAnchor?`锚点${f(ref1.price)}`:`底${f(b1.price)}`}`],
       [green<red,`回调绿柱${f(green)}<红柱${f(red)}(动能衰竭)`],
       [last.type==="底"&&n-1-b2.i<=3,"底分型确认"],
     ],"加仓50%");
@@ -707,7 +711,7 @@ function levelGates(kls,bi,macd,zs,kdj,now){
     G("止盈二",[
       [zsD!=null&&now<zsD,`现价${f(now)} ${zsD!=null?"vs ZD "+f(zsD):""}(破=清仓)`],
       [bBuy&&now<bBuy.price,`vs 二买低点${bBuy?f(bBuy.price):"—"}`],
-    ],"清仓(先到者)");
+    ],"清仓(先到者)",true);  // any=true: OR语义(先到先触发,原every=AND导致监控滞后)
   }
   // 关6 止损: 跌破一买低点 或 -2.5%
   if(b2){
@@ -715,7 +719,8 @@ function levelGates(kls,bi,macd,zs,kdj,now){
     G("止损",[
       [entryRef&&now<entryRef.price,`现价${f(now)} vs 一买底${entryRef?f(entryRef.price):"—"}`],
       [entryRef&&now<entryRef.price*0.975,`距一买底-2.5%线 ${entryRef?f(entryRef.price*0.975):"—"}`],
-    ],"全部止损离场");
+    ],"全部止损离场",true);  // any=true: OR语义
+    if(gateAnchor&&now<gateAnchor.price*0.975)gateAnchor=null;  // 止损线破位=闯关流程重置
   }
   // 当前关卡: 顺序不可跳关——第一关未全过的就是当前关
   let cur=null,phase="建仓期";
@@ -1090,8 +1095,8 @@ function tradeAdvice(nowPrice,sw,S,div,zs,rawSw){
   if(belowBot)return {title:"创新低·等反弹做空",cls:"act-wait",dir:"wait",desc:`跌破前底${f(lB.price)}，等反弹做空`,signals:[{type:"wait",label:"等反弹做空区",zone:`${f(lB.price)} ~ ${f(lB.price*1.015)}`}],lT,lB,leg,chan:"",tentative};
   if(aboveTop)return {title:"创新高·等回调做多",cls:"act-wait",dir:"wait",desc:`突破前高${f(lT.price)}，等回调做多`,signals:[{type:"wait",label:"等回调做多区",zone:`${f(lT.price*0.985)} ~ ${f(lT.price)}`}],lT,lB,leg,chan:"",tentative};
   // 三类:中枢突破后顺势(不在顶/底极端,才算回踩确认)
-  if(zs&&nowPrice>zs.ZG&&!nearTop)return {title:`三类买点·突破中枢${tag}`,cls:"act-long",dir:"long",desc:`站上中枢上沿${f(zs.ZG)}未跌回，三类买点(突破后顺势)`,signals:[{type:"long",label:"三类买点做多",zone:`${f(zs.ZG)} ~ ${f(lT.price)}`,note:longStop+tag}],lT,lB,leg,chan:"三类买点",tentative};
-  if(zs&&nowPrice<zs.ZD&&!nearBot)return {title:`三类卖点·跌破中枢${tag}`,cls:"act-short",dir:"short",desc:`跌破中枢下沿${f(zs.ZD)}未升回，三类卖点(破位后顺势)`,signals:[{type:"short",label:"三类卖点做空",zone:`${f(lB.price)} ~ ${f(zs.ZD)}`,note:shortStop+tag}],lT,lB,leg,chan:"三类卖点",tentative};
+  if(zs&&nowPrice>zs.ZG&&!nearTop)return {title:`三类买点·突破中枢${tag}`,cls:"act-long",dir:"long",desc:`站上中枢上沿${f(zs.ZG)}未跌回，三类买点(突破后顺势)`,signals:[{type:"long",label:"三类买点做多",zone:z(zs.ZG,lT.price),note:longStop+tag}],lT,lB,leg,chan:"三类买点",tentative};
+  if(zs&&nowPrice<zs.ZD&&!nearBot)return {title:`三类卖点·跌破中枢${tag}`,cls:"act-short",dir:"short",desc:`跌破中枢下沿${f(zs.ZD)}未升回，三类卖点(破位后顺势)`,signals:[{type:"short",label:"三类卖点做空",zone:z(lB.price,zs.ZD),note:shortStop+tag}],lT,lB,leg,chan:"三类卖点",tentative};
   // 二类:回调企稳(leg up&近底)/反弹受阻(leg down&近顶)
   if(leg==="up"&&nearBot)return {title:`二类买点·回调企稳${tag}`,cls:"act-long",dir:"long",desc:`回调到前底${f(lB.price)}止跌，二类买点`,signals:[{type:"long",label:"二类买点做多",zone:z(nowPrice,lB.price),note:longStop+tag}],lT,lB,leg,chan:"二类买点",tentative};
   if(leg==="down"&&nearTop)return {title:`二类卖点·反弹受阻${tag}`,cls:"act-short",dir:"short",desc:`反弹到前高${f(lT.price)}受阻，二类卖点`,signals:[{type:"short",label:"二类卖点做空",zone:z(nowPrice,lT.price),note:shortStop+tag}],lT,lB,leg,chan:"二类卖点",tentative};
@@ -1274,7 +1279,7 @@ async function analyze(){
     const macdTr=calcMACD(kt);
     const divTr=detectDiv(biTr,macdTr,S);
     const zsTr=buildZS(biTr);
-    const trAdv=tradeAdvice(now,biTr,S,divTr,zsTr,swTr);
+    const trAdv=tradeAdvice(now,biTr,S,divTr,zsTr[zsTr.length-1],swTr);  // 传末中枢对象(修复:原传数组致 zs.ZG=undefined,三类买卖点分支永不可达)
     // 综合(含背驰)
     const adv=combineAdvice(trT.dir,trAdv,P.trendN,P.tradeN,S,divT,divTr);
 
