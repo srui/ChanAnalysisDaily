@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>K线分析</title>
+<style>
+:root{--bg:#0e1117;--card:#161b22;--card2:#1c2230;--line:#262d3a;--txt:#e6edf3;--sub:#8b949e;
+--gold:#e8b339;--green:#2ea043;--green-s:rgba(46,160,67,.18);--red:#f85149;--red-s:rgba(248,81,73,.18);
+--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);
+line-height:1.6;padding:16px;min-height:100vh;
+background-image:radial-gradient(1000px 500px at 85% -10%,rgba(232,179,57,.06),transparent),radial-gradient(800px 400px at -10% 110%,rgba(88,166,255,.05),transparent)}
+.wrap{max-width:1220px;margin:0 auto}
+header{padding:10px 0 12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.h-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.badge{display:inline-block;font-size:11px;color:var(--gold);border:1px solid var(--gold);padding:2px 10px;border-radius:20px;letter-spacing:1px;margin-bottom:5px}
+h1{font-size:21px;font-weight:700;background:linear-gradient(90deg,#fff,#e8b339);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
+.sub{color:var(--sub);font-size:11.5px}
+.h-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sym-tabs{display:flex;background:var(--card2);border-radius:8px;padding:3px}
+.sym-tabs button{padding:6px 14px;border:none;background:transparent;color:var(--sub);font-size:12.5px;cursor:pointer;border-radius:6px;font-family:inherit;font-weight:600;transition:.15s}
+.sym-tabs button.active{background:var(--gold);color:#000}
+.btn{padding:7px 14px;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;transition:.15s}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn.on{border-color:#2ea043;color:#7ee787;background:rgba(46,160,67,.12)}
+.cnt-btn{background:var(--card2);border:1px solid var(--line);color:var(--sub);padding:5px 13px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;transition:.15s}
+.cnt-btn:hover{border-color:var(--blue);color:var(--txt)}
+.cnt-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:600}
+/* 周期选择器 */
+.period-sel{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+.pcombo{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:9px 8px;cursor:pointer;transition:.15s;text-align:center;font-family:inherit;color:var(--txt)}
+.pcombo:hover{border-color:var(--blue);background:#1f2636}
+.pcombo.active{background:rgba(232,179,57,.12);border-color:var(--gold)}
+.pcombo .pt{font-size:13px;font-weight:700;color:var(--gold)}
+.pcombo.active .pt{color:var(--gold)}
+.pcombo .pd{font-size:10.5px;color:var(--sub);margin-top:2px}
+.pcombo .pd b{color:#79c0ff}
+@media(max-width:680px){.period-sel{grid-template-columns:repeat(2,1fr)}}
+/* 仪表盘 */
+.dash{display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:11px;margin:14px 0}
+@media(max-width:760px){.dash{grid-template-columns:1fr}}
+.dcard{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:14px}
+.dcard .dl{font-size:10.5px;color:var(--sub);margin-bottom:3px;letter-spacing:.5px}
+.dcard .dv{font-size:15px;font-weight:600}
+.trend-pill{display:inline-block;padding:3px 11px;border-radius:18px;font-size:12.5px;font-weight:600;margin-top:4px}
+.pill-down{background:var(--red-s);color:#ffa198;border:1px solid var(--red)}
+.pill-up{background:var(--green-s);color:#7ee787;border:1px solid var(--green)}
+.pill-range{background:rgba(210,153,34,.15);color:#e3b341;border:1px solid var(--orange)}
+.advice-card{border-width:2px}
+.advice-card.act-wait{border-color:var(--orange);background:linear-gradient(135deg,rgba(210,153,34,.1),transparent)}
+.advice-card.act-short{border-color:var(--red);background:linear-gradient(135deg,rgba(248,81,73,.12),transparent)}
+.advice-card.act-long{border-color:var(--green);background:linear-gradient(135deg,rgba(46,160,67,.12),transparent)}
+.advice-card .at{font-size:17px;font-weight:700;margin-bottom:3px}
+.advice-card .ad{font-size:12px;color:#c9d1d9}
+.advice-card .aicon{font-size:22px;float:right}
+.resonance{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:4px;margin-top:5px;font-weight:600}
+.res-ok{background:var(--green-s);color:#7ee787}
+.res-no{background:var(--red-s);color:#ffa198}
+.res-wait{background:rgba(210,153,34,.15);color:#e3b341}
+/* 图表 */
+.chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:12px}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px}
+.chart-head .ct{font-size:12.5px;color:var(--gold);font-weight:600}
+.chart-head .ct .tag{background:var(--card2);color:var(--blue);padding:1px 7px;border-radius:4px;font-size:10.5px;margin-left:5px}
+.chart-head .ck{font-size:10.5px;color:var(--sub)}
+.kchart{width:100%;height:auto;display:block}
+.chart-wrap.mini{padding:10px}
+/* 分析栏 */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.col{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px}
+.col h3{font-size:12.5px;color:var(--gold);margin-bottom:9px}
+.col h3 small{color:var(--sub);font-weight:400;font-size:10.5px}
+.level-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
+.level-row:last-child{border:none}
+.level-row .ln{color:var(--sub)}.level-row .lv{font-family:"SF Mono",Consolas,monospace;font-weight:600}
+.lv-up{color:#7ee787}.lv-dn{color:#ffa198}.lv-now{color:var(--gold)}
+.fr-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--line);font-size:11.5px}
+.fr-row:last-child{border:none}
+.ft-top{color:#ffa198}.ft-bot{color:#7ee787}
+.fr-tag{font-size:9.5px;padding:1px 5px;border-radius:3px;background:var(--card2);color:var(--sub);margin-left:4px}
+.signal-box{padding:10px 12px;border-radius:7px;margin-bottom:7px;font-size:12px}
+.sig-wait{background:rgba(210,153,34,.1);border:1px solid var(--orange);color:#e3b341}
+.sig-short{background:var(--red-s);border:1px solid var(--red);color:#ffa198}
+.sig-long{background:var(--green-s);border:1px solid var(--green);color:#7ee787}
+.signal-box .lvl{font-family:"SF Mono",Consolas,monospace;font-size:12.5px;margin-top:2px;display:block}
+.checklist{font-size:12px;color:#c9d1d9;line-height:1.9}
+.checklist b{font-weight:700}
+/* 入场检查清单(7+7) */
+.chk-section{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px;margin-bottom:12px}
+.chk-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.chk-head .ct{font-weight:700;font-size:13.5px;color:var(--fg)}
+.chk-head .ct small{font-weight:400;color:var(--sub);font-size:10.5px}
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:760px){.chk-grid{grid-template-columns:1fr}}
+.chk-col{border-radius:9px;padding:10px;border:1px solid var(--line)}
+.chk-big{background:linear-gradient(180deg,rgba(63,185,80,.06),transparent)}
+.chk-small{background:linear-gradient(180deg,rgba(188,140,255,.06),transparent)}
+.chk-col-t{font-size:12.5px;font-weight:700;color:var(--fg);margin-bottom:8px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+.chk-col-t small{font-weight:400;color:var(--sub);font-size:10px}
+.chk-row{display:grid;grid-template-columns:18px 70px 1fr;grid-template-rows:auto auto;column-gap:6px;align-items:start;padding:6px 4px 6px 8px;border-bottom:1px solid rgba(110,118,129,.12);border-left:3px solid transparent}
+.chk-row:last-child{border-bottom:none}
+.chk-row.chk-ok{border-left-color:#7ee787;background:rgba(63,185,80,.05)}
+.chk-row.chk-ng{border-left-color:#f85149;background:rgba(248,81,73,.04)}
+.chk-row.chk-neu{border-left-color:rgba(110,118,129,.4)}
+.chk-no{grid-row:1/3;color:var(--ic,var(--sub));font-weight:700;font-size:11px;text-align:center;line-height:1.5}
+.chk-k{grid-column:2;grid-row:1/3;color:var(--sub);font-size:11px;line-height:1.5}
+.chk-v{grid-column:3;grid-row:1;color:var(--ic,var(--fg));font-weight:600;font-size:12px;line-height:1.4}
+.chk-sub{grid-column:3;grid-row:2;color:var(--sub);font-size:10px;line-height:1.3;margin-top:1px}
+.chk-foot{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11px;color:var(--sub);line-height:1.6}
+/* 入场检查清单:左侧竖条抽屉(悬停/点击滑出,移开收起) */
+.chk-drawer{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;display:flex;align-items:flex-start}
+.chk-tab{position:relative;z-index:2;writing-mode:vertical-rl;text-orientation:upright;cursor:pointer;user-select:none;background:var(--card);border:1px solid var(--line);border-left:none;border-radius:0 9px 9px 0;padding:14px 7px;font-size:12.5px;font-weight:700;color:var(--fg);box-shadow:3px 0 10px rgba(0,0,0,.25);transition:background .2s,color .2s;letter-spacing:2px}
+.chk-panel{width:500px;max-width:calc(100vw - 46px);max-height:84vh;overflow-y:auto;margin-left:-500px;background:var(--card);border:1px solid var(--line);border-left:none;border-radius:0 10px 10px 0;padding:13px;box-shadow:6px 0 22px rgba(0,0,0,.35);transition:margin-left .32s ease}
+.chk-drawer:hover .chk-panel,.chk-drawer.open .chk-panel{margin-left:0}
+.chk-drawer:hover .chk-tab,.chk-drawer.open .chk-tab{background:var(--blue);color:#fff}
+/* 买卖点信号:右侧抽屉(悬停/点击滑出,与左侧入场检查清单对称) */
+.sig-drawer{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:60;display:flex;align-items:flex-start}
+.sig-tab{position:relative;z-index:2;writing-mode:vertical-rl;text-orientation:upright;cursor:pointer;user-select:none;background:var(--card);border:1px solid var(--line);border-right:none;border-radius:9px 0 0 9px;padding:14px 7px;font-size:12.5px;font-weight:700;color:var(--fg);box-shadow:-3px 0 10px rgba(0,0,0,.25);transition:background .2s,color .2s;letter-spacing:2px}
+.sig-panel{width:500px;max-width:calc(100vw - 80px);max-height:84vh;overflow-y:auto;margin-right:-500px;background:var(--card);border:1px solid var(--line);border-right:none;border-radius:10px 0 0 10px;padding:13px;box-shadow:-6px 0 22px rgba(0,0,0,.35);transition:margin-right .32s ease}
+.sig-drawer:hover .sig-panel,.sig-drawer.open .sig-panel{margin-right:0}
+.sig-drawer:hover .sig-tab,.sig-drawer.open .sig-tab{background:var(--gold);color:#000}
+.sig-head{font-weight:700;font-size:13.5px;color:var(--fg);margin-bottom:8px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+.sig-head small{font-weight:400;color:var(--sub);font-size:10.5px}
+.sig-section{margin-bottom:16px}
+.sig-section:last-child{margin-bottom:0}
+.loading{text-align:center;padding:50px 20px;color:var(--sub)}
+.error-box{background:var(--red-s);border:1px solid var(--red);border-radius:8px;padding:13px;color:#ffa198;font-size:12.5px;margin:16px 0}
+.updated{font-size:10.5px;color:var(--sub)}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#7ee787;margin-right:3px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+footer{text-align:center;color:var(--sub);font-size:10.5px;margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
+.hint-box{background:rgba(188,140,255,.08);border-left:3px solid var(--purple);border-radius:6px;padding:9px 12px;margin:10px 0;font-size:11.5px;color:#c9b8e8}
+/* tooltip浮窗 */
+#tooltip{position:fixed;display:none;background:rgba(13,17,23,.96);border:1px solid var(--gold);border-radius:8px;padding:9px 12px;font-size:11.5px;pointer-events:none;z-index:999;font-family:"SF Mono",Consolas,monospace;box-shadow:0 6px 20px rgba(0,0,0,.6);min-width:150px;line-height:1.7}
+</style>
+</head>
+<body>
+<div id="tooltip"></div>
+<div class="wrap">
+<header>
+<div class="h-top">
+<div>
+<span class="badge">缠论 · 多周期联立 · 区间套</span>
+<h1>K线分析</h1>
+<p class="sub">趋势周期定方向 · 交易周期找买卖点 · 顺大势逆小势 · 双周期K线对比</p>
+</div>
+<div class="h-right">
+<div class="sym-tabs" id="symTabs">
+<button data-sym="BTCUSDT" class="active">BTC</button>
+<button data-sym="ETHUSDT">ETH</button>
+<button data-sym="SOLUSDT">SOL</button>
+<button data-sym="BNBUSDT">BNB</button>
+<button data-sym="ZECUSDT">ZEC</button>
+<button data-sym="TAOUSDT">TAO</button>
+<button data-sym="XAUUSDT">XAU</button>
+</div>
+<button class="btn" id="alertBtn">🔔 开启预警</button>
+<button class="btn" id="refreshBtn">⟳ 刷新</button>
+<button class="btn" id="autoRefreshBtn">🔄 自动刷新</button>
+<span style="font-size:11px;color:var(--sub);margin-left:4px">📡源</span>
+<button class="cnt-btn src-btn" data-s="auto" title="先fapi,失败自动切OKX">自动</button>
+<button class="cnt-btn src-btn" data-s="fapi" title="Binance合约API">fapi</button>
+<button class="cnt-btn src-btn" data-s="okx" title="OKX永续备援(XAU用PAXG代理,价格略有差异)">OKX</button>
+<span id="srcTag" style="font-size:10.5px;color:var(--sub)"></span>
+<span id="zeitBox" style="font-size:10.5px;color:var(--sub);margin-left:8px"></span>
+<button class="btn" id="biBtn" title="确认分型依次连线=笔">🖊 笔</button>
+<button class="btn" id="segBtn" title="线段破坏=反向三笔构成新线段(第三笔突破第一笔终点)">📐 线段</button>
+<button class="btn" id="cdlBtn" title="阳线空心(缠论经典画法)/实心切换">🕯 K线样式</button>
+<button class="btn" id="emaBtn" title="EMA21/55/144(教练系统·大趋势方向肉眼判据)">📈 均线</button>
+</div>
+</div>
+<!-- 周期选择器 -->
+<div class="period-sel" id="periodSel">
+<button class="pcombo" data-p="5m_30m"><div class="pt">5分钟 / 30分钟</div><div class="pd">交易 <b>5m</b> · 趋势 <b>30m</b><br>超短线</div></button>
+<button class="pcombo" data-p="15m_1h"><div class="pt">15分钟 / 1小时</div><div class="pd">交易 <b>15m</b> · 趋势 <b>1h</b><br>短线</div></button>
+<button class="pcombo active" data-p="30m_4h"><div class="pt">30分钟 / 4小时</div><div class="pd">交易 <b>30m</b> · 趋势 <b>4h</b><br>波段★</div></button>
+<button class="pcombo" data-p="4h_1d"><div class="pt">4小时 / 日线</div><div class="pd">交易 <b>4h</b> · 趋势 <b>1d</b><br>中波段★</div></button>
+</div>
+<div style="display:flex;gap:7px;align-items:center;margin-top:8px;flex-wrap:wrap">
+<span style="font-size:11.5px;color:var(--sub)">📊 K线数量：</span>
+<button class="cnt-btn" data-c="80">80</button>
+<button class="cnt-btn active" data-c="150">150</button>
+<button class="cnt-btn" data-c="250">250</button>
+<button class="cnt-btn" data-c="300">300</button>
+<button class="cnt-btn" data-c="500">500</button>
+<button class="cnt-btn" data-c="1000">1000</button>
+<span style="font-size:10.5px;color:var(--sub);margin-left:6px">只作用于交易周期图 · 趋势周期固定250根</span>
+</div>
+</header>
+
+<div id="loading" class="loading"><div style="font-size:26px">⏳</div><p style="margin-top:8px" id="loadMsg">正在获取双周期K线数据...</p></div>
+<div id="errorBox" class="error-box" style="display:none"></div>
+
+<div id="content" style="display:none">
+<!-- 仪表盘 -->
+<div class="dash">
+<div class="dcard">
+<div class="dl">📍 趋势周期 · <span id="trendPeriodLabel">4H</span></div>
+<div class="dv" id="trendPeriodDir">—</div>
+<div style="font-size:10.5px;color:var(--sub);margin-top:5px" id="trendPeriodDetail">—</div>
+</div>
+<div class="dcard">
+<div class="dl">🎯 交易周期 · <span id="tradePeriodLabel">1H</span></div>
+<div class="dv" id="tradePeriodStatus">—</div>
+<div style="font-size:10.5px;color:var(--sub);margin-top:5px" id="tradePeriodDetail">—</div>
+</div>
+<div class="dcard advice-card" id="adviceCard">
+<div class="dl">⚡ 综合建议（周期联立）</div>
+<div class="at" id="adviceTitle">—</div>
+<div class="ad" id="adviceDesc">—</div>
+<div id="resonance"></div>
+</div>
+</div>
+
+<!-- 趋势周期图 -->
+<div class="chart-wrap mini">
+<div class="chart-head">
+<span class="ct">趋势周期 K线 <span class="tag" id="tag1">—</span></span>
+<span class="ck">大级别结构 · 定方向 <span class="updated"><span class="dot"></span><span id="updTime">—</span></span></span>
+</div>
+<div id="chartTrend"></div>
+</div>
+
+<!-- 交易周期图 -->
+<div class="chart-wrap">
+<div class="chart-head">
+<span class="ct">交易周期 K线 <span class="tag" id="tag2">—</span></span>
+<span class="ck">小级别结构 · 找买卖点 · <span style="color:#58a6ff">—笔</span> <span style="color:#58a6ff">▭笔中枢</span> · <span style="color:#f6465d">━线段</span> · <span style="color:#f0b90b">▭段中枢</span> · <span style="color:#e8e8e8">┄走势类型</span> · 色块=等待区 · <b style="color:#3fb950">B买</b>/<b style="color:#f85149">S卖</b>=我的历史成交</span>
+</div>
+<div id="chartTrade"></div>
+</div>
+
+<!-- 分析栏 -->
+<div class="col">
+<h3>📐 分型对比 <small>(上:趋势周期 下:交易周期)</small></h3>
+<div id="fractalsBox"></div>
+</div>
+
+<!-- 趋势全景地图:独立主区块(五周期联立·先选级别再定买卖) -->
+<div class="col" id="panoCard">
+<h3>🗺 趋势全景地图 <small>(五周期联立 · 先选级别再定买卖 · 《二买点交易计划》第二课)</small></h3>
+<div id="panoSummary" style="margin:0 0 8px;font-size:12px;line-height:1.8;color:#c9d1d9">—</div>
+<div id="panoBox" style="overflow-x:auto">—</div>
+</div>
+
+<!-- 盘面信息:右侧抽屉(关键价位 + 买卖点信号 + 操作清单) -->
+<div class="sig-drawer" id="sigDrawer">
+<div class="sig-tab" id="sigTab" title="悬停或点击展开">📊 盘面信息</div>
+<div class="sig-panel">
+<div class="sig-section">
+<div class="sig-head">📍 关键价位 <small>(交易周期)</small></div>
+<div id="levelsBox"></div>
+</div>
+<div class="sig-section">
+<div class="sig-head">🎯 买卖点信号 <small>(交易周期)</small></div>
+<div id="signalsBox"></div>
+</div>
+<div class="sig-section">
+<div class="sig-head">🎮 闯关模式检测 <small>(交易周期执行 · 趋势周期定方向)</small></div>
+<div id="levelGatesBox">—</div>
+</div>
+<div class="sig-section">
+<div class="sig-head">🐼 教练系统 <small>(271入场法 · 动能/防守位/G1D1)</small></div>
+<div id="coachBox">—</div>
+</div>
+<div class="sig-section">
+<div class="sig-head">📐 三维度看盘 <small>(①高低点结构 ②实体资金 ③影线混乱度)</small></div>
+<div id="dimsBox">—</div>
+</div>
+<div class="sig-section">
+<div class="sig-head">📚 区间套四式 <small>(泽熙船长·大级别位置×小级别信号共振)</small></div>
+<div id="qjtBox">—</div>
+</div>
+<div class="sig-section">
+<div class="sig-head">🏛 九段升级检查 <small>(中枢延伸满9段→升级大一级别)</small></div>
+<div id="segUpBox">—</div>
+</div>
+<div class="sig-section">
+<div class="sig-head">📋 操作清单</div>
+<div class="checklist" id="checklist">—</div>
+</div>
+</div>
+</div>
+
+<!-- 入场检查清单:左侧抽屉(竖标签悬停/点击滑出) -->
+<div class="chk-drawer" id="chkDrawer">
+<div class="chk-tab" id="chkTab" title="悬停或点击展开">📋 入场检查清单</div>
+<div class="chk-section chk-panel">
+<div class="chk-head">
+<span class="ct">📋 入场检查清单 <small>· 多周期联立（大趋势定方向 + 回调小趋势找入场）</small></span>
+<span class="ck" id="chkSummary">—</span>
+</div>
+<div class="chk-grid">
+<div class="chk-col chk-big">
+<div class="chk-col-t">🅰 大趋势 · <span id="chkBigPeriod">—</span> <small>结构层 / 定方向</small></div>
+<div id="chkBig"></div>
+</div>
+<div class="chk-col chk-small">
+<div class="chk-col-t">🅱 回调小趋势 · <span id="chkSmallPeriod">—</span> <small>入场层 / 找买卖点</small></div>
+<div id="chkSmall"></div>
+</div>
+</div>
+<div class="chk-foot">💡 <b>用法：</b>先看左栏「大趋势」是否成立（方向明确、阶段健康、防守位未破），再看右栏「回调小趋势」是否给出入场信号。两栏同时绿灯（共振）才是最佳时机。</div>
+</div>
+</div>
+
+<div class="hint-box">
+💡 <b>周期联立用法：</b>趋势周期（上图）判断大方向——上涨只做多、下跌只做空；交易周期（下图）找具体买卖点。<b style="color:#7ee787">两个周期方向一致时才是最佳时机</b>（共振）；方向相反时观望（逆大势不做）。
+</div>
+</div>
+
+<footer>数据源：Binance Futures API 实时 · 缠论多周期联立(区间套) · 不构成投资建议 · 每次切换周期/币种自动刷新</footer>
+</div>
+
+<script>
+const API="https://fapi.binance.com/fapi/v1";
+const SYMS={BTCUSDT:{name:"BTC",dec:1},ETHUSDT:{name:"ETH",dec:2},SOLUSDT:{name:"SOL",dec:2},BNBUSDT:{name:"BNB",dec:2},ZECUSDT:{name:"ZEC",dec:2},TAOUSDT:{name:"TAO",dec:2},XAUUSDT:{name:"XAU",dec:2}};
+// 周期组合配置: trade=交易周期, trend=趋势周期, limit=K线根数
+const PERIODS={
+  "5m_30m":{trade:"5m",trend:"30m",tradeN:"5分钟",trendN:"30分钟",tradeLimit:250,trendLimit:250,label:"超短线"},
+  "15m_1h":{trade:"15m",trend:"1h",tradeN:"15分钟",trendN:"1小时",tradeLimit:250,trendLimit:250,label:"短线"},
+  "30m_4h":{trade:"30m",trend:"4h",tradeN:"30分钟",trendN:"4小时",tradeLimit:250,trendLimit:250,label:"波段"},
+  "4h_1d":{trade:"4h",trend:"1d",tradeN:"4小时",trendN:"日线",tradeLimit:250,trendLimit:250,label:"中波段"},
+};
+let curSym="BTCUSDT", curPeriod="30m_4h", klineCount=150;
+let panoCache={sym:null,ts:0,rows:null};  // 趋势全景地图缓存(3分钟)
+const TREND_COUNT=250;  // 4h趋势图固定根数(≈41天,够看两个中枢);背景级别不随交易周期根数联动
+
+// MACD计算
+function ema(data,period){const k=2/(period+1),out=[data[0]];for(let i=1;i<data.length;i++)out.push(data[i]*k+out[i-1]*(1-k));return out}
+function calcMACD(kls){
+  const closes=kls.map(k=>k[4]);
+  const e12=ema(closes,12),e26=ema(closes,26);
+  const dif=e12.map((v,i)=>v-e26[i]);
+  const dea=ema(dif,9);
+  const hist=dif.map((v,i)=>(v-dea[i])*2);
+  return{dif,dea,hist};
+}
+// 背驰检测(缠论一类买卖点核心)
+function detectDiv(sw,macd,S){
+  const f=v=>v.toFixed(S.dec);
+  const cf=sw.filter(s=>s.confirmed);
+  const tops=cf.filter(s=>s.type==="顶"),bots=cf.filter(s=>s.type==="底");
+  const r={topDiv:false,botDiv:false,divs:[]};
+  // MACD柱子面积(缠论正宗:看区间内同向柱面积之和)
+  function area(i1,i2,sign){let s=0;for(let i=Math.max(0,i1);i<=i2;i++){if((macd.hist[i]>0)===(sign>0))s+=Math.abs(macd.hist[i])}return s}
+  // 顶背驰:两顶t1<t2,价格新高但红柱面积缩小
+  if(tops.length>=2){
+    const t2=tops[tops.length-1],t1=tops[tops.length-2];
+    const midB=bots.filter(b=>b.i>t1.i&&b.i<t2.i);
+    if(midB.length>0&&t2.price>=t1.price*0.998){
+      const b1=midB[0];
+      const prevB=bots.filter(b=>b.i<t1.i).slice(-1)[0];
+      const a1=prevB?area(prevB.i,t1.i,1):area(0,t1.i,1);
+      const a2=area(b1.i,t2.i,1);
+      if(a1>0&&a2<a1*0.85){
+        r.topDiv=true;
+        r.divs.push({type:"顶背驰",idx:t2.i,price:t2.price,t:t2.t,area1:a1,area2:a2,seg1:[prevB?prevB.i:0,t1.i],seg2:[b1.i,t2.i],top1:t1,top2:t2,
+          msg:`顶背驰：价格 ${f(t1.price)}→${f(t2.price)} 新高，MACD红柱面积 ${a1.toFixed(0)}→${a2.toFixed(0)} 缩小(${(a2/a1*100).toFixed(0)}%) → <b>一类卖点(抓顶)</b>`});
+      }
+    }
+  }
+  // 底背驰:两底b1<b2,价格新低但绿柱面积(绝对值)缩小
+  if(bots.length>=2){
+    const b2=bots[bots.length-1],b1=bots[bots.length-2];
+    const midT=tops.filter(t=>t.i>b1.i&&t.i<b2.i);
+    if(midT.length>0&&b2.price<=b1.price*1.002){
+      const t1=midT[0];
+      const prevT=tops.filter(t=>t.i<b1.i).slice(-1)[0];
+      const a1=prevT?area(prevT.i,b1.i,-1):area(0,b1.i,-1);
+      const a2=area(t1.i,b2.i,-1);
+      if(a1>0&&a2<a1*0.85){
+        r.botDiv=true;
+        r.divs.push({type:"底背驰",idx:b2.i,price:b2.price,t:b2.t,area1:a1,area2:a2,seg1:[prevT?prevT.i:0,b1.i],seg2:[t1.i,b2.i],bot1:b1,bot2:b2,
+          msg:`底背驰：价格 ${f(b1.price)}→${f(b2.price)} 新低，MACD绿柱面积 ${a1.toFixed(0)}→${a2.toFixed(0)} 缩小(${(a2/a1*100).toFixed(0)}%) → <b>一类买点(抄底)</b>`});
+      }
+    }
+  }
+  return r;
+}
+// [deprecated] 旧版中枢(滑动窗口近似)——已被 buildZS 取代,保留仅作参考
+function findZhongShu(sw){
+  const cf=sw.filter(s=>s.confirmed);
+  const zs=[];
+  for(let i=0;i<=cf.length-4;i++){
+    const seg=cf.slice(i,i+4);
+    const s1hi=Math.max(seg[0].price,seg[1].price),s1lo=Math.min(seg[0].price,seg[1].price);
+    const s2hi=Math.max(seg[1].price,seg[2].price),s2lo=Math.min(seg[1].price,seg[2].price);
+    const s3hi=Math.max(seg[2].price,seg[3].price),s3lo=Math.min(seg[2].price,seg[3].price);
+    const ZG=Math.min(s1hi,s2hi,s3hi),ZD=Math.max(s1lo,s2lo,s3lo);
+    if(ZG>ZD*1.002) zs.push({ZG,ZD,startI:seg[1].i,endI:seg[3].i,seg});
+  }
+  // 合并相邻重叠中枢
+  const merged=[];
+  zs.forEach(z=>{const m=merged[merged.length-1];
+    if(m&&m.endI>=z.startI-1&&m.ZG>=z.ZD&&z.ZG>=m.ZD){m.ZG=Math.min(m.ZG,z.ZG);m.ZD=Math.max(m.ZD,z.ZD);m.endI=Math.max(m.endI,z.endI)}
+    else merged.push(Object.assign({},z))});
+  return merged;
+}
+
+async function fetchJSON(u){const r=await fetch(u);if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}
+// ===== 数据源层: fapi(默认) / OKX备援, 支持自动故障转移与手动选择 =====
+// OKX差异: K线最新在前需倒序; 周期映射 1h→1H/1d→1D; 单次上限300根(超过自动截断);
+// XAUUSDT→PAXG-USDT-SWAP(1:1金本位代币,价格≈现货金); 成交量为张数(相对比较仍有效)
+let curSrc=localStorage.getItem("apiSource")||"auto";      // auto | fapi | okx
+let activeSrc="fapi";                                      // 本次实际生效的源
+let fapiDownUntil=0;                                       // fapi失败后的冷却截止时间戳
+const SYM_MAP={BTCUSDT:"BTC-USDT-SWAP",ETHUSDT:"ETH-USDT-SWAP",SOLUSDT:"SOL-USDT-SWAP",BNBUSDT:"BNB-USDT-SWAP",ZECUSDT:"ZEC-USDT-SWAP",TAOUSDT:"TAO-USDT-SWAP",XAUUSDT:"PAXG-USDT-SWAP"};
+const IV_MAP={"5m":"5m","15m":"15m","30m":"30m","1h":"1H","4h":"4H","1d":"1D"};
+const OKX_BASE="https://www.okx.com/api/v5/market";
+async function fetchTO(u,ms){                              // 带超时的fetch, 防单源挂死
+  const c=new AbortController();const t=setTimeout(()=>c.abort(),ms||8000);
+  try{return await fetch(u,{signal:c.signal})}finally{clearTimeout(t)}
+}
+async function klinesFrom(src,sym,iv,limit){
+  if(src==="fapi"){
+    if(Date.now()<fapiDownUntil)throw new Error("fapi冷却中");
+    const r=await fetchTO(`${API}/klines?symbol=${sym}&interval=${iv}&limit=${limit}`);
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    const d=await r.json();
+    if(!Array.isArray(d)||!d.length)throw new Error("fapi空数据");
+    fapiDownUntil=0;
+    return d.map(k=>[k[0],+k[1],+k[2],+k[3],+k[4],+k[5]]);
+  }
+  const inst=SYM_MAP[sym]||sym,bar=IV_MAP[iv]||iv;
+  const r=await fetchTO(`${OKX_BASE}/candles?instId=${inst}&bar=${bar}&limit=${Math.min(300,limit)}`);
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  const j=await r.json();
+  if(j.code!=="0"||!j.data||!j.data.length)throw new Error(j.msg||"OKX空数据");
+  return j.data.slice().reverse().map(k=>[+k[0],+k[1],+k[2],+k[3],+k[4],+k[5]]);   // OKX最新在前→倒序
+}
+async function priceFrom(src,sym){
+  if(src==="fapi"){
+    if(Date.now()<fapiDownUntil)throw new Error("fapi冷却中");
+    const d=await fetchTO(`${API}/ticker/price?symbol=${sym}`).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()});
+    if(!d||!d.price)throw new Error("fapi空价格");
+    fapiDownUntil=0;return +d.price;
+  }
+  const inst=SYM_MAP[sym]||sym;
+  const j=await fetchTO(`${OKX_BASE}/ticker?instId=${inst}`).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()});
+  if(j.code!=="0"||!j.data||!j.data[0])throw new Error(j.msg||"OKX空价格");
+  return +j.data[0].last;
+}
+async function withFallback(fn,sym,iv,limit){
+  const order=curSrc==="okx"?["okx"]:curSrc==="fapi"?["fapi"]:["fapi","okx"];
+  let err;
+  for(const s of order){
+    try{
+      const out=iv?await fn(s,sym,iv,limit):await fn(s,sym);
+      activeSrc=s;
+      return out;
+    }catch(e){
+      err=e;
+      if(s==="fapi")fapiDownUntil=Date.now()+60000;      // fapi失败→冷却1分钟,auto模式下走OKX
+    }
+  }
+  throw err;
+}
+async function loadKlines(sym,iv,limit){return withFallback(klinesFrom,sym,iv,limit)}
+async function fetchPrice(sym){return withFallback(priceFrom,sym)}
+
+// 分型识别(确认+潜在)
+function findSwings(kls,win){
+  win=win||3;
+  const cf=[];
+  for(let i=win;i<kls.length-win;i++){
+    let isT=true,isB=true;
+    for(let j=i-win;j<=i+win;j++){if(j===i)continue;if(kls[j][2]>=kls[i][2])isT=false;if(kls[j][3]<=kls[i][3])isB=false}
+    if(isT)cf.push({i,type:"顶",price:kls[i][2],t:kls[i][0],confirmed:true});
+    else if(isB)cf.push({i,type:"底",price:kls[i][3],t:kls[i][0],confirmed:true});
+  }
+  const clean=cf.filter((p,idx,a)=>idx===0||a[idx-1].type!==p.type);
+  const all=clean.slice();
+  const lastIdx=clean.length?clean[clean.length-1].i:0;
+  const recent=kls.slice(lastIdx+1);
+  if(recent.length>=2){
+    let hi=0,lo=0;
+    for(let j=1;j<recent.length;j++){if(recent[j][2]>recent[hi][2])hi=j;if(recent[j][3]<recent[lo][3])lo=j}
+    const hiG=lastIdx+1+hi,loG=lastIdx+1+lo;
+    const lastType=clean.length?clean[clean.length-1].type:null;
+    const cand=[];
+    if(hiG<loG){cand.push({i:hiG,type:"顶",price:recent[hi][2],t:recent[hi][0],confirmed:false});if(hiG!==loG)cand.push({i:loG,type:"底",price:recent[lo][3],t:recent[lo][0],confirmed:false})}
+    else{cand.push({i:loG,type:"底",price:recent[lo][3],t:recent[lo][0],confirmed:false});if(hiG!==loG)cand.push({i:hiG,type:"顶",price:recent[hi][2],t:recent[hi][0],confirmed:false})}
+    cand.forEach(c=>{if(c.type!==lastType){all.push(c)}});
+  }
+  return all;
+}
+// [deprecated] 旧版笔(无包含合并)——已被 buildBiM 取代,保留仅作参考
+function buildBi(sw){
+  const cf=sw.filter(s=>s.confirmed);
+  const bi=[];
+  for(const f of cf){
+    const last=bi[bi.length-1];
+    if(!last){bi.push(f);continue}
+    if(last.type===f.type){
+      if(last.type==="顶"?f.p>=last.p:f.p<=last.p)bi[bi.length-1]=f;
+    }else if(f.i-last.i>=4){
+      bi.push(f);
+    } // 间隔不足4根:构不成一笔,跳过该分型
+  }
+  return bi;
+}
+// K线包含关系合并(缠论标准预处理):相邻K线高低点存在包含时,按趋势方向合并——上升取高高,下降取低低
+function mergeK(kls){
+  const out=[];
+  for(let i=0;i<kls.length;i++){
+    const h=kls[i][2],l=kls[i][3];
+    const m=out[out.length-1];
+    if(m&&((m.h>=h&&m.l<=l)||(h>=m.h&&l<=m.l))){
+      const prev=out[out.length-2];
+      const dir=prev?(m.h>prev.h?1:-1):(h>=m.h?1:-1);
+      const nh=dir>0?Math.max(m.h,h):Math.min(m.h,h);
+      const nl=dir>0?Math.max(m.l,l):Math.min(m.l,l);
+      m.h=nh;m.l=nl;m.i1=i;
+      m.hi=nh===m.h?m.hi:i;   // 极值来自哪根原始K线(用于画图定位)
+      m.lo=nl===m.l?m.lo:i;
+    }else{
+      out.push({h,l,t:kls[i][0],i0:i,i1:i,hi:i,lo:i});
+    }
+  }
+  return out;
+}
+// 标准笔:合并后K线上找分型,顶底极值间隔≥4根原始K线(中间至少3根),同向保留更极端
+// 间隔用原始K线数(i差)而非合并K数(mj差)——与每日缠论分析管线同源;合并K严格版会把81,500这类
+// "间隔3根合并K的新高顶"拒收,导致笔区间内出现超越端点的价格(81,271→76,853内含81,500),图形失真
+function buildBiM(kls){
+  const mg=mergeK(kls);
+  const fr=[];
+  for(let j=1;j<mg.length-1;j++){
+      if(mg[j].h>mg[j-1].h&&mg[j].h>mg[j+1].h)fr.push({i:mg[j].hi,type:"顶",price:mg[j].h,t:mg[j].t,mj:j,confirmed:true});
+      else if(mg[j].l<mg[j-1].l&&mg[j].l<mg[j+1].l)fr.push({i:mg[j].lo,type:"底",price:mg[j].l,t:mg[j].t,mj:j,confirmed:true});
+  }
+  const bi=[];
+  for(const f of fr){
+    const last=bi[bi.length-1];
+    if(!last){bi.push(f);continue}
+    if(last.type===f.type){
+      if(last.type==="顶"?f.price>=last.price:f.price<=last.price)bi[bi.length-1]=f;
+    }else if(f.i-last.i>=4){
+      bi.push(f);
+    }
+  }
+  return bi;
+}
+// 缠论标准中枢(生长算法):
+// 构成: 进入段后的连续三段重叠 → ZG=min(三段高点), ZD=max(三段低点), ZG>ZD才成立
+// 延伸: ①端点回到区间内(震荡延伸) ②离开后下一段返回(往返延伸,+2段)
+// 结束: 段离开后不再返回 → 中枢在离开段起点处结束,离开段=下一中枢的进入段
+// 扩展: 相邻两个中枢区间重叠 → 数学上等价于更大级别的单一中枢(次级别走势的重叠)
+function buildZS(pts){
+  if(pts.length<5)return [];
+  const st=[];
+  for(let k=0;k<pts.length-1;k++)st.push({hi:Math.max(pts[k].price,pts[k+1].price),lo:Math.min(pts[k].price,pts[k+1].price),i0:pts[k].i,i1:pts[k+1].i,ep:pts[k+1].price});
+  const out=[];
+  let k=1;                                   // 第0笔默认为进入段
+  while(k+2<st.length){
+    const ZG=Math.min(st[k].hi,st[k+1].hi,st[k+2].hi);
+    const ZD=Math.max(st[k].lo,st[k+1].lo,st[k+2].lo);
+    if(ZG>ZD){
+      const inR=v=>v>=ZD&&v<=ZG;
+      const zs={ZG,ZD,startI:pts[k].i,endI:pts[k+3].i,segs:3};
+      let j=k+3;
+      while(j<st.length){
+        if(inR(st[j].ep)){zs.endI=st[j].i1;zs.segs++;j++;continue}              // 端点回区间:震荡延伸
+        if(j+1<st.length&&inR(st[j+1].ep)){zs.endI=st[j+1].i1;zs.segs+=2;j+=2;continue} // 离开又返回:往返延伸
+        break;                                                                  // 真离开
+      }
+      out.push(zs);
+      k=j+1;                                 // 离开段(j)作下一中枢进入段
+    }else k++;
+  }
+  return out;
+}
+// 线段:由笔构建——缠论标准切分规则(三层确认):
+// 层1(即时破坏):反向笔终点超过本段起点(V型反转) → 段立即结束
+// 层2(三笔破坏):反向三笔 下-上-下 且第三笔终点<第一笔终点 → 段结束
+// 层3(特征序列):标准缠论还要求包含处理后的特征序列分型——本实现用层2近似(实战够用)
+// 线段的方向一旦确认,只有层1或层2的破坏才翻转——单笔回调不翻段
+function buildSegs(bi){
+  const segs=[];
+  if(bi.length<2)return segs;
+  let dir=bi[1].price>=bi[0].price?1:-1;  // 1上涨 -1下跌
+  let start=bi[0],ext=bi[1];              // ext=当前方向极值点
+  let firstR=null,revCnt=0;               // 反向第一笔端点 / 反向端点计数
+  for(let i=2;i<bi.length;i++){
+    const p=bi[i];
+    if(dir>0){
+      if(p.type==="顶"){
+        if(p.price>ext.price){ext=p;firstR=null;revCnt=0}   // 新高:线段延续,重置反向结构
+      }else{                                                // 底=反向笔端点
+        if(p.price<start.price){                            // 回落超过段起点:即时破坏(V型反转)
+          segs.push({dir,from:start,to:ext});
+          start=ext;dir=-1;ext=p;firstR=null;revCnt=0;
+        }else{
+          revCnt++;
+          if(revCnt===1)firstR=p;
+          else if(firstR&&p.price<firstR.price){            // 下-上-下三笔成段:第三笔破第一笔终点
+            segs.push({dir,from:start,to:ext});
+            start=ext;dir=-1;ext=p;firstR=null;revCnt=0;
+          }
+        }
+      }
+    }else{
+      if(p.type==="底"){
+        if(p.price<ext.price){ext=p;firstR=null;revCnt=0}   // 新低:线段延续
+      }else{                                                // 顶=反向笔端点
+        if(p.price>start.price){                            // 反弹超过段起点:即时破坏(V型反转)
+          segs.push({dir,from:start,to:ext});
+          start=ext;dir=1;ext=p;firstR=null;revCnt=0;
+        }else{
+          revCnt++;
+          if(revCnt===1)firstR=p;
+          else if(firstR&&p.price>firstR.price){            // 上-下-上三笔成段
+            segs.push({dir,from:start,to:ext});
+            start=ext;dir=1;ext=p;firstR=null;revCnt=0;
+          }
+        }
+      }
+    }
+  }
+  segs.push({dir,from:start,to:ext,running:true}); // 未完成的当前线段
+  return segs;
+}
+// KDJ(9,3,3): RSV=(C-L9)/(H9-L9)*100, K/D平滑, J=3K-2D —— 闯关模式第一关使用
+function calcKDJ(kls,n){
+  n=n||9;
+  const K=[],D=[],J=[];let k=50,d=50;
+  for(let i=0;i<kls.length;i++){
+    let hh=-1e18,ll=1e18;
+    for(let j=Math.max(0,i-n+1);j<=i;j++){hh=Math.max(hh,kls[j][2]);ll=Math.min(ll,kls[j][3])}
+    const rsv=(hh-ll)<1e-9?50:(kls[i][4]-ll)/(hh-ll)*100;
+    k=k*2/3+rsv/3;d=d*2/3+k/3;
+    K.push(k);D.push(d);J.push(3*k-2*d);
+  }
+  return{k:K,d:D,j:J};
+}
+// 闯关模式(《缠论自动交易之闯关模式》策略卡): 多头六关流水线,逐关检测当前条件状态
+// 规则: ①一买抄底→②二买确认→③三买突破→④止盈一→⑤止盈二/⑥止损; 不可跳关; 顶背驰只止盈不开空
+function levelGates(kls,bi,macd,zs,kdj,now){
+  const n=kls.length,f=v=>v.toFixed(0);
+  const area=(i1,i2,sg)=>{let s=0;for(let i=Math.max(0,i1);i<=Math.min(n-1,i2);i++){if((macd.hist[i]>0)===(sg>0))s+=Math.abs(macd.hist[i])}return s};
+  const bots=bi.filter(b=>b.type==="底"),tops=bi.filter(b=>b.type==="顶");
+  const b1=bots[bots.length-2],b2=bots[bots.length-1];          // b2=最近底(一买底候选), b1=前底
+  const t1=tops[tops.length-2],t2=tops[tops.length-1];          // t2=最近顶
+  const last=bi[bi.length-1];
+  const lastZs=zs[zs.length-1];
+  const rows=[];
+  const G=(name,conds,action)=>rows.push({name,conds,action,ok:conds.every(c=>c[0])});
+  // 关1 一买抄底: 底背驰+绿柱1/3+J<0+底分型确认K
+  if(b1&&b2){
+    const midT=tops.find(t=>t.i>b1.i&&t.i<b2.i);
+    const prevB=bots[bots.length-3];
+    const a1=prevB?area(prevB.i,b1.i,-1):area(Math.max(0,b1.i-20),b1.i,-1);
+    const a2=midT?area(midT.i,b2.i,-1):area(b1.i,b2.i,-1);
+    G("一买抄底",[
+      [b2.price<b1.price,`价格新低 ${f(b1.price)}→${f(b2.price)}`],
+      [macd.dif[b2.i]>macd.dif[b1.i],`DIF低点抬高 ${f(macd.dif[b1.i])}→${f(macd.dif[b2.i])}`],
+      [a2<a1/3,`绿柱面积 ${f(a1)}→${f(a2)} (需<1/3)`],
+      [kdj.j[n-1]<0,`KDJ J=${kdj.j[n-1].toFixed(1)} (需<0)`],
+      [last.type==="底"&&n-1-b2.i<=3,`底分型确认K线(距底${n-1-b2.i}根,需≤3)`],
+    ],"开仓100%");
+  }
+  // 关2 二买确认: 回调不破一买低点 + 回调绿柱<红柱(动能衰竭) + 5m底分型确认
+  if(b1&&b2){
+    const midT2=tops.find(t=>t.i>b1.i&&t.i<b2.i);
+    const green=midT2?area(midT2.i,b2.i,-1):0,red=midT2?area(b1.i,midT2.i,1):0;
+    G("二买确认",[
+      [b2.price>b1.price,`回调底${f(b2.price)}不破一买底${f(b1.price)}`],
+      [green<red,`回调绿柱${f(green)}<红柱${f(red)}(动能衰竭)`],
+      [last.type==="底"&&n-1-b2.i<=3,"底分型确认"],
+    ],"加仓50%");
+  }
+  // 关3 三买突破: 放量突破前中枢ZG + 站上ZG + 回踩不破
+  if(lastZs){
+    const ZG=lastZs.ZG;
+    let bi2=-1;for(let i=n-1;i>=0;i--){if(kls[i][4]>ZG){bi2=i}else if(bi2>=0)break}  // 突破K线
+    let volOk=false,volTxt="无突破K";
+    if(bi2>=0){
+      const avg5=(()=>{let s=0,c=0;for(let q=Math.max(0,bi2-5);q<bi2;q++){s+=kls[q][5]||0;c++}return c?s/c:0})();
+      const v=kls[bi2][5]||0;volOk=avg5>0&&v>avg5*2;
+      volTxt=`突破量/前5均=${avg5>0?(v/avg5).toFixed(1):"—"}倍(需>2)`;
+    }
+    let retrace=true;for(let i=(bi2>=0?bi2:0);i<n;i++){if(kls[i][3]<ZG)retrace=false}
+    G("三买突破",[
+      [now>ZG,`现价${f(now)}站上ZG ${f(ZG)}`],
+      [volOk,volTxt],
+      [retrace,"突破后回踩未破ZG"],
+    ],"再加仓30%");
+  }
+  // 关4 止盈一: 新高+顶背驰(DIF高点降低+红柱面积<80%)
+  if(t1&&t2){
+    const midB=bots.find(b=>b.i>t1.i&&b.i<t2.i);
+    const r1=midB?area(t1.i,midB.i,1):0,r2=midB?area(midB.i,t2.i,1):0;
+    G("止盈一",[
+      [t2.price>t1.price,`新高 ${f(t1.price)}→${f(t2.price)}`],
+      [macd.dif[t2.i]<macd.dif[t1.i],`DIF高点降低 ${f(macd.dif[t1.i])}→${f(macd.dif[t2.i])}`],
+      [r1>0&&r2<r1*0.8,`红柱面积 ${f(r1)}→${f(r2)} (需<80%)`],
+    ],"减仓50%");
+  }
+  // 关5 止盈二: 跌破上涨中枢ZD 或 二买低点(先到者)
+  {
+    const bBuy=b2&&b2.price>b1.price?b2:null;   // 二买低点(若最近底是回调底)
+    const zsD=lastZs?lastZs.ZD:null;
+    G("止盈二",[
+      [zsD!=null&&now<zsD,`现价${f(now)} ${zsD!=null?"vs ZD "+f(zsD):""}(破=清仓)`],
+      [bBuy&&now<bBuy.price,`vs 二买低点${bBuy?f(bBuy.price):"—"}`],
+    ],"清仓(先到者)");
+  }
+  // 关6 止损: 跌破一买低点 或 -2.5%
+  if(b2){
+    const entryRef=b1&&b2.price<b1.price?b2:b1;  // 一买底=开仓参照
+    G("止损",[
+      [entryRef&&now<entryRef.price,`现价${f(now)} vs 一买底${entryRef?f(entryRef.price):"—"}`],
+      [entryRef&&now<entryRef.price*0.975,`距一买底-2.5%线 ${entryRef?f(entryRef.price*0.975):"—"}`],
+    ],"全部止损离场");
+  }
+  // 当前关卡: 顺序不可跳关——第一关未全过的就是当前关
+  let cur=null,phase="建仓期";
+  for(const r of rows.slice(0,3)){if(!r.ok){cur=r;break}}
+  if(!cur){cur=rows[3]||null;phase="持仓期(止盈/止损监控)"}
+  return{rows,cur,phase};
+}
+
+// ===== 熊猫教练系统加持(2026-05 价格行为&缠论 "271入场法") =====
+// EMA21/55/144: 教练用三均线肉眼判大趋势方向
+function calcEMA(kls,n){const c=kls.map(k=>k[4]);const k=2/(n+1);let e=c[0];return c.map(v=>e=v*k+e*(1-k))}
+// 动能评分1-10(教练分档: 8-10 强趋势·可左侧 / 5-7一般·需右侧 / 1-4不及格)
+// 回调小趋势动能1-4分=绝佳入场(动能衰竭才是机会,反直觉但正是教练核心)
+// 规则: 同向K占比×3 + 实体占比×2 + 收盘位置×3 + 量能趋势×2(各归一后满分10)
+function momentumScore(kls,lookback){
+  lookback=Math.min(lookback||30,kls.length);
+  const seg=kls.slice(-lookback);
+  if(seg.length<5)return{score:0,grade:"数据不足",dir:0,parts:{}};
+  const dir=Math.sign(seg[seg.length-1][4]-seg[0][4])||1;
+  let same=0,bodySum=0,closePosSum=0;
+  seg.forEach(k=>{const o=k[1],c=k[4],h=k[2],l=k[3],rng=Math.max(1e-9,h-l);
+    if(Math.sign(c-o)===dir)same++;
+    bodySum+=Math.abs(c-o)/rng;
+    closePosSum+=dir>0?(c-l)/rng:(h-c)/rng;});
+  const half=Math.floor(seg.length/2);
+  const v1=seg.slice(0,half).reduce((s,k)=>s+(k[5]||0),0)/Math.max(1,half);
+  const v2=seg.slice(half).reduce((s,k)=>s+(k[5]||0),0)/Math.max(1,seg.length-half);
+  const parts={same:same/seg.length,body:bodySum/seg.length,closePos:closePosSum/seg.length,vol:v1>0?v2/v1:1};
+  const score=Math.max(1,Math.min(10,Math.round(parts.same*3+parts.body*2+parts.closePos*3+Math.min(1,Math.max(0,parts.vol))*2)));
+  const grade=score>=8?"8-10 强趋势·可左侧":(score>=5?"5-7 一般·需右侧":"1-4 不及格");
+  return{dir,score,grade,parts};
+}
+// G1/D1(高1/低1): 顺大趋势看回调——回调中首次收盘突破前一根顺势极值的K=高1/低1;
+// 其后再创回调极值后的第二次突破=高2/低2(弱趋势/右侧入场的经典信号)
+function findG1D1(kls,trendDir){
+  const n=kls.length;if(n<10||!trendDir)return null;
+  const look=Math.min(30,n),start=n-look;
+  let extI=start;                                   // 回调起点=窗口内顺势极值(多头最高high/空头最低low)
+  for(let i=start;i<n;i++){if(trendDir>0?kls[i][2]>=kls[extI][2]:kls[i][3]<=kls[extI][3])extI=i}
+  if(extI>=n-3)return null;                        // 极端就在尾部=没有回调,无G/D
+  let pullExtI=extI,sigCnt=0,last=null;
+  for(let i=extI+2;i<n;i++){
+    const k=kls[i],prev=kls[i-1];
+    const newPull=trendDir>0?k[3]<kls[pullExtI][3]:k[2]>kls[pullExtI][2];
+    if(newPull){pullExtI=i;sigCnt=0;continue}      // 回调延续(创新极值),信号计数归零
+    const brk=trendDir>0?k[4]>prev[2]:k[4]<prev[3];
+    if(brk&&sigCnt===0){sigCnt=1;last={i,type:(trendDir>0?"高1":"低1")}}
+    else if(brk&&sigCnt===1&&last&&pullExtI>last.i){sigCnt=2;last={i,type:(trendDir>0?"高2":"低2")}}
+  }
+  return last;
+}
+// 防守位(教练:防守位被破=改变偏见): 上涨取最近的笔底/中枢ZD(价下方最高者),下跌取笔顶/ZG(价上方最低者)
+function defenseLevel(bi,zs,dir,now){
+  const bots=bi.filter(b=>b.type==="底"),tops=bi.filter(b=>b.type==="顶");
+  const lastZs=zs[zs.length-1];
+  if(dir==="上涨"){
+    const lB=bots[bots.length-1];
+    const c=[lB&&lB.price,lastZs&&lastZs.ZD].filter(v=>v&&v<now);
+    return c.length?{p:Math.max(...c),label:"防守位",side:"long"}:null;
+  }
+  if(dir==="下跌"){
+    const lT=tops[tops.length-1];
+    const c=[lT&&lT.price,lastZs&&lastZs.ZG].filter(v=>v&&v>now);
+    return c.length?{p:Math.min(...c),label:"防守位",side:"short"}:null;
+  }
+  return null;
+}
+// TD序列(迪马克): 数连续同向衰竭K线, 9/13=经典转折计数
+// 老唐用法: 多头回调5~9根小段(前5清一色阴→6-7根买,出9加仓); 缓跌夹杂阳线→等9; 空头抢反弹12~18根中段等13
+function tdCount(kls){
+  let buy=0,sell=0;
+  for(let i=4;i<kls.length;i++){
+    if(kls[i][4]<kls[i-4][4]){buy++;sell=0}else if(kls[i][4]>kls[i-4][4]){sell++;buy=0}else{buy=0;sell=0}
+  }
+  return{buy,sell};
+}
+// 共振投票器(老唐"激进单/常规点位"): K线结构/均线/动能/背驰/TD 五项独立投票
+// 0-1项=要么不做; 2项=激进单≤10%仓; 3项+=常规点位≤30%仓
+function resonanceVote(biTr,kls,emaArr,divTr,tdTr){
+  const votes=[];
+  const s=dimStructure(biTr);
+  if(s.label.indexOf("上涨")>=0)votes.push("结构→多");else if(s.label.indexOf("下降")>=0)votes.push("结构→空");
+  const e21=emaArr[0],e55=emaArr[1],n=kls.length,c=kls[n-1][4];
+  if(c>e21[n-1]&&e21[n-1]>e55[n-1])votes.push("均线→多");else if(c<e21[n-1]&&e21[n-1]<e55[n-1])votes.push("均线→空");
+  const m=momentumScore(kls,30);if(m.score>=5)votes.push("动能→"+(m.dir>0?"多":"空"));
+  if(divTr&&divTr.botDiv)votes.push("背驰→多");else if(divTr&&divTr.topDiv)votes.push("背驰→空");
+  if(tdTr&&tdTr.buy>=7)votes.push("TD→多");else if(tdTr&&tdTr.sell>=7)votes.push("TD→空");
+  const bull=votes.filter(v=>v.endsWith("多")).length,bear=votes.filter(v=>v.endsWith("空")).length;
+  const dir=bull>bear?"多":(bear>bull?"空":"僵持");
+  const cnt=Math.max(bull,bear);
+  const level=(dir==="僵持"||cnt<=1)?"观望（要么不做）":(cnt===2?"激进单 · 仓位≤10%（严格止损）":"常规点位 · 仓位≤30%");
+  return{votes,bull,bear,dir,cnt,level};
+}
+// 资金费率(老唐: 8/16/24点收取, 高费率=持仓成本/拥挤) — fapi优先, OKX备援
+async function fetchFunding(sym){
+  try{
+    if(Date.now()<fapiDownUntil)throw new Error("冷却");
+    const d=await fetchTO(`${API}/premiumIndex?symbol=${sym}`).then(r=>r.json());
+    if(d&&d.lastFundingRate!=null)return{rate:+d.lastFundingRate,next:+d.nextFundingTime,src:"fapi"};
+    throw new Error("空");
+  }catch(e){
+    try{
+      const inst=SYM_MAP[sym]||sym;
+      const j=await fetchTO(`https://www.okx.com/api/v5/public/funding-rate?instId=${inst}`).then(r=>r.json());
+      if(j.code==="0"&&j.data[0])return{rate:+j.data[0].fundingRate,next:+j.data[0].fundingTime,src:"okx"};
+    }catch(e2){}
+    return null;
+  }
+}
+// 真突破质检(教练:看突破那段的力量,不看"针破还是实体破"; 老唐不对称规则:向上需放量确认,向下无需量能):
+// 判真=收盘未收回 + (向上: 实体≥0.55且量能≥1.2倍 | 向下: 实体≥0.5即够); 收盘收回=假破; 其余=待确认
+function breakQuality(kls,level){
+  const n=kls.length;
+  let crossIdx=-1;
+  for(let i=1;i<n;i++){const p0=kls[i-1][4],c=kls[i][4];
+    if((p0<level&&c>=level)||(p0>level&&c<=level))crossIdx=i;}
+  if(crossIdx<0)return{state:"未触碰",body:0,volMult:1};
+  const lastClose=kls[n-1][4];
+  const brokeUp=kls[crossIdx][4]>=level;
+  const body=Math.abs(kls[crossIdx][4]-kls[crossIdx][1])/Math.max(1e-9,kls[crossIdx][2]-kls[crossIdx][3]);
+  let s=0,c2=0;for(let q=Math.max(0,crossIdx-5);q<crossIdx;q++){s+=kls[q][5]||0;c2++}
+  const volMult=c2>0?(kls[crossIdx][5]||0)/(s/c2):1;
+  if(brokeUp&&lastClose<level)return{state:"✗ 假破(收盘已收回)",body,volMult};
+  if(!brokeUp&&lastClose>level)return{state:"✗ 假破(收盘已收回)",body,volMult};
+  if(brokeUp&&body>=0.55&&volMult>=1.2)return{state:"✓ 真突破(向上·放量)",body,volMult};
+  if(!brokeUp&&body>=0.5)return{state:"✓ 真突破(向下·无需量能)",body,volMult};
+  return{state:"△ 待确认(力量不足)",body,volMult};
+}
+// 271入场建议(教练2×2: 大趋势强弱 × 回调简单/复杂)
+function coach271(mT,mTr,trDir,g1d1){
+  if(trDir==="震荡")return{txt:"趋势周期震荡——教练纪律：<b>看不懂就不做</b>，等方向先明确",cls:"wait"};
+  const strong=mT.score>=8,mid=mT.score>=5;
+  if(strong)return{txt:`大趋势强(${mT.score}分·强趋势) → <b>高1/低1 或 1类买卖点</b>入场，<b>可复仇1次</b>${g1d1?` · 当前信号：<b style="color:var(--gold)">${g1d1.type}</b>`:" · 等回调终结信号"}`,cls:"long"};
+  if(mid)return{txt:`大趋势一般(${mT.score}分) → <b>右侧入场</b>：等${g1d1&&g1d1.type.indexOf("2")>=0?"高2/低2确认(已出现)":"高2/低2或信号K确认"}${mTr.score<=4?` · 回调动能${mTr.score}分(衰竭)=绝佳入场窗口`:""}`,cls:"wait"};
+  return{txt:`大趋势弱(${mT.score}分·不及格) → 只做<b>3类买卖点</b>(中枢离开后回抽不回)，<b>不允许复仇</b>`,cls:"short"};
+}
+// ===== 三维度看盘 =====
+// 维度一: 高低点排列=市场结构(用笔端点最近3顶3底: 同升=上涨趋势/同降=下降趋势/高压低抬=收敛挤压/无规律=杂波)
+function dimStructure(bi){
+  const tops=bi.filter(b=>b.type==="顶").slice(-3),bots=bi.filter(b=>b.type==="底").slice(-3);
+  if(tops.length<2||bots.length<2)return{label:"数据不足",consist:0};
+  let tAsc=0,tDsc=0,bAsc=0,bDsc=0;
+  for(let i=1;i<tops.length;i++)tops[i].price>tops[i-1].price?tAsc++:tDsc++;
+  for(let i=1;i<bots.length;i++)bots[i].price>bots[i-1].price?bAsc++:bDsc++;
+  const tDir=tAsc>=tDsc?1:-1,bDir=bAsc>=bDsc?1:-1;
+  const consist=(Math.max(tAsc,tDsc)+Math.max(bAsc,bDsc))/((tops.length-1)+(bots.length-1));
+  let label;
+  if(consist<0.6)label="杂波(高低点无规律·无延伸性)";
+  else if(tDir>0&&bDir>0)label="上涨趋势(高点抬高·低点上移)";
+  else if(tDir<0&&bDir<0)label="下降趋势(高点降低·低点下降)";
+  else if(tDir<0&&bDir>0)label="收敛挤压(高点降低·低点抬高)";
+  else label="扩张震荡(高点抬高·低点下降)";
+  return{label,consist};
+}
+// 维度二: K线实体=资金参与度("K线的长度就是资金的态度": 实体占比+与前一等长窗口的力度比)
+function dimCapital(kls,lb){
+  lb=Math.min(lb||30,kls.length);
+  const seg=kls.slice(-lb),prev=kls.slice(-lb*2,-lb);
+  const bodyRatio=seg.reduce((s,k)=>s+Math.abs(k[4]-k[1])/Math.max(1e-9,k[2]-k[3]),0)/seg.length;
+  const pct=seg.reduce((s,k)=>s+Math.abs(k[4]-k[1])/k[4],0)/seg.length*100;
+  const prevPct=prev.length>=lb/2?prev.reduce((s,k)=>s+Math.abs(k[4]-k[1])/k[4],0)/prev.length*100:pct;
+  const rel=prevPct>0?pct/prevPct:1;
+  const label=bodyRatio>=0.5&&rel>=1.1?"实体饱满·大资金参与":(rel<0.7?"实体极缩·大资金不参与":"力度平平·资金观望");
+  return{bodyRatio,pct,rel,label};
+}
+// 维度三: 影线/实体=多空混乱度(长影+十字星频繁=多空反复打平手,看着热闹实际混乱)
+function dimChaos(kls,lb){
+  lb=Math.min(lb||30,kls.length);
+  const seg=kls.slice(-lb);
+  const wick=seg.reduce((s,k)=>s+((k[2]-k[3])-Math.abs(k[4]-k[1]))/Math.max(1e-9,k[2]-k[3]),0)/seg.length;
+  const dojis=seg.filter(k=>Math.abs(k[4]-k[1])/Math.max(1e-9,k[2]-k[3])<0.3).length;
+  const label=wick>=0.6&&dojis>=lb*0.25?"混乱度高(长影线+十字星·多空拉锯)":(wick>=0.45?"有拉锯(影线偏长)":"盘面干净(实体主导)");
+  return{wick,dojis,label};
+}
+// 三维度综合一句话
+function dimSummary(s,c,ch){
+  const trend=s.label.indexOf("上涨趋势")>=0||s.label.indexOf("下降趋势")>=0;
+  if(trend){
+    if(c.label.indexOf("饱满")>=0)return ch.label.indexOf("干净")>=0?"标准趋势行情：顺势做，回调是礼物":"趋势在但多空有拉锯：顺势轻仓，等混乱度消化";
+    if(c.label.indexOf("极缩")>=0)return"趋势+资金撤离：动能衰竭期，等背驰/终完美证据，别追";
+    return"趋势+资金观望：右侧等确认再上";
+  }
+  if(s.label.indexOf("收敛")>=0)return"收敛挤压：区间边沿做，中段反复拉锯、不参与"+(c.label.indexOf("极缩")>=0?"（资金离场，变盘临近）":"");
+  if(s.label.indexOf("扩张")>=0)return"扩张震荡：波动放大无方向，减仓或回避";
+  return"杂波行情：无延伸性，全是短线噪音——不参与";
+}
+
+// ===== 区间套四式(泽熙船长《缠论区间套买卖实战内核》) =====
+// 大级别=趋势周期(4h/1h/1d)定位置，小级别=交易周期(30m/15m/4h)定时机
+// 一式·类二买: 大级别上涨 + 回调至大中枢下轨 + 小级别盘整背驰
+// 二式·突破后三买: 突破大中枢上轨 + 小级别新中枢整体站上轨上方 + 回踩不跌回
+// 三式·震荡低吸: 大中枢震荡 + 回踩下轨 + 小级别背驰
+// 四式·一卖预警: 冲高离开上轨 + 小级别连续中枢力度衰减 + 背驰 + 站不回上轨 (四信号计数)
+function qjtPatterns(S,zsT,trDir,now,ktr,kt,zsTr,divTr){
+  const out=[];
+  const big=zsT[zsT.length-1],small=zsTr[zsTr.length-1];
+  if(!big)return out;
+  const f=v=>v.toFixed(S.dec);
+  // 大级别近端触及位(趋势周期最近10根K线的低/高)
+  let tLow=Infinity,tHigh=-Infinity;
+  for(let i=Math.max(0,ktr.length-10);i<ktr.length;i++){tLow=Math.min(tLow,ktr[i][3]);tHigh=Math.max(tHigh,ktr[i][2]);}
+  // 小级别最近8根低点(判断回踩是否跌回)
+  let sLow=Infinity;
+  for(let i=Math.max(0,kt.length-8);i<kt.length;i++)sLow=Math.min(sLow,kt[i][3]);
+  // 一式·类二买
+  {
+    const c=[[trDir==="上涨",`大级别方向上涨(当前${trDir})`],
+      [tLow<=big.ZD*1.005,`回调触及大中枢下轨 ${f(big.ZD)}(近低${f(tLow)})`],
+      [!!(divTr&&divTr.botDiv),`小级别底背驰${divTr&&divTr.botDiv?"✓":"✗(缺确认，等小级别信号)"}`]];
+    out.push({name:"一式·类二买",formula:"大级别上涨 + 回调至中枢下轨 + 小级别盘整背驰",checks:c,
+      verdict:c.every(x=>x[0])?"✓ 类二买成立":((c[0][0]&&c[1][0])?"◐ 位置到位·等小级别背驰确认":"○ 观察")});
+  }
+  // 二式·突破后三买
+  {
+    const c=[[now>big.ZG,`现价${f(now)}在大中枢上轨${f(big.ZG)}上方`],
+      [!!small&&small.ZD>big.ZG,small?`小级别中枢(${f(small.ZD)}~${f(small.ZG)})整体站在上轨上方`:"小级别新中枢未形成"],
+      [sLow>big.ZG,`回踩未跌回上轨(近低${f(sLow)})`]];
+    out.push({name:"二式·突破后三买",formula:"突破大中枢 + 小级别新中枢站上轨上方 + 回踩不跌回",checks:c,
+      verdict:c.every(x=>x[0])?"✓ 突破后三买成立":"○ 观察"});
+  }
+  // 三式·震荡低吸
+  {
+    const c=[[now>big.ZD&&now<big.ZG,`大中枢震荡格局(体内${f(big.ZD)}~${f(big.ZG)})`],
+      [now<=big.ZD*1.01||tLow<=big.ZD*1.005,`回踩至下轨${f(big.ZD)}附近`],
+      [!!(divTr&&divTr.botDiv),`小级别背驰${divTr&&divTr.botDiv?"✓":"✗"}`]];
+    out.push({name:"三式·震荡低吸",formula:"大中枢震荡 + 回踩下轨 + 小级别背驰(止损清晰·成本低)",checks:c,
+      verdict:c.every(x=>x[0])?"✓ 低吸机会":((c[0][0]&&c[1][0])?"◐ 到位·缺背驰确认":"○ 观察")});
+  }
+  // 四式·一卖预警(四信号计数)
+  {
+    const c=[[tHigh>big.ZG,`大级别冲高离开过上轨(近高${f(tHigh)} vs ${f(big.ZG)})`],
+      [zsTr.length>=2,`离开后小级别已形成 ${zsTr.length} 个中枢(力度衰减观察)`],
+      [!!(divTr&&divTr.topDiv),`小级别背驰${divTr&&divTr.topDiv?"✓":"✗"}`],
+      [now<big.ZG,`现价${f(now)}站不回上轨${f(big.ZG)}`]];
+    const n=c.filter(x=>x[0]).length;
+    out.push({name:"四式·一卖预警",formula:"冲高乏力 + 连续中枢力度衰减 + 背驰 + 站不回上轨",checks:c,
+      verdict:n>=4?"🚨 一卖预警(4/4共振)":(n===3?"⚠️ 接近一卖(3/4)":`○ ${n}/4`)});
+  }
+  return out;
+}
+
+// ===== 趋势全景地图(《二买点交易计划》第二课·五周期联立决策表) =====
+// 每周期回答: 方向/阶段/在走什么/防守位/两剧本/目标/剩余利润/持仓类型/参与裁定
+// 术语对译(缠论纪律): 简单回调=不进前中枢的回调, 复杂回调=回调进前中枢(中枢扩展), 末期=动能背离证据
+function panoPhase(bi,zs,macd,now){
+  const tops=bi.filter(s=>s.type==="顶"),bots=bi.filter(s=>s.type==="底");
+  const lT=tops[tops.length-1],lB=bots[bots.length-1];
+  const last=bi[bi.length-1];
+  // 当前进行中的笔方向: 最后确认端点是顶→回调down, 是底→延伸up
+  let leg=last?(last.type==="顶"?"down":"up"):"";
+  let dir="震荡";
+  const zsL0=zs[zs.length-1];
+  if(zsL0){
+    // 中枢位置优先: 体内=交易区间, 上方=上涨侧, 下方=下跌侧
+    if(now>zsL0.ZG*1.001)dir="上涨";
+    else if(now<zsL0.ZD*0.999)dir="下跌";
+    else dir="震荡";
+  }else if(tops.length>=2&&bots.length>=2){
+    if(lT.price>tops[tops.length-2].price&&lB.price>bots[bots.length-2].price)dir="上涨";
+    else if(lT.price<tops[tops.length-2].price&&lB.price<bots[bots.length-2].price)dir="下跌";
+  }
+  // 动能背离(粗版灰带): 价格新高/新低而DIF不同步
+  let weak=false;
+  if(tops.length>=2&&lT.price>tops[tops.length-2].price&&macd.dif[lT.i]<macd.dif[tops[tops.length-2].i])weak=true;
+  if(bots.length>=2&&lB.price<bots[bots.length-2].price&&macd.dif[lB.i]>macd.dif[bots[bots.length-2].i])weak=true;
+  const zsL=zs[zs.length-1];
+  let phase;
+  if(!lT||!lB)phase="结构不足";
+  else if(weak)phase="末期·动能背离";
+  else if(dir==="上涨")phase=leg==="down"?((zsL&&lB.price<zsL.ZD)?"复杂回调·进中枢":"简单回调·不进中枢"):(now>(zsL?zsL.ZG:-Infinity)?"生长·离开中枢":"生长");
+  else if(dir==="下跌")phase=leg==="up"?((zsL&&lT.price>zsL.ZG)?"复杂回调·进中枢":"简单回调·不进中枢"):(now<(zsL?zsL.ZD:Infinity)?"生长·离开中枢":"生长");
+  else phase=zsL?"交易区间·中枢震荡":"结构不足";
+  return{dir,phase,leg,lT,lB,zsL,weak};
+}
+function panoRow(iv,k,now,S){
+  const dec=S?S.dec:2,f=v=>v.toFixed(dec);
+  const bi=buildBiM(k),zs=buildZS(bi),macd=calcMACD(k);
+  const st=panoPhase(bi,zs,macd,now);
+  // 防守位: 结构锚定——上涨回调取 max(最近确认底, 中枢上轨生命线); 突破生长取最近确认底; 震荡取所在半区边沿
+  let def=now;
+  if(st.dir==="上涨"){
+    if(st.phase.indexOf("回调")>=0&&st.zsL)def=Math.max(st.lB?st.lB.price:-Infinity,st.zsL.ZG);
+    else def=st.lB?st.lB.price:((st.zsL&&st.zsL.ZD)||now);
+  }else if(st.dir==="下跌"){
+    if(st.phase.indexOf("回调")>=0&&st.zsL)def=Math.min(st.lT?st.lT.price:Infinity,st.zsL.ZD);
+    else def=st.lT?st.lT.price:((st.zsL&&st.zsL.ZG)||now);
+  }else if(st.zsL)def=now>=(st.zsL.ZD+st.zsL.ZG)/2?st.zsL.ZD:st.zsL.ZG;
+  // 目标与剩余利润: 生长=等距(前笔高度×2), 回调=前极值, 震荡=对侧边沿
+  let tgt=now,tgtLab="—";
+  const legH=(st.lT&&st.lB)?Math.abs(st.lT.price-st.lB.price):0;
+  if(st.dir==="上涨"&&st.lT&&st.lB){
+    if(st.phase.indexOf("生长")>=0||now>st.lT.price){tgt=st.lB.price+legH*2;tgtLab="等距"+f(tgt)}  // 已破前高也用等距
+    else{tgt=st.lT.price;tgtLab="前高"+f(tgt)}
+  }else if(st.dir==="下跌"&&st.lT&&st.lB){
+    if(st.phase.indexOf("生长")>=0||now<st.lB.price){tgt=st.lT.price-legH*2;tgtLab="等距"+f(tgt)}
+    else{tgt=st.lB.price;tgtLab="前低"+f(tgt)}
+  }else if(st.zsL){const mid=(st.zsL.ZD+st.zsL.ZG)/2;tgt=now>=mid?st.zsL.ZG:st.zsL.ZD;tgtLab=(now>=mid?"上沿":"下沿")+f(tgt)}
+  const remain=Math.abs(tgt-now)/now;
+  // 持仓周期与类型(周期定基准, 回调阶段挂观望)
+  const holdMap={"1d":"数周~数月","4h":"数日~数周","1h":"1~5天","30m":"数小时~2天","15m":"30分~数小时"};
+  const typeMap={"1d":"大波段","4h":"波段","1h":"小波段","30m":"日内波段","15m":"短线"};
+  let hold=holdMap[iv]||"—",type=typeMap[iv]||"—";
+  if(st.phase.indexOf("回调")>=0){hold="等结构";type="观望"}
+  // 两剧本(方向×阶段模板)
+  let s1,s2;
+  if(st.dir==="上涨"){
+    if(st.phase.indexOf("生长")>=0){s1="回调不进中枢→恢复上涨";s2="回调进前中枢→扩展"}
+    else if(st.phase.indexOf("简单")>=0){s1="止跌于结构位→新上涨笔";s2="加深进中枢→转复杂"}
+    else{s1="中枢扩展后再定方向";s2="跌破防守位→趋势存疑"}
+  }else if(st.dir==="下跌"){
+    if(st.phase.indexOf("生长")>=0){s1="反弹不进中枢→恢复下跌";s2="反弹进前中枢→扩展"}
+    else if(st.phase.indexOf("简单")>=0){s1="受阻于结构位→新下跌笔";s2="加深进中枢→转复杂"}
+    else{s1="中枢扩展后再定方向";s2="收复防守位→趋势存疑"}
+  }else{s1="向上离开中枢→三买候选";s2="向下离开中枢→三卖候选"}
+  if(st.weak){s1="背离确认→转折(一类买卖点)";s2="DIF修复→灰带解除续走"}
+  // 参与裁定(先问值不值得, 再问做不做)
+  let choice="",ok=false;
+  if(st.phase==="结构不足")choice="样本不足";
+  else if(st.weak)choice="末期·只减不加";
+  else if(st.dir==="震荡")choice="区间边沿做·中段不做";
+  else if(remain>=0.03&&(st.phase.indexOf("生长")>=0||st.phase.indexOf("简单")>=0)){choice="✓ 顺势可参与";ok=true}
+  else if(st.phase.indexOf("回调")>=0)choice="等回调走完·盯防守位";
+  else if(remain>=0.015)choice="◐ 利润一般·右侧做";
+  else choice="利润太薄·放弃";
+  // 在走什么(带端点)
+  let walk="—";
+  if(st.lT&&st.lB)walk=st.leg==="down"?(`顶${f(st.lT.price)}→回调`):(st.leg==="up"?(`底${f(st.lB.price)}→延伸`):"—");
+  return{iv,dir:st.dir,phase:st.phase,walk,def,tgt,tgtLab,remain,s1,s2,hold,type,choice,ok};
+}
+
+// 趋势判断(破位逻辑)
+function trendOf(sw,kls){
+  const cf=sw.filter(s=>s.confirmed);
+  const tops=cf.filter(s=>s.type==="顶"),bots=cf.filter(s=>s.type==="底");
+  if(!tops.length||!bots.length)return {dir:"震荡",lastTop:null,lastBot:null};
+  const lT=tops[tops.length-1],lB=bots[bots.length-1];
+  const afterTopLow=kls.slice(lT.i).reduce((m,k)=>Math.min(m,k[3]),Infinity);
+  const afterBotHigh=kls.slice(lB.i).reduce((m,k)=>Math.max(m,k[2]),-Infinity);
+  const prevB=bots.filter(b=>b.i<lT.i).slice(-1)[0];
+  const prevT=tops.filter(t=>t.i<lB.i).slice(-1)[0];
+  if(prevB&&afterTopLow<prevB.price)return {dir:"下跌",lastTop:lT,lastBot:lB};
+  if(prevT&&afterBotHigh>prevT.price)return {dir:"上涨",lastTop:lT,lastBot:lB};
+  if(tops.length>=2&&bots.length>=2){
+    if(lT.price<tops[tops.length-2].price&&lB.price<bots[bots.length-2].price)return {dir:"下跌",lastTop:lT,lastBot:lB};
+    if(lT.price>tops[tops.length-2].price&&lB.price>bots[bots.length-2].price)return {dir:"上涨",lastTop:lT,lastBot:lB};
+  }
+  return {dir:"震荡",lastTop:lT,lastBot:lB};
+}
+// 交易周期建议决策树(结构化三类买卖点:背驰=一类/中枢突破=三类/回调企稳=二类)
+// sw=标准笔端点(全部已确认); rawSw=原始分型(仅用于「未确认试探」标记)
+function tradeAdvice(nowPrice,sw,S,div,zs,rawSw){
+  const tops=sw.filter(s=>s.type==="顶"),bots=sw.filter(s=>s.type==="底");
+  const lT=tops[tops.length-1],lB=bots[bots.length-1];
+  const lastSw=sw[sw.length-1],prevSw=sw[sw.length-2];
+  let leg=null;if(lastSw&&prevSw){if(prevSw.type==="顶"&&lastSw.type==="底")leg="down";else if(prevSw.type==="底"&&lastSw.type==="顶")leg="up"}
+  const f=v=>v.toFixed(S.dec);
+  if(!lT||!lB)return {title:"数据不足",cls:"act-wait",dir:"wait",desc:"",signals:[],chan:"",tentative:false};
+  // 接近阈值自适应:按最近一笔幅度,大波动放宽、小波动收紧(0.6%~2.5%)
+  const rng=Math.abs(lT.price-lB.price)/Math.min(lT.price,lB.price);
+  const nearT=Math.max(0.006,Math.min(0.025,rng*0.25));
+  const belowBot=nowPrice<lB.price,aboveTop=nowPrice>lT.price;
+  const nearBot=Math.abs(nowPrice-lB.price)/nowPrice<nearT,nearTop=Math.abs(nowPrice-lT.price)/nowPrice<nearT;
+  const tentative=(()=>{if(!rawSw)return false;   // 最近原始分型未确认=试探性
+    const t=rawSw.filter(s=>s.type==="顶").pop(),b=rawSw.filter(s=>s.type==="底").pop();
+    return(t&&!t.confirmed)||(b&&!b.confirmed)})();
+  const tag=tentative?" · 未确认试探":"";
+  const z=(a,b)=>`${f(Math.min(a,b))} ~ ${f(Math.max(a,b))}`;  // 区间统一低~高
+  const longStop=lB?`止损${f(lB.price*0.995)}`:"",shortStop=lT?`止损${f(lT.price*1.005)}`:"";
+  // 一类:背驰转折(趋势末段反转,最强信号,即便创新低/高也算)
+  if(div&&div.botDiv&&nearBot)return {title:`一类买点·背驰抄底${tag}`,cls:"act-long",dir:"long",desc:`底背驰+回调到前底${f(lB.price)}，一类买点(趋势末段反转)`,signals:[{type:"long",label:"一类买点做多",zone:z(nowPrice,lB.price),note:longStop+tag}],lT,lB,leg,chan:"一类买点",tentative};
+  if(div&&div.topDiv&&nearTop)return {title:`一类卖点·背驰抓顶${tag}`,cls:"act-short",dir:"short",desc:`顶背驰+反弹到前高${f(lT.price)}，一类卖点(趋势末段反转)`,signals:[{type:"short",label:"一类卖点做空",zone:z(nowPrice,lT.price),note:shortStop+tag}],lT,lB,leg,chan:"一类卖点",tentative};
+  if(belowBot)return {title:"创新低·等反弹做空",cls:"act-wait",dir:"wait",desc:`跌破前底${f(lB.price)}，等反弹做空`,signals:[{type:"wait",label:"等反弹做空区",zone:`${f(lB.price)} ~ ${f(lB.price*1.015)}`}],lT,lB,leg,chan:"",tentative};
+  if(aboveTop)return {title:"创新高·等回调做多",cls:"act-wait",dir:"wait",desc:`突破前高${f(lT.price)}，等回调做多`,signals:[{type:"wait",label:"等回调做多区",zone:`${f(lT.price*0.985)} ~ ${f(lT.price)}`}],lT,lB,leg,chan:"",tentative};
+  // 三类:中枢突破后顺势(不在顶/底极端,才算回踩确认)
+  if(zs&&nowPrice>zs.ZG&&!nearTop)return {title:`三类买点·突破中枢${tag}`,cls:"act-long",dir:"long",desc:`站上中枢上沿${f(zs.ZG)}未跌回，三类买点(突破后顺势)`,signals:[{type:"long",label:"三类买点做多",zone:`${f(zs.ZG)} ~ ${f(lT.price)}`,note:longStop+tag}],lT,lB,leg,chan:"三类买点",tentative};
+  if(zs&&nowPrice<zs.ZD&&!nearBot)return {title:`三类卖点·跌破中枢${tag}`,cls:"act-short",dir:"short",desc:`跌破中枢下沿${f(zs.ZD)}未升回，三类卖点(破位后顺势)`,signals:[{type:"short",label:"三类卖点做空",zone:`${f(lB.price)} ~ ${f(zs.ZD)}`,note:shortStop+tag}],lT,lB,leg,chan:"三类卖点",tentative};
+  // 二类:回调企稳(leg up&近底)/反弹受阻(leg down&近顶)
+  if(leg==="up"&&nearBot)return {title:`二类买点·回调企稳${tag}`,cls:"act-long",dir:"long",desc:`回调到前底${f(lB.price)}止跌，二类买点`,signals:[{type:"long",label:"二类买点做多",zone:z(nowPrice,lB.price),note:longStop+tag}],lT,lB,leg,chan:"二类买点",tentative};
+  if(leg==="down"&&nearTop)return {title:`二类卖点·反弹受阻${tag}`,cls:"act-short",dir:"short",desc:`反弹到前高${f(lT.price)}受阻，二类卖点`,signals:[{type:"short",label:"二类卖点做空",zone:z(nowPrice,lT.price),note:shortStop+tag}],lT,lB,leg,chan:"二类卖点",tentative};
+  // 追单差(到位但追单性价比低)
+  if(leg==="down"&&nearBot)return {title:"下跌到位·追空差",cls:"act-wait",dir:"wait",desc:`接近底${f(lB.price)}，追空性价比差`,signals:[{type:"wait",label:"等反弹做空区",zone:`${f(nowPrice)} ~ ${f(lT.price)}`}],lT,lB,leg,chan:"",tentative};
+  if(leg==="up"&&nearTop)return {title:"上涨到位·追多差",cls:"act-wait",dir:"wait",desc:`接近顶${f(lT.price)}，追多性价比差`,signals:[{type:"wait",label:"等回调做多区",zone:`${f(lB.price)} ~ ${f(nowPrice)}`}],lT,lB,leg,chan:"",tentative};
+  return {title:"中间区域·等待",cls:"act-wait",dir:"wait",desc:`位于底${f(lB.price)}与顶${f(lT.price)}之间`,signals:[{type:"wait",label:"等接近顶/底",zone:`${f(lB.price)} ~ ${f(lT.price)}`}],lT,lB,leg,chan:"",tentative};
+}
+// 周期联立综合建议(含背驰反转判定)
+function combineAdvice(trendDir,trAdv,trendN,tradeN,S,divT,divTr){
+  const f=v=>v.toFixed(S.dec);
+  const wantDir=trendDir==="下跌"?"short":"long";
+  const act=trendDir==="下跌"?"做空":"做多",actColor=trendDir==="下跌"?"#ffa198":"#7ee787";
+  // 背驰提示(显示用)
+  const hasDivT=divT&&divT.divs.length,hasDivTr=divTr&&divTr.divs.length;
+  const divNote=hasDivT||hasDivTr?`<br><span style="color:#bc8cff">⚡ ${hasDivT?'趋势周期':''}${hasDivT&&hasDivTr?'+':''}${hasDivTr?'交易周期':''}出现背驰，注意趋势可能反转(一类买卖点预警)</span>`:"";
+  if(trendDir==="震荡"){
+    return{title:"观望 · 大级别震荡",cls:"act-wait",icon:"⏳",resonance:"wait",
+      desc:`趋势周期(${trendN})震荡无方向，等突破或背驰后再用${tradeN}找点位。${trAdv.desc}。${hasDivTr?'<br>⚡ '+divTr.divs[0].msg:''}`,
+      checklist:`✅ 当前：<b style="color:#e3b341">观望</b>（大级别震荡）<br>❌ 大级别无趋势，不做<br>⏳ 等${trendN}出现明确趋势${hasDivTr?'<br>⚡ '+tradeN+'背驰:一类买卖点预警':''}`};
+  }
+  // 背驰反转检查:下跌中底背驰=可能见底,上涨中顶背驰=可能见顶
+  // 趋势周期自身背驰(divT)是最强反转信号,优先于交易周期背驰(divTr)
+  let dm=null,dsrc="";
+  if(trendDir==="下跌"&&divT&&divT.botDiv){dm=divT.divs.find(d=>d.type==="底背驰");dsrc=trendN}
+  else if(trendDir==="下跌"&&divTr&&divTr.botDiv){dm=divTr.divs.find(d=>d.type==="底背驰");dsrc=tradeN}
+  else if(trendDir==="上涨"&&divT&&divT.topDiv){dm=divT.divs.find(d=>d.type==="顶背驰");dsrc=trendN}
+  else if(trendDir==="上涨"&&divTr&&divTr.topDiv){dm=divTr.divs.find(d=>d.type==="顶背驰");dsrc=tradeN}
+  if(dm){
+    return{title:`⚠️ ${trendDir}趋势疑似见${trendDir==="下跌"?"底":"顶"}`,cls:"act-wait",icon:"⚡",resonance:"wait",
+      desc:`趋势周期(${trendN})<b>${trendDir}</b>，但<b style="color:#bc8cff">${dsrc}周期</b>出现${dm.type}。${dm.msg}。这是趋势可能反转的预警，原趋势单应考虑止盈，<b>但不立即反向操作</b>，等${trendN}确认反转。`,
+      checklist:`⚠️ <b style="color:#bc8cff">${dm.type}预警</b>(${dsrc})<br>📌 原${trendDir}单考虑止盈<br>⏳ 等${trendN}确认反转后再反向<br>💰 反向时用计算器算仓位`};
+  }
+  // 无明确方向信号(wait):顺势则"等回调/反弹点位"，而非逆势
+  if(trAdv.dir==="wait"){
+    return{title:`观望 · 等${tradeN}${trendDir==="下跌"?"反弹做空":"回调做多"}`,cls:"act-wait",icon:"⏳",resonance:"wait",
+      desc:`趋势周期(${trendN})<b>${trendDir}</b>，顺势只${act}。交易周期${trAdv.title}，${trAdv.desc}。`,
+      checklist:`✅ 顺势方向：<b style="color:${actColor}">只${act}</b><br>⏳ 交易周期尚未到买卖点<br>📋 等${tradeN}${trAdv.signals[0]?trAdv.signals[0].zone:"信号"}`};
+  }
+  // 有方向信号:同向=共振,反向=逆势不做
+  if(trAdv.dir===wantDir){
+    return{title:`✓ 顺势${act}（共振）`,cls:trAdv.cls,icon:trendDir==="下跌"?"▼":"▲",resonance:"ok",
+      desc:`趋势周期(${trendN})<b>${trendDir}</b> + 交易周期(${tradeN})${trAdv.title}。<b style="color:#7ee787">两级周期方向一致，最佳交易时机！</b>${divNote}`,
+      checklist:`✅ <b style="color:${actColor}">顺势${act}</b>（双周期共振${trAdv.chan?' · '+trAdv.chan:''}）${trAdv.tentative?'<br>⚠️ 信号含未确认分型，属试探':''}<br>📍 ${trAdv.signals[0]?trAdv.signals[0].note:""}<br>🎯 进场：${trAdv.signals[0]?trAdv.signals[0].zone:"现价附近"}<br>⚖️ 杠杆10-15x · 风险1.5%<br>💰 用<a href="仓位计算器.html" style="color:var(--gold)">仓位计算器</a>算仓位`};
+  }
+  return{title:`观望 · 逆大势不做`,cls:"act-wait",icon:"⚠️",resonance:"no",
+    desc:`趋势周期(${trendN})<b>${trendDir}</b>，但交易周期(${tradeN})${trAdv.title}方向<b style="color:#ffa198">与大级别相反</b>。缠论：顺大势逆小势，<b>不做逆势单</b>。${divNote}`,
+    checklist:`✅ 当前：<b style="color:#ffa198">观望（逆势）</b><br>⚠️ ${trendN}${trendDir}，${tradeN}想${trAdv.dir==="short"?"做空":"做多"}<br>❌ 方向相反，放弃此信号<br>⏳ 等${tradeN}与${trendN}同向`};
+}
+
+// 入场检查清单（多周期联立 7+7 维度）
+// 大趋势看方向，回调小趋势找入场；每一项从已计算的分型/趋势/动能/中枢/背驰自动填充
+// ok 字段 = 该项是否达标(对顺势交易有利)；颜色保留涨跌色仅作标识
+function buildChecklist(now,S,P,swT,trT,macdT,divT,zsT,swTr,trAdv,macdTr,divTr,zsTr){
+  const f=v=>(v==null||isNaN(v))?"—":v.toFixed(S.dec);
+  const ft=t=>{if(!t)return"—";const d=new Date(t);return(d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+  const upColor='#7ee787',dnColor='#ffa198',neu='var(--sub)';
+  const cfT=swT.filter(s=>s.confirmed);
+  const topsT=cfT.filter(s=>s.type==="顶"),botsT=cfT.filter(s=>s.type==="底");
+  const lT=topsT.length?topsT[topsT.length-1]:null;
+  const lB=botsT.length?botsT[botsT.length-1]:null;
+  const dir=trT.dir;
+  const isUp=dir==="上涨",isDn=dir==="下跌";
+  let legPct=null;
+  if(lT&&lB){const lo=Math.min(lT.price,lB.price);legPct=Math.abs(lT.price-lB.price)/lo*100}
+  const lastZsT=zsT.length?zsT[zsT.length-1]:null;
+  const inZsT=lastZsT&&now>=lastZsT.ZD&&now<=lastZsT.ZG;
+  let legsAfterZs=null;
+  if(lastZsT){legsAfterZs=cfT.filter(s=>s.i>lastZsT.endI).length}
+
+  // ===== 大趋势 7 项 =====
+  let tStart=isUp?lB:(isDn?lT:null);
+  const hT=macdT.hist;
+  const mT=hT[hT.length-1],mTprev=hT[hT.length-2]||0;
+  const tMomDir=mT>mTprev?"放大↑":(mT<mTprev?"收敛↓":"持平");
+  let tStage,tStageIcon,tStageColor,tStageOk;
+  if(!isUp&&!isDn){tStage="无趋势·震荡";tStageIcon="⏳";tStageColor="#e3b341";tStageOk=false}
+  else if(divT&&(divT.topDiv||divT.botDiv)){tStage="末期·疑似反转";tStageIcon="⚠️";tStageColor="#bc8cff";tStageOk=false}
+  else if(inZsT){tStage="震荡酝酿·中枢内";tStageIcon="⏳";tStageColor="#e3b341";tStageOk=false}
+  else if(legsAfterZs!==null&&legsAfterZs<=2){tStage="初期·刚突破中枢";tStageIcon="✅";tStageColor=upColor;tStageOk=true}
+  else{tStage="中段·健康延伸";tStageIcon="✅";tStageColor=upColor;tStageOk=true}
+  let tGuard=isUp?lB:(isDn?lT:null);
+  // 防守位未破 = 趋势仍有效
+  const tGuardOk=tGuard?(isUp?now>tGuard.price:(isDn?now<tGuard.price:false)):false;
+  // ⑦趋势结构:最近同向拐点是否延续(上涨:低点抬高; 下跌:高点降低)→趋势健康度
+  let tStruct;
+  if(!isUp&&!isDn) tStruct={ok:false,txt:"大级别无趋势"};
+  else{const arr=isUp?botsT:topsT;
+    if(arr.length>=2){const a=arr[arr.length-2].price,b=arr[arr.length-1].price;
+      tStruct=(isUp?b>a:b<a)?{ok:true,txt:"✅ 结构延续(顺势)"}:{ok:false,txt:"⚠️ 结构破坏(防反转)"};
+    }else tStruct={ok:false,txt:"样本不足"};
+  }
+  // 动能配合 = MACD柱方向与趋势一致
+  const tMomOk=(isDn&&mT<0)||(isUp&&mT>0);
+
+  const big=[
+    {k:"起点",icon:"①",val:tStart?`${f(tStart.price)}`:"—",sub:tStart?ft(tStart.t):"无有效拐点",color:isUp?upColor:(isDn?dnColor:neu),ok:!!tStart},
+    {k:"方向",icon:"②",val:dir,sub:isUp?'▲多头':(isDn?'▼空头':'区间内'),color:isUp?upColor:(isDn?dnColor:neu),ok:isUp||isDn},
+    {k:"阶段",icon:"③",val:tStage,icon2:tStageIcon,color:tStageColor,ok:tStageOk},
+    {k:"动能",icon:"④",val:`${mT.toFixed(1)}`,sub:`MACD柱 ${mT>0?'红':'绿'} ${tMomDir}${tMomOk?' · 同向✓':' · ⚠与趋势背离'}`,color:tMomOk?upColor:"#e3b341",ok:tMomOk},
+    {k:"级别",icon:"⑤",val:P.trendN,sub:legPct!=null?`近笔 ${legPct.toFixed(1)}%`:"",color:"var(--blue)",ok:true,neutral:true},
+    {k:"防守位",icon:"⑥",val:tGuard?`${f(tGuard.price)}`:"—",sub:isUp?'破前低=趋势坏':(isDn?'破前高=趋势坏':'区间边界'),color:tGuardOk?upColor:"#e3b341",ok:tGuardOk},
+    {k:"趋势结构",icon:"⑦",val:tStruct.txt,color:tStruct.ok?upColor:"#e3b341",ok:tStruct.ok}
+  ];
+
+  // ===== 回调小趋势 7 项（交易周期）=====
+  const hTr=macdTr.hist;
+  const mTr=hTr[hTr.length-1],mTrPrev=hTr[hTr.length-2]||0;
+  const trMomDir=mTr>mTrPrev?"放大↑":(mTr<mTrPrev?"收敛↓":"持平");
+  let cbStart;
+  if(isUp) cbStart=trAdv.lT;
+  else if(isDn) cbStart=trAdv.lB;
+  else cbStart=trAdv.lT||trAdv.lB;
+  const cbLeg=!trAdv.leg?"—":(isUp?(trAdv.leg==="down"?"回调·下跌":"上涨·延伸"):(isDn?(trAdv.leg==="up"?"反弹·上涨":"下跌·延伸"):(trAdv.leg==="up"?"上涨笔":"下跌笔")));
+  // 回调方向是否符合预期:上涨等回调(下跌笔)进场做多,下跌等反弹(上涨笔)进场做空
+  const cbLegOk=(isUp&&trAdv.leg==="down")||(isDn&&trAdv.leg==="up");
+  let cbStage,cbStageIcon,cbStageColor,cbStageOk;
+  const nlB=trAdv.lB&&now<trAdv.lB.price*0.999,olT=trAdv.lT&&now>trAdv.lT.price*1.001;
+  const hasSignal=trAdv.cls==="act-long"||trAdv.cls==="act-short";
+  if(hasSignal){cbStage="回调到位·可入场";cbStageIcon="✅";cbStageColor=upColor;cbStageOk=true}
+  else if(trAdv.title.includes("创新")||nlB||olT){cbStage="已破位·追涨跌差";cbStageIcon="⚠️";cbStageColor=dnColor;cbStageOk=false}
+  else if(trAdv.title.includes("到位")){cbStage="价格到顶/底·追单差";cbStageIcon="⏳";cbStageColor="#e3b341";cbStageOk=false}
+  else if(trAdv.title.includes("中间")){cbStage="进行中·未到位";cbStageIcon="⏳";cbStageColor="#e3b341";cbStageOk=false}
+  else{cbStage=trAdv.title;cbStageIcon="⏳";cbStageColor=neu;cbStageOk=false}
+  const wantDir=isUp?"long":(isDn?"short":null);
+  let cbGuard;
+  if(wantDir==="long") cbGuard=trAdv.lB;
+  else if(wantDir==="short") cbGuard=trAdv.lT;
+  else cbGuard=trAdv.lB||trAdv.lT;
+  // 回调防守位未破
+  const cbGuardOk=cbGuard?(wantDir==="long"?now>cbGuard.price:(wantDir==="short"?now<cbGuard.price:false)):false;
+  const sigTxt=hasSignal?"✅ 出现入场信号":"⏳ 等待信号";
+  // 回调动能:反向动能在收敛(耗尽)=利于顺势进场(回调/反弹快结束)
+  const cbMomConv=Math.abs(mTr)<Math.abs(mTrPrev);
+  const cbMomOk=cbMomConv;
+
+  const small=[
+    {k:"起点",icon:"①",val:cbStart?`${f(cbStart.price)}`:"—",sub:cbStart?ft(cbStart.t):"无有效拐点",color:isUp?upColor:(isDn?dnColor:neu),ok:!!cbStart},
+    {k:"方向",icon:"②",val:cbLeg,sub:trAdv.leg||"—",color:cbLegOk?upColor:neu,ok:cbLegOk},
+    {k:"阶段",icon:"③",val:cbStage,icon2:cbStageIcon,color:cbStageColor,ok:cbStageOk},
+    {k:"动能",icon:"④",val:`${mTr.toFixed(1)}`,sub:`MACD柱 ${mTr>0?'红':'绿'} ${cbMomConv?'收敛·利于进场':'放大·未到位'}`,color:cbMomOk?upColor:"#e3b341",ok:cbMomOk},
+    {k:"级别",icon:"⑤",val:P.tradeN,sub:"小级别",color:"var(--blue)",ok:true,neutral:true},
+    {k:"防守位",icon:"⑥",val:cbGuard?`${f(cbGuard.price)}`:"—",sub:wantDir==='long'?'做多止损位':(wantDir==='short'?'做空止损位':'区间边界'),color:cbGuardOk?upColor:"#e3b341",ok:cbGuardOk},
+    {k:"入场信号",icon:"⑦",val:sigTxt,sub:hasSignal?trAdv.title:"未到买卖点",color:hasSignal?upColor:neu,ok:hasSignal}
+  ];
+
+  return {big,small,dir};
+}
+
+function fmtTime(t){const d=new Date(t);return (d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function formatVol(v){if(v>=1e9)return(v/1e9).toFixed(2)+"B";if(v>=1e6)return(v/1e6).toFixed(2)+"M";if(v>=1e3)return(v/1e3).toFixed(1)+"K";return v.toFixed(1)}
+
+async function analyze(){
+  const S=SYMS[curSym],P=PERIODS[curPeriod];
+  document.getElementById("loading").style.display="block";
+  document.getElementById("content").style.display="none";
+  document.getElementById("errorBox").style.display="none";
+  document.getElementById("loadMsg").textContent=`正在获取 ${S.name} ${P.tradeN}${klineCount}根 + ${P.trendN}${TREND_COUNT}根...`;
+  document.getElementById("trendPeriodLabel").textContent=P.trendN;
+  document.getElementById("tradePeriodLabel").textContent=P.tradeN;
+  document.getElementById("tag1").textContent=P.trendN;
+  document.getElementById("tag2").textContent=P.tradeN;
+  try{
+    const [kt,ktr,price]=await Promise.all([
+      loadKlines(curSym,P.trade,klineCount),
+      loadKlines(curSym,P.trend,TREND_COUNT),
+      fetchPrice(curSym)
+    ]);
+    const now=price;
+    // 趋势周期分析(标准结构:合并K线→笔→中枢,信号与图形同源)
+    const swT=findSwings(ktr,3);              // 原始分型:仅分型对比面板+未确认试探标记使用
+    const biT=buildBiM(ktr);                  // 标准笔
+    const trT=trendOf(biT,ktr);
+    const macdT=calcMACD(ktr);
+    const divT=detectDiv(biT,macdT,S);        // 基于标准笔的背驰
+    const zsT=buildZS(biT);                   // 标准中枢
+    // 交易周期分析(先算背驰/中枢,再交给tradeAdvice做结构化买卖点判定)
+    const swTr=findSwings(kt,3);
+    const biTr=buildBiM(kt);
+    const macdTr=calcMACD(kt);
+    const divTr=detectDiv(biTr,macdTr,S);
+    const zsTr=buildZS(biTr);
+    const trAdv=tradeAdvice(now,biTr,S,divTr,zsTr,swTr);
+    // 综合(含背驰)
+    const adv=combineAdvice(trT.dir,trAdv,P.trendN,P.tradeN,S,divT,divTr);
+
+    document.getElementById("loading").style.display="none";
+    document.getElementById("content").style.display="block";
+    // 趋势周期卡片
+    document.getElementById("trendPeriodDir").innerHTML=`<span class="trend-pill pill-${trT.dir==='下跌'?'down':(trT.dir==='上涨'?'up':'range')}">${trT.dir}</span>`;
+    document.getElementById("trendPeriodDetail").innerHTML=`顶 ${trT.lastTop?trT.lastTop.price.toFixed(S.dec):"—"} · 底 ${trT.lastBot?trT.lastBot.price.toFixed(S.dec):"—"}`;
+    // 交易周期卡片
+    const legZ=trAdv.leg==="down"?"下跌笔":(trAdv.leg==="up"?"上涨笔":"—");
+    document.getElementById("tradePeriodStatus").innerHTML=`<span style="color:${trAdv.cls==='act-short'?'#ffa198':(trAdv.cls==='act-long'?'#7ee787':'#e3b341')}">${trAdv.title}</span>`;
+    document.getElementById("tradePeriodDetail").innerHTML=`${legZ} · 现价${now.toFixed(S.dec)} · 顶${trAdv.lT?trAdv.lT.price.toFixed(S.dec):"—"} 底${trAdv.lB?trAdv.lB.price.toFixed(S.dec):"—"}`;
+    // 综合建议
+    const ac=document.getElementById("adviceCard");
+    ac.className="dcard advice-card "+adv.cls;
+    document.getElementById("adviceTitle").textContent=adv.title;
+    document.getElementById("adviceDesc").innerHTML=adv.desc;
+    const resEl=document.getElementById("resonance");
+    const resMap={ok:["res-ok","✓ 周期共振（顺势）"],no:["res-no","✗ 周期背离（逆势）"],wait:["res-wait","○ 等待共振"]};
+    const[rk,rt]=resMap[adv.resonance]||resMap.wait;
+    resEl.innerHTML=`<span class="resonance ${rk}">${rt}</span>`;
+    document.getElementById("updTime").textContent="更新 "+new Date().toLocaleTimeString();
+    const srcTag=document.getElementById("srcTag");
+    if(srcTag)srcTag.textContent=activeSrc==="okx"?"· 当前:OKX备援"+(curSym==="XAUUSDT"?"(PAXG代理)":""):(curSrc==="okx"?"· 当前:fapi":"· 当前:fapi");
+    // 关键价位(交易周期)
+    const lvls=[["前高(压力)",trAdv.lT?trAdv.lT.price:null,"up"],["★现价",now,"now"],["前低(支撑)",trAdv.lB?trAdv.lB.price:null,"dn"]];
+    document.getElementById("levelsBox").innerHTML=lvls.filter(l=>l[1]!==null).map(l=>`<div class="level-row"><span class="ln">${l[0]}</span><span class="lv lv-${l[2]}">${l[1].toFixed(S.dec)}</span></div>`).join("");
+    // 分型对比
+    let frHTML="<div style='font-size:10.5px;color:var(--blue);margin-bottom:4px'>趋势周期 "+P.trendN+"</div>";
+    frHTML+=swT.slice(-4).reverse().map(s=>`<div class="fr-row"><span class="${s.type==='顶'?'ft-top':'ft-bot'}">${s.confirmed?'':'<span class="fr-tag">潜</span>'}${s.type==='顶'?'▲':'▽'} ${fmtTime(s.t)}</span><span class="lv">${s.price.toFixed(S.dec)}</span></div>`).join("");
+    frHTML+="<div style='font-size:10.5px;color:var(--blue);margin:8px 0 4px'>交易周期 "+P.tradeN+"</div>";
+    frHTML+=swTr.slice(-5).reverse().map(s=>`<div class="fr-row"><span class="${s.type==='顶'?'ft-top':'ft-bot'}">${s.confirmed?'':'<span class="fr-tag">潜</span>'}${s.type==='顶'?'▲':'▽'} ${fmtTime(s.t)}</span><span class="lv">${s.price.toFixed(S.dec)}</span></div>`).join("");
+    document.getElementById("fractalsBox").innerHTML=frHTML;
+    // 信号
+    document.getElementById("signalsBox").innerHTML=trAdv.signals.map(s=>{
+      const cls=s.type==="short"?"sig-short":(s.type==="long"?"sig-long":"sig-wait");
+      return `<div class="signal-box ${cls}"><b>${s.label}</b><span class="lvl">${s.zone}</span>${s.note?'<div style="font-size:10.5px;opacity:.85">'+s.note+'</div>':''}</div>`;
+    }).join("")+`<div style="font-size:10.5px;color:var(--sub);margin-top:4px">📌 ${P.tradeN}级别的信号，需${P.trendN}趋势${trT.dir==="震荡"?"先明确方向":(trT.dir==="下跌"?"下跌确认才做空":"上涨确认才做多")}</div>`;
+    // 闯关模式检测(交易周期执行;趋势周期下跌=方向过滤拦截)
+    const kdjTr=calcKDJ(kt,9);
+    const lg=levelGates(kt,biTr,macdTr,zsTr,kdjTr,now);
+    const lgEl=document.getElementById("levelGatesBox");
+    if(lgEl){
+      const dirBlock=trT.dir==="下跌"
+        ?`<div style="font-size:10.5px;color:#ffa198;margin-bottom:4px">⛔ 趋势周期(${P.trendN})下跌——多头闯关流程被方向过滤拦截（30分钟定方向），以下仅作条件监控</div>`:"";
+      const curRow=lg.cur?`<div style="font-size:11px;margin:5px 0 3px;padding:3px 8px;background:rgba(232,179,57,.12);border:1px solid rgba(232,179,57,.4);border-radius:5px">🎯 当前关卡：<b style="color:var(--gold)">${lg.cur.name}</b> · ${lg.phase} · 触发动作：<b>${lg.cur.action}</b>（顺序不可跳关）</div>`:"";
+      lgEl.innerHTML=dirBlock+curRow
+        +`<div style="font-size:11px;line-height:1.75">`
+        +lg.rows.map(r=>{
+          const cur=lg.cur&&lg.cur.name===r.name;
+          return `<div style="padding:3px 0;border-bottom:1px dashed var(--line);${cur?"background:rgba(232,179,57,.05)":""}">
+<div style="display:flex;justify-content:space-between"><b style="color:${r.ok?"#7ee787":"var(--txt)"}">${r.ok?"✓":"○"} ${r.name}</b><span style="color:var(--gold);font-size:10px">${r.action}</span></div>
+${r.conds.map(c=>`<div style="font-size:10px;color:${c[0]?"#7ee787":"var(--sub)"}">${c[0]?"✓":"✗"} ${c[1]}</div>`).join("")}
+</div>`}).join("")
+        +`</div><div style="font-size:9.5px;color:var(--sub);margin-top:4px;line-height:1.6">⚠️ ⑤顶背驰在本策略只用于止盈(关4)，不开空单；仓位=风险敞口占比；前一关未触发时后关满足也不进场（防追高）。学习检测工具，不构成执行指令。</div>`;
+    }
+    // 清单
+    document.getElementById("checklist").innerHTML=adv.checklist;
+    // 入场检查清单(7+7)
+    const chk=buildChecklist(now,S,P,biT,trT,macdT,divT,zsT,biTr,trAdv,macdTr,divTr,zsTr);
+    document.getElementById("chkBigPeriod").textContent=P.trendN;
+    document.getElementById("chkSmallPeriod").textContent=P.tradeN;
+    const chkRow=o=>`<div class="chk-row ${o.neutral?'chk-neu':(o.ok?'chk-ok':'chk-ng')}" style="--ic:${o.color}">
+      <span class="chk-no">${o.icon}</span>
+      <span class="chk-k">${o.k}</span>
+      <span class="chk-v">${o.icon2?o.icon2+" ":""}${o.val}</span>
+      ${o.sub?`<span class="chk-sub">${o.sub}</span>`:""}
+    </div>`;
+    document.getElementById("chkBig").innerHTML=chk.big.map(chkRow).join("");
+    document.getElementById("chkSmall").innerHTML=chk.small.map(chkRow).join("");
+    // 总结:达标项数(ok),级别等中性项不计入有效分母
+    const bigEff=chk.big.filter(o=>!o.neutral),smallEff=chk.small.filter(o=>!o.neutral);
+    const bigOk=bigEff.filter(o=>o.ok).length,smallOk=smallEff.filter(o=>o.ok).length;
+    const bigTot=bigEff.length,smallTot=smallEff.length;
+    document.getElementById("chkSummary").innerHTML=adv.resonance==="ok"
+      ?`<span class="resonance res-ok">✓ 大趋势${bigOk}/${bigTot} + 小趋势${smallOk}/${smallTot} · 共振可入场</span>`
+      :(adv.resonance==="no"
+        ?`<span class="resonance res-no">✗ 大趋势${bigOk}/${bigTot} + 小趋势${smallOk}/${smallTot} · 逆势观望</span>`
+        :`<span class="resonance res-wait">○ 大趋势${bigOk}/${bigTot} + 小趋势${smallOk}/${smallTot} · 等待共振</span>`);
+    // 画图(趋势图标背驰+交易周期区间+中枢,交易图画MACD+成交量+中枢)
+    const tradeRange=[kt[0][0],kt[kt.length-1][0]];
+    // 教练系统数据(动能/防守位/G1D1/EMA)
+    const emaT=[21,55,144].map(nn=>calcEMA(ktr,nn));
+    const emaTr=[21,55,144].map(nn=>calcEMA(kt,nn));
+    const mT=momentumScore(ktr,Math.min(60,ktr.length));
+    const mTr=momentumScore(kt,30);
+    const dT=defenseLevel(biT,zsT,trT.dir,now);
+    const bqT=dT?breakQuality(ktr,dT.p):null;
+    const g1d1=trT.dir==="震荡"?null:findG1D1(kt,trT.dir==="上涨"?1:-1);
+    const c271=coach271(mT,mTr,trT.dir,g1d1);
+    const tdT=tdCount(ktr),tdTr=tdCount(kt);
+    drawChart("chartTrend",ktr,now,S,P.trendN,trT.dir,false,null,null,divT,tradeRange,zsT,{ema:emaT,defense:dT,td:tdT});
+    drawChart("chartTrade",kt,now,S,P.tradeN,trT.dir,true,trAdv,macdTr,divTr,null,zsTr,{ema:emaTr,g1d1,td:tdTr});
+    // 时段/费率条(老唐: 8/16/24=亚/欧/美+费率收取点; 欧亚单边多,美股波动大; 高费率=拥挤)
+    const zeitEl=document.getElementById("zeitBox");
+    if(zeitEl){
+      const hh=new Date().getHours();
+      const sess=hh>=8&&hh<16?"亚盘·单边居多":(hh>=16?"欧盘·单边居多":"美股盘·波动较大");
+      const nextH=hh<8?"08":(hh<16?"16":"24");
+      const fund=await fetchFunding(curSym).catch(()=>null);
+      const fr=fund?(fund.rate*100).toFixed(4)+"%":"—";
+      const crowd=fund&&Math.abs(fund.rate)>=0.0005?` ⚠️${fund.rate>0?"多":"空"}头拥挤`:"";
+      zeitEl.innerHTML=`🕐 ${sess} · 下个节点 ${nextH}:00(费率) · 费率 ${fr}${crowd}`;
+    }
+    // 教练系统卡
+    const cbEl=document.getElementById("coachBox");
+    if(cbEl){
+      const f=v=>v.toFixed(S.dec);
+      cbEl.innerHTML=`<div style="font-size:11px;line-height:1.8">`
+        +`<div class="jrow" style="display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:2px 0"><span>大趋势动能(${P.trendN})</span><span style="color:${mT.score>=8?'#7ee787':(mT.score>=5?'#e3b341':'#ffa198')}"><b>${mT.score}分</b> · ${mT.grade.split('·')[1]||'—'}</span></div>`
+        +`<div class="jrow" style="display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:2px 0"><span>交易周期动能(${P.tradeN})</span><span style="color:${mTr.score<=4?'#7ee787':'var(--sub)'}"><b>${mTr.score}分</b>${mTr.score<=4?' · 回调衰竭=绝佳入场':''}</span></div>`
+        +`<div class="jrow" style="display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:2px 0"><span>🛡 防守位(${trT.dir})</span><span style="color:#f0883e">${dT?`<b>${f(dT.p)}</b> · 被破=改变偏见`:trT.dir==='震荡'?'震荡无防守位':'—'}</span></div>`
+        +`<div class="jrow" style="display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:2px 0"><span>突破质检</span><span style="color:${bqT&&bqT.state.indexOf('真')>=0?'#7ee787':(bqT&&bqT.state.indexOf('假')>=0?'#ffa198':'var(--sub)')}">${bqT?`${bqT.state} · 实体${(bqT.body*100).toFixed(0)}%/量${bqT.volMult.toFixed(1)}倍`:'—'}</span></div>`
+        +`<div style="padding:4px 0 0;color:#c9d1d9">🎯 <b>271建议：</b>${c271.txt}</div>`
+        +`</div><div style="font-size:9.5px;color:var(--sub);margin-top:3px;line-height:1.6">依据《教练交易系统2026-05·价格行为&缠论》：真突破看力量不看针破；防守位被破=改变偏见；以损定仓不加仓。学习工具，不构成执行指令。</div>`;
+    }
+    // 三维度看盘卡(①高低点结构 ②实体资金 ③影线混乱度)
+    const dimRow=(nm,s,c,ch)=>{
+      const col=t=>t.indexOf("上涨")>=0?"#7ee787":(t.indexOf("下降")>=0?"#ffa198":(t.indexOf("收敛")>=0?"#e3b341":"var(--sub)"));
+      return `<div style="padding:3px 0 5px;border-bottom:1px dashed var(--line)">
+<div style="display:flex;justify-content:space-between"><b style="color:var(--blue)">${nm}</b><span style="color:${col(s.label)};font-size:11px">${s.label}</span></div>
+<div style="font-size:10px;color:var(--sub);line-height:1.7">② 实体${(c.bodyRatio*100).toFixed(0)}%/力度比${c.rel.toFixed(2)} → <span style="color:${c.label.indexOf("饱满")>=0?"#7ee787":(c.label.indexOf("极缩")>=0?"#ffa198":"var(--sub)")}">${c.label}</span><br>③ 影线占比${(ch.wick*100).toFixed(0)}%/十字星${ch.dojis}根 → <span style="color:${ch.label.indexOf("混乱")>=0?"#ffa198":"var(--sub)"}">${ch.label}</span></div>
+<div style="font-size:10.5px;color:#c9d1d9;margin-top:2px">💡 ${dimSummary(s,c,ch)}</div></div>`;};
+    const dimEl=document.getElementById("dimsBox");
+    if(dimEl){
+      const sT=dimStructure(biT),cT=dimCapital(ktr,40),chT=dimChaos(ktr,40);
+      const sTr=dimStructure(biTr),cTr=dimCapital(kt,30),chTr=dimChaos(kt,30);
+      const vote=resonanceVote(biTr,kt,emaTr,divTr,tdTr);
+      dimEl.innerHTML=dimRow(P.trendN+"（结构层）",sT,cT,chT)+dimRow(P.tradeN+"（交易层）",sTr,cTr,chTr)
+        +`<div style="margin-top:6px;padding:6px 8px;background:rgba(46,160,67,.08);border:1px solid rgba(46,160,67,.3);border-radius:7px;font-size:11px;line-height:1.8">
+<div><b>🎯 共振投票器（${P.tradeN}·五项独立）</b>：${vote.votes.length?vote.votes.join(" ｜ "):"全部弃权"}</div>
+<div>方向：<b style="color:${vote.dir==="多"?"#7ee787":(vote.dir==="空"?"#ffa198":"var(--sub)")}">${vote.dir}</b>（多${vote.bull}:空${vote.bear}）→ <b style="color:var(--gold)">${vote.level}</b></div>
+<div style="font-size:9.5px;color:var(--sub)">老唐规则：1项符合要么不做；2项=激进单≤10%仓严格止损；3项+=常规≤30%仓。K线结构/均线排列/动能/背驰/TD 各自独立投票。</div></div>`
+        +`<div style="font-size:9.5px;color:var(--sub);margin-top:3px;line-height:1.6">三维度：①高低点排列定结构（趋势/收敛/杂波）②K线长度=资金态度（实体饱满才有大行情）③影线/实体=混乱度（长影十字星=多空打平手）。与教练动能卡互补互验。</div>`;
+    }
+    // 区间套四式卡(泽熙船长·大级别位置×小级别信号)
+    const qjtEl=document.getElementById("qjtBox");
+    if(qjtEl){
+      const qjt=qjtPatterns(S,zsT,trT.dir,now,ktr,kt,zsTr,divTr);
+      if(qjt.length){
+        qjtEl.innerHTML=qjt.map(p=>{
+          const hit=p.verdict.indexOf("✓")>=0,near=p.verdict.indexOf("◐")>=0;
+          const bd=hit?"rgba(46,160,67,.12)":(near?"rgba(227,179,65,.08)":"transparent");
+          const bc=hit?"rgba(46,160,67,.35)":(near?"rgba(227,179,65,.3)":"var(--line)");
+          return `<div style="padding:5px 8px;margin:5px 0;background:${bd};border:1px solid ${bc};border-radius:7px;font-size:11px;line-height:1.8">
+<div style="display:flex;justify-content:space-between"><b style="color:var(--blue)">${p.name}</b><span style="color:${hit?"#7ee787":(near?"#e3b341":"var(--sub)")}">${p.verdict}</span></div>
+<div style="font-size:9.5px;color:var(--sub)">公式：${p.formula}</div>
+${p.checks.map(c=>`<div style="font-size:10px;color:${c[0]?"#7ee787":"var(--sub)"}">${c[0]?"✓":"✗"} ${c[1]}</div>`).join("")}</div>`;}).join("")
+          +`<div style="font-size:9.5px;color:var(--sub);margin-top:3px;line-height:1.7">📖 学前必读(泽熙船长·十年精髓)：①固定级别组合(${P.trendN}+${P.tradeN})不随意切换 ②背驰必须做MACD力度对比(黄白线高度+柱面积，本页已内置) ③区间套≠找单一图形，核心是<b>大级别位置与小级别信号双向共振</b>——大级别定值不值得参与，小级别定精确进出场。</div>`;
+      }else qjtEl.innerHTML='<span style="color:var(--sub);font-size:10px">大级别中枢未形成，暂无区间套结构</span>';
+    }
+    // 九段升级检查(中枢延伸满9段→中枢升级大一级别;3×3=三个次级别中枢合成)
+    const suEl=document.getElementById("segUpBox");
+    if(suEl){
+      const rowZS=(nm,zs)=>{
+        if(!zs.length)return `<div style="padding:3px 0;font-size:11px;color:var(--sub)">${nm}：中枢样本不足</div>`;
+        const z=zs[zs.length-1];
+        const up=z.segs>=9, near=z.segs>=7&&z.segs<9;
+        const col=up?"#e3b341":(near?"#f0883e":"#7ee787");
+        return `<div style="padding:3px 0;border-bottom:1px dashed var(--line);font-size:11px;line-height:1.7">
+<div style="display:flex;justify-content:space-between"><span>${nm} <b style="color:var(--blue)">${z.ZD.toFixed(S.dec)}~${z.ZG.toFixed(S.dec)}</b></span><b style="color:${col}">${z.segs} 段${up?" · 已升级":(near?" · 接近满9":"" )}</b></div>
+${up?`<div style="font-size:10px;color:#e3b341">⚠️ 延伸≥9段，本中枢已升级为大一级别中枢——离开判定按大级别边沿（上沿 ${z.ZG.toFixed(S.dec)} / 下沿 ${z.ZD.toFixed(S.dec)}），当前级别的信号只作进场时机</div>`:(near?`<div style="font-size:10px;color:#f0883e">◐ 距升级还差 ${9-z.segs} 段——延伸可继续，段数多≠马上变盘</div>`:"")}
+</div>`;};
+      suEl.innerHTML=rowZS(P.trendN+"（趋势周期）",zsT)+rowZS(P.tradeN+"（交易周期）",zsTr)
+        +`<div style="font-size:9.5px;color:var(--sub);margin-top:3px;line-height:1.6">规则：中枢由3段次级别重叠构成，此后每次离开又返回=延伸+1段；满9段（3×3）中枢升级大一级别（如30m→4h）。升级≠立刻变盘——震荡可以继续延伸，但一旦离开，量级与判定线都按大级别计。</div>`;
+    }
+    // 趋势全景地图(独立主区块·五周期联立;3分钟缓存,失败不阻塞主分析)
+    const panoEl=document.getElementById("panoBox");
+    if(panoEl){
+      const fresh=panoCache.sym===curSym&&(Date.now()-panoCache.ts)<180000;
+      if(!fresh){
+        try{
+          const ivs=["1d","4h","1h","30m","15m"];
+          const ks=await Promise.all(ivs.map(iv=>loadKlines(curSym,iv,iv==="1d"?100:150)));
+          panoCache={sym:curSym,ts:Date.now(),rows:ivs.map((iv,i)=>panoRow(iv,ks[i],now,S))};
+        }catch(e){panoCache.rows=null}
+      }
+      const rows=panoCache.rows;
+      const sumEl=document.getElementById("panoSummary");
+      if(rows&&rows.length){
+        const col=d=>d==="上涨"?"#7ee787":(d==="下跌"?"#ffa198":"var(--sub)");
+        const f=v=>v.toFixed(S.dec);
+        // 一句话结论: 可参与周期 + 关键防守位
+        if(sumEl){
+          const okR=rows.filter(r=>r.ok),waitR=rows.filter(r=>r.phase.indexOf("回调")>=0&&r.dir!=="震荡");
+          const big=rows[0];
+          sumEl.innerHTML=`🎯 <b>结论：</b>大背景 ${big.iv} ${big.dir}（${big.phase}）——`
+            +(okR.length?`可参与周期 <b style="color:#7ee787">${okR.map(r=>r.iv+"·剩"+(r.remain*100).toFixed(1)+"%").join(" / ")}</b>；`:`当前无可参与周期；`)
+            +(waitR.length?`等待回调走完：<b style="color:#f0883e">${waitR.map(r=>r.iv+"(防守位"+f(r.def)+")").join(" / ")}</b>——防守位被破=该周期改变偏见。`:``);
+        }
+        panoEl.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:11px;line-height:1.6">`
+          +`<tr style="color:var(--sub);font-size:10px;text-align:left"><th style="padding:3px 6px">周期</th><th>方向·阶段</th><th>当前在走</th><th>防守位</th><th>两剧本(最大概率)</th><th>目标(剩余)</th><th>预计持仓·类型</th><th>我的选择</th></tr>`
+          +rows.map(r=>`<tr style="border-top:1px dashed var(--line);vertical-align:top;${r.ok?"background:rgba(46,160,67,.06)":""}">`
+            +`<td style="padding:5px 6px;color:var(--blue);font-weight:700">${r.iv}</td>`
+            +`<td style="color:${col(r.dir)};font-weight:600">${r.dir}<br><span style="font-size:9.5px;font-weight:400">${r.phase}</span></td>`
+            +`<td style="color:var(--sub)">${r.walk}</td>`
+            +`<td style="color:#f0883e;font-weight:600">${f(r.def)}</td>`
+            +`<td style="color:var(--sub)">①${r.s1}<br>②${r.s2}</td>`
+            +`<td>${r.tgtLab}<br><span style="color:${r.remain>=0.03?"#7ee787":"var(--sub)"}">剩${(r.remain*100).toFixed(1)}%</span></td>`
+            +`<td style="color:var(--sub)">${r.hold}<br><span style="font-size:9.5px">${r.type}</span></td>`
+            +`<td style="color:${r.ok?"#7ee787":"var(--sub)"};font-weight:${r.ok?"700":"400"}">${r.choice}</td></tr>`).join("")
+          +`</table>`
+          +`<div style="font-size:10px;color:var(--sub);margin-top:6px;line-height:1.7">用法（《二买点交易计划》第二课）：先在"我的选择"列找到<b>可参与的周期</b>，再去该周期等二买/类二买——剩余利润≥3%且阶段为生长/简单回调才值得做；预计持仓列防止级别错位（30m 的单不该拿成 4h 的波动）。术语：简单回调=不进前中枢 · 复杂回调=中枢扩展 · 末期=动能背离。</div>`;
+      }else{
+        panoEl.innerHTML='<span style="color:var(--sub);font-size:10px">五周期数据获取失败(不影响主分析)</span>';
+        if(sumEl)sumEl.innerHTML='—';
+      }
+    }
+    // 背驰信息(在信号栏顶部)
+    if(divTr&&divTr.divs.length){
+      const divHtml='<div style="background:rgba(188,140,255,.12);border:1px solid var(--purple);border-radius:7px;padding:10px 12px;margin-bottom:8px;font-size:11.5px;color:#d4c5f0"><b style="color:#bc8cff">⚡ '+P.tradeN+'背驰检测(一类买卖点)</b><br>'+divTr.divs.map(d=>'<div style="margin-top:3px">'+d.msg+'</div>').join("")+'</div>';
+      document.getElementById("signalsBox").innerHTML=divHtml+document.getElementById("signalsBox").innerHTML;
+    }
+    // 价格预警检查
+    checkAlert(adv,divTr,divT,now,S,trAdv,buildSegs(biT),P.tradeN);
+  }catch(e){
+    document.getElementById("loading").style.display="none";
+    const eb=document.getElementById("errorBox");eb.style.display="block";
+    eb.innerHTML="<b>⚠ 数据获取失败：</b>"+e.message+"<br><br>可能：网络问题或无法访问 fapi.binance.com（需科学上网）。<br>测试：<a href='https://fapi.binance.com' style='color:#79c0ff'>fapi.binance.com</a>";
+    console.error(e);
+  }
+}
+
+// ===== 鼠标联动交互 =====
+const chartData={};
+const tipEl=()=>document.getElementById("tooltip");
+function svgPoint(svg,x,y){const pt=svg.createSVGPoint();pt.x=x;pt.y=y;return pt.matrixTransform(svg.getScreenCTM().inverse())}
+function onMove(e,divId){
+  const d=chartData[divId];if(!d)return;
+  const svg=e.currentTarget.closest("svg");
+  const pt=svgPoint(svg,e.clientX,e.clientY);
+  let i=Math.round((pt.x-d.ml)/(d.pw/(d.n-1)));
+  i=Math.max(0,Math.min(d.n-1,i));
+  const k=d.kls[i];if(!k)return;
+  const x=d.X(i);
+  const cv=document.getElementById(divId+"_cv"),ch=document.getElementById(divId+"_ch"),hk=document.getElementById(divId+"_hk");
+  if(cv){cv.setAttribute("x1",x);cv.setAttribute("x2",x);cv.setAttribute("opacity",0.7)}
+  // 水平线限定在K线区 + 右侧跟随鼠标价格标签
+  const ptG=document.getElementById(divId+"_pt"),ptT=document.getElementById(divId+"_ptt");
+  if(ch&&pt.y>=d.kTop&&pt.y<=d.kBot){
+    ch.setAttribute("y1",pt.y);ch.setAttribute("y2",pt.y);ch.setAttribute("opacity",0.45);
+    if(ptG){const pr=d.hi-(pt.y-d.kTop)/((d.kBot-d.kTop)||1)*(d.hi-d.lo);
+      ptG.setAttribute("opacity",0.95);
+      ptG.setAttribute("transform","translate(0,"+(pt.y-8).toFixed(1)+")");
+      if(ptT)ptT.textContent=pr.toFixed(d.S.dec)}
+  }else{
+    if(ch)ch.setAttribute("opacity",0);
+    if(ptG)ptG.setAttribute("opacity",0);
+  }
+  if(hk){hk.setAttribute("x",x-d.cw);hk.setAttribute("opacity",0.13)}
+  // 浮窗内容
+  const up=k[4]>=k[1],chg=(k[4]-k[1])/k[1]*100;
+  const f=v=>v.toFixed(d.S.dec);
+  let html=`<div style="color:#e8b339;font-weight:600;margin-bottom:4px;font-size:11px">${fmtTime(k[0])}</div>`;
+  html+=`<div style="display:flex;gap:10px"><span>开 <b>${f(k[1])}</b></span><span>高 <b style="color:#7ee787">${f(k[2])}</b></span></div>`;
+  html+=`<div style="display:flex;gap:10px"><span>低 <b style="color:#ffa198">${f(k[3])}</b></span><span>收 <b style="color:${up?'#7ee787':'#ffa198'}">${f(k[4])}</b></span></div>`;
+  html+=`<div style="color:${up?'#7ee787':'#ffa198'};margin:2px 0">${up?'▲':'▼'} ${chg>=0?'+':''}${chg.toFixed(2)}%</div>`;
+  if(d.hasVol&&k[5]!=null)html+=`<div style="color:#8b949e;font-size:10.5px">量 ${formatVol(k[5])}</div>`;
+  if(d.macd){
+    const df=d.macd.dif[i],da=d.macd.dea[i],hh=d.macd.hist[i];
+    html+=`<div style="margin-top:4px;padding-top:3px;border-top:1px solid #2a3242;font-size:10.5px">`;
+    html+=`<span style="color:#e8b339">DIF ${df.toFixed(1)}</span> <span style="color:#bc8cff">DEA ${da.toFixed(1)}</span><br>`;
+    html+=`<span style="color:${hh>=0?'#7ee787':'#ffa198'}">柱 ${hh.toFixed(1)}</span></div>`;
+  }
+  const t=tipEl();t.innerHTML=html;t.style.display="block";
+  let tx=e.clientX+16,ty=e.clientY+16;
+  if(tx+180>window.innerWidth)tx=e.clientX-190;
+  if(ty+120>window.innerHeight)ty=e.clientY-130;
+  t.style.left=tx+"px";t.style.top=ty+"px";
+}
+function hideCross(divId){
+  ["_cv","_ch","_hk","_pt"].forEach(s=>{const el=document.getElementById(divId+s);if(el)el.setAttribute("opacity",0)});
+  const t=tipEl();if(t)t.style.display="none";
+}
+
+function drawChart(divId,kls,now,S,periodName,trendDir,isTrade,trAdv,macd,div,tradeRange,zs,coach){
+  const n=kls.length,w=1180;
+  const hasMacd=isTrade&&macd;
+  const hasVol=isTrade&&kls[0]&&kls[0][5]!=null;
+  const ml=58,mr=110,mt=28,mb=30,pw=w-ml-mr,gap=12;
+  const macdH=hasMacd?104:0,volH=hasVol?62:0;
+  const ph=isTrade?310:285;
+  const kBot=mt+ph;
+  const macdTop=hasMacd?kBot+gap:0,macdBot=macdTop+macdH;
+  const volTop=hasVol?(hasMacd?macdBot+gap:kBot+gap):0,volBot=volTop+volH;
+  const h=(hasVol?volBot:(hasMacd?macdBot:kBot))+mb;
+  const prices=kls.map(k=>k[2]).concat(kls.map(k=>k[3])).concat([now]);
+  let lo=Math.min(...prices),hi=Math.max(...prices);const pad=(hi-lo)*0.08;lo-=pad;hi+=pad;
+  const X=i=>ml+i*(pw/(n-1)),Y=p=>mt+(hi-p)/(hi-lo)*ph;
+  const cw=Math.max(2,pw/n*(isTrade?0.62:0.55));
+  let P=[`<svg viewBox="0 0 ${w} ${h}" class="kchart" preserveAspectRatio="xMidYMid meet">`];
+  P.push(`<rect width="${w}" height="${h}" fill="#0d1117" rx="8"/>`);
+  // K线区价格网格
+  for(let k=0;k<5;k++){const gy=mt+ph*k/4,p=hi-(hi-lo)*k/4;P.push(`<line x1="${ml}" y1="${gy}" x2="${ml+pw}" y2="${gy}" stroke="#1c2230"/>`);P.push(`<text x="${ml-8}" y="${gy+3}" fill="#6e7681" font-size="10" text-anchor="end">${p.toFixed(S.dec)}</text>`)}
+  const step=Math.max(1,Math.floor(n/10));
+  for(let i=0;i<n;i+=step){P.push(`<line x1="${X(i)}" y1="${mt}" x2="${X(i)}" y2="${mt+ph}" stroke="#161b24"/>`)}
+  // K线(细节:空心阳线选项/密集自动细线化/现价K高亮)
+  const upC="#2ebd85",dnC="#f6465d";
+  for(let i=0;i<n;i++){const k=kls[i],x=X(i),up=k[4]>=k[1],col=up?upC:dnC;
+    const yo=Y(k[1]),yc=Y(k[4]);
+    if(cw<1.6){P.push(`<line x1="${x}" y1="${Y(k[2])}" x2="${x}" y2="${Y(k[3])}" stroke="${col}" stroke-width="0.8" opacity="0.9"/>`);continue}
+    P.push(`<line x1="${x}" y1="${Y(k[2])}" x2="${x}" y2="${Y(k[3])}" stroke="${col}" stroke-width="1"/>`);
+    const by=Math.min(yo,yc),bh=Math.max(2,Math.abs(yc-yo));
+    if(up&&hollowUp)P.push(`<rect x="${(x-cw/2).toFixed(1)}" y="${by.toFixed(1)}" width="${cw.toFixed(1)}" height="${bh.toFixed(1)}" fill="#0d1117" stroke="${col}" stroke-width="1"/>`);
+    else P.push(`<rect x="${(x-cw/2).toFixed(1)}" y="${by.toFixed(1)}" width="${cw.toFixed(1)}" height="${bh.toFixed(1)}" fill="${col}"/>`);
+    if(i===n-1)P.push(`<rect x="${(x-cw/2-1.5).toFixed(1)}" y="${(by-2).toFixed(1)}" width="${(cw+3).toFixed(1)}" height="${(bh+4).toFixed(1)}" fill="none" stroke="#e8b339" stroke-width="1.2" opacity="0.9" rx="1"/>`);
+  }
+  // 区间极值标注
+  let iH=0,iL=0;for(let i=0;i<n;i++){if(kls[i][2]>=kls[iH][2])iH=i;if(kls[i][3]<=kls[iL][3])iL=i}
+  P.push(`<text x="${X(iH).toFixed(1)}" y="${(Y(kls[iH][2])-5).toFixed(1)}" fill="#2ebd85" font-size="9.5" font-weight="600" text-anchor="middle">高 ${kls[iH][2].toFixed(S.dec)}</text>`);
+  P.push(`<text x="${X(iL).toFixed(1)}" y="${(Y(kls[iL][3])+14).toFixed(1)}" fill="#f6465d" font-size="9.5" font-weight="600" text-anchor="middle">低 ${kls[iL][3].toFixed(S.dec)}</text>`);
+  // ===== 缠论结构层(合并K线→标准笔→线段→走势类型 + 两级中枢) =====
+  let biN=0,segN=0,biZN=0,dzN=0;
+  const cfAll=buildBiM(kls);
+  const segs=cfAll.length>=2?buildSegs(cfAll):[];
+  // 走势类型(白色虚线:依次连接线段端点,进行中部分延伸至现价)
+  if(showSeg&&segs.length>=2){
+    const zsPtsArr=[segs[0].from].concat(segs.map(s=>s.to));
+    if(segs[segs.length-1].running)zsPtsArr.push({i:n-1,price:now});
+    const zsPts=zsPtsArr.map(p=>X(p.i).toFixed(1)+","+Y(p.price).toFixed(1)).join(" ");
+    P.push(`<polyline points="${zsPts}" fill="none" stroke="#e8e8e8" stroke-width="1.2" stroke-dasharray="7,5" opacity="0.75"/>`);
+  }
+  // 笔(蓝色:完成笔实线+进行中一笔虚线延伸至现价,端点小圆点)
+  if(showBi&&cfAll.length>=1){
+    biN=cfAll.length;
+    if(cfAll.length>=2){
+      const biPts=cfAll.map(s=>X(s.i).toFixed(1)+","+Y(s.price).toFixed(1)).join(" ");
+      P.push(`<polyline points="${biPts}" fill="none" stroke="#58a6ff" stroke-width="1.4" opacity="0.85"/>`);
+    }
+    const lp=cfAll[cfAll.length-1];
+    P.push(`<line x1="${X(lp.i).toFixed(1)}" y1="${Y(lp.price).toFixed(1)}" x2="${X(n-1).toFixed(1)}" y2="${Y(now).toFixed(1)}" stroke="#58a6ff" stroke-width="1.4" stroke-dasharray="5,4" opacity="0.85"/>`);
+    cfAll.forEach(p=>{P.push(`<circle cx="${X(p.i).toFixed(1)}" cy="${Y(p.price).toFixed(1)}" r="1.7" fill="#58a6ff" opacity="0.9"/>`)});
+  }
+  // 线段(红色,不分方向;进行中线段虚线延伸至现价)
+  if(showSeg&&segs.length){
+    segN=segs.length;
+    segs.forEach((sg,q)=>{
+      P.push(`<line x1="${X(sg.from.i).toFixed(1)}" y1="${Y(sg.from.price).toFixed(1)}" x2="${X(sg.to.i).toFixed(1)}" y2="${Y(sg.to.price).toFixed(1)}" stroke="#f6465d" stroke-width="2.2" opacity="0.8" stroke-linecap="round"/>`);
+      const mx=(X(sg.from.i)+X(sg.to.i))/2,my=(Y(sg.from.price)+Y(sg.to.price))/2;
+      P.push(`<text x="${mx.toFixed(1)}" y="${(my-5).toFixed(1)}" fill="#f6465d" font-size="9.5" font-weight="700" text-anchor="middle">${q+1}${sg.dir>0?"↑":"↓"}${sg.running?"…":""}</text>`);
+    });
+    const rs=segs[segs.length-1];
+    if(rs.running)P.push(`<line x1="${X(rs.to.i).toFixed(1)}" y1="${Y(rs.to.price).toFixed(1)}" x2="${X(n-1).toFixed(1)}" y2="${Y(now).toFixed(1)}" stroke="#f6465d" stroke-width="2.2" stroke-dasharray="6,4" opacity="0.7" stroke-linecap="round"/>`);
+  }
+  // 笔中枢(蓝色矩形:进入段后连续三笔重叠+延伸,标准生长算法)
+  const biZs=buildZS(cfAll);
+  biZN=biZs.length;
+  biZs.forEach((z,idx)=>{
+    if(z.ZG>hi+pad||z.ZD<lo-pad)return;
+    const x1=X(z.startI)-cw/2,x2=X(Math.min(z.endI,n-1))+cw/2;
+    const yZG=Y(Math.min(z.ZG,hi)),yZD=Y(Math.max(z.ZD,lo));
+    P.push(`<rect x="${x1.toFixed(1)}" y="${yZG.toFixed(1)}" width="${(x2-x1).toFixed(1)}" height="${(yZD-yZG).toFixed(1)}" fill="#58a6ff" opacity="0.20" stroke="#58a6ff" stroke-width="1.4" stroke-dasharray="4,2" rx="3"/>`);
+    P.push(`<text x="${(x1+4).toFixed(1)}" y="${(yZG+11).toFixed(1)}" fill="#58a6ff" font-size="9" font-weight="600" opacity="0.95">笔中枢${idx+1}</text>`);
+  });
+  // 段中枢(黄色矩形:以线段为次级别,同标准生长算法)
+  const segPts=segs.length?[segs[0].from].concat(segs.map(s=>s.to)):[];
+  const dzs=buildZS(segPts);
+  dzN=dzs.length;
+  dzs.forEach((z,idx)=>{
+    if(z.ZG>hi+pad||z.ZD<lo-pad)return;
+    const x1=X(z.startI)-cw/2,x2=X(Math.min(z.endI,n-1))+cw/2;
+    const yZG=Y(Math.min(z.ZG,hi)),yZD=Y(Math.max(z.ZD,lo));
+    P.push(`<rect x="${x1.toFixed(1)}" y="${yZG.toFixed(1)}" width="${(x2-x1).toFixed(1)}" height="${(yZD-yZG).toFixed(1)}" fill="#f0b90b" opacity="0.24" stroke="#f0b90b" stroke-width="2" stroke-dasharray="6,3" rx="3"/>`);
+    P.push(`<text x="${(x1+4).toFixed(1)}" y="${(yZD+13).toFixed(1)}" fill="#f0b90b" font-size="9.5" font-weight="700" opacity="0.95">段中枢${idx+1}</text>`);
+  });
+  // 分型标记已移除:笔的连线端点即顶底位置(潜在分型仍在右侧"分型对比"面板与信号文案中提示)
+  // ===== 教练系统层: EMA21/55/144 + G1/D1信号K + 防守位 =====
+  coach=coach||{};
+  if(showEMA&&coach.ema){
+    const emaCols=["#79c0ff","#d29922","#bc8cff"],emaNs=["21","55","144"];
+    coach.ema.forEach((arr,q)=>{
+      if(!arr||arr.length!==n)return;
+      let d="";for(let i=0;i<n;i++){const y=Y(Math.max(lo,Math.min(hi,arr[i])));d+=(i===0?"M":"L")+X(i).toFixed(1)+" "+y.toFixed(1)}
+      P.push(`<path d="${d}" fill="none" stroke="${emaCols[q]}" stroke-width="1.1" opacity="0.55"/>`);
+      P.push(`<text x="${(ml+pw-4-emaNs[q].length*6).toFixed(1)}" y="${(Y(Math.max(lo,Math.min(hi,arr[n-1])))-3-q*11).toFixed(1)}" fill="${emaCols[q]}" font-size="8.5" text-anchor="end" opacity="0.85">EMA${emaNs[q]}</text>`);
+    });
+  }
+  if(coach.g1d1&&coach.g1d1.i!=null){
+    const g=coach.g1d1,x=X(Math.max(0,Math.min(n-1,g.i)));
+    const isHigh=g.type.indexOf("高")>=0;
+    const y=Y(Math.max(lo,Math.min(hi,isHigh?kls[g.i][2]:kls[g.i][3])));
+    const gy=isHigh?y-12:y+16;
+    P.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="#e8b339" opacity="0.9"/>`);
+    P.push(`<text x="${x.toFixed(1)}" y="${gy.toFixed(1)}" fill="#e8b339" font-size="10" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0d1117;stroke-width:3px">⚡${g.type}</text>`);
+  }
+  if(coach.defense&&coach.defense.p>lo&&coach.defense.p<hi){
+    const dy=Y(coach.defense.p);
+    P.push(`<line x1="${ml}" y1="${dy.toFixed(1)}" x2="${ml+pw}" y2="${dy.toFixed(1)}" stroke="#f0883e" stroke-width="1.6" stroke-dasharray="2,4" opacity="0.9"/>`);
+    P.push(`<rect x="${ml+pw+2}" y="${(dy-8).toFixed(1)}" width="${mr-4}" height="16" fill="#f0883e" rx="3" opacity="0.92"/>`);
+    P.push(`<text x="${ml+pw+6}" y="${(dy+4).toFixed(1)}" fill="#000" font-size="9.5" font-weight="700">🛡${coach.defense.p.toFixed(0)}</text>`);
+  }
+  if(coach.td&&(coach.td.buy>=7||coach.td.sell>=7)){
+    const t=coach.td,buy=t.buy>=7;
+    P.push(`<text x="${ml+pw-6}" y="${mt+12}" fill="${buy?"#7ee787":"#ffa198"}" font-size="10.5" font-weight="700" text-anchor="end" style="paint-order:stroke;stroke:#0d1117;stroke-width:3px">TD ${buy?"买"+t.buy:"卖"+t.sell}${Math.max(t.buy,t.sell)>=9?" ⚡":""}</text>`);
+  }
+  // 背驰标注(在K线区只画醒目圈,文字说明在信号栏)
+  if(div&&div.divs.length){
+    div.divs.forEach(d=>{const x=X(d.idx),y=Y(d.price);const col=d.type==="顶背驰"?"#f85149":"#2ea043";
+      P.push(`<circle cx="${x}" cy="${y}" r="9" fill="none" stroke="${col}" stroke-width="2.2"/>`);
+      P.push(`<circle cx="${x}" cy="${y}" r="3" fill="${col}"/>`);
+    });
+  }
+  // 交易周期区间标注(仅趋势图:用紫色高亮交易周期覆盖的范围)
+  if(!isTrade&&tradeRange){
+    let sI=0,eI=n-1;
+    for(let ii=0;ii<n;ii++){if(kls[ii][0]>=tradeRange[0]){sI=ii;break}}
+    for(let ii=n-1;ii>=0;ii--){if(kls[ii][0]<=tradeRange[1]){eI=ii;break}}
+    if(eI>=sI){
+      const x1=X(sI)-cw/2,x2=X(Math.min(eI,n-1))+cw/2;
+      const days=(tradeRange[1]-tradeRange[0])/86400000;
+      const spanTxt=days>=2?days.toFixed(0)+"天":(days*24).toFixed(0)+"小时";
+      P.push(`<rect x="${x1.toFixed(1)}" y="${mt}" width="${(x2-x1).toFixed(1)}" height="${ph}" fill="#bc8cff" opacity="0.11"/>`);
+      P.push(`<line x1="${x1.toFixed(1)}" y1="${mt}" x2="${x1.toFixed(1)}" y2="${mt+ph}" stroke="#bc8cff" stroke-width="1.1" stroke-dasharray="3,3" opacity="0.7"/>`);
+      P.push(`<line x1="${x2.toFixed(1)}" y1="${mt}" x2="${x2.toFixed(1)}" y2="${mt+ph}" stroke="#bc8cff" stroke-width="1.1" stroke-dasharray="3,3" opacity="0.7"/>`);
+      const lblW=120,lblX=Math.max(ml,x1+2);
+      P.push(`<rect x="${lblX.toFixed(1)}" y="${mt+2}" width="${lblW}" height="15" fill="#bc8cff" rx="2" opacity="0.92"/>`);
+      P.push(`<text x="${(lblX+6).toFixed(1)}" y="${mt+13}" fill="#000" font-size="10" font-weight="700">◧ 交易周期 ${spanTxt}</text>`);
+    }
+  }
+  // 现价线
+  const ny=Y(now);P.push(`<line x1="${ml}" y1="${ny}" x2="${ml+pw}" y2="${ny}" stroke="#e8b339" stroke-width="1.1" stroke-dasharray="4,3"/>`);
+  P.push(`<rect x="${ml+pw+2}" y="${ny-8}" width="${mr-4}" height="16" fill="#e8b339" rx="3"/><text x="${ml+pw+6}" y="${ny+4}" fill="#000" font-size="10" font-weight="700">${now.toFixed(S.dec)}</text>`);
+  // 等待区(交易周期)
+  if(isTrade&&trAdv&&trAdv.signals[0]){const sig=trAdv.signals[0];const m=sig.zone.match(/[\d.]+/g);if(m&&m.length>=2){const z1=Math.min(+m[0],+m[1]),z2=Math.max(+m[0],+m[1]);if(z1>lo&&z2<hi){const y1=Y(z2),y2=Y(z1);const col=trAdv.cls==="act-short"?"#f85149":(trAdv.cls==="act-long"?"#2ea043":"#d29922");P.push(`<rect x="${ml}" y="${y1}" width="${pw}" height="${Math.max(3,y2-y1)}" fill="${col}" opacity="0.12"/>`);P.push(`<line x1="${ml}" y1="${y1}" x2="${ml+pw}" y2="${y1}" stroke="${col}" stroke-width="0.7" stroke-dasharray="3,3" opacity="0.6"/>`);P.push(`<line x1="${ml}" y1="${y2}" x2="${ml+pw}" y2="${y2}" stroke="${col}" stroke-width="0.7" stroke-dasharray="3,3" opacity="0.6"/>`);P.push(`<text x="${ml+4}" y="${y1-3}" fill="${col}" font-size="9.5" font-weight="600">${sig.label}</text>`)}}}
+  P.push(`<text x="${ml}" y="${mt-7}" fill="#e8b339" font-size="11.5" font-weight="bold">${SYMS[curSym].name} ${periodName} · ${trendDir} · ${n}根${biN?' · 笔'+biN:''}${segN?' · 线段'+segN:''}${biZN?' · 笔中枢'+biZN:''}${dzN?' · 段中枢'+dzN:''}</text>`);
+  // ===== MACD副图 =====
+  if(hasMacd){
+    const myMid=(macdTop+macdBot)/2;
+    const allV=macd.hist.concat(macd.dif).concat(macd.dea).map(Math.abs);
+    const mv=Math.max(...allV)*1.15||1;
+    const MY=v=>myMid-(v/mv)*(macdH/2-3);
+    P.push(`<rect x="${ml}" y="${macdTop}" width="${pw}" height="${macdH}" fill="#0a0e14" stroke="#1c2230" rx="4"/>`);
+    P.push(`<text x="${ml+4}" y="${macdTop+11}" fill="#6e7681" font-size="9.5">MACD(12,26,9)</text>`);
+    P.push(`<line x1="${ml}" y1="${myMid}" x2="${ml+pw}" y2="${myMid}" stroke="#3a4250" stroke-width="0.7"/>`);
+    for(let i=0;i<n;i+=step){P.push(`<line x1="${X(i)}" y1="${macdTop}" x2="${X(i)}" y2="${macdBot}" stroke="#141a24"/>`)}
+    const mcw=Math.max(1.5,pw/n*0.5);
+    for(let i=0;i<n;i++){const hh=macd.hist[i];if(Math.abs(hh)<mv*0.001)continue;const x=X(i);const y0=myMid,y1=MY(hh);const col=hh>=0?(hh>macd.hist[i-1]?"#26a69a":"#1e7a72"):"#ef5350";P.push(`<rect x="${x-mcw/2}" y="${Math.min(y0,y1)}" width="${mcw}" height="${Math.max(0.5,Math.abs(y1-y0))}" fill="${col}" opacity="0.85"/>`)}
+    let difP="";for(let i=0;i<n;i++){difP+=(i===0?"M":"L")+X(i)+" "+MY(macd.dif[i])}
+    P.push(`<path d="${difP}" fill="none" stroke="#e8b339" stroke-width="1.1"/>`);
+    let deaP="";for(let i=0;i<n;i++){deaP+=(i===0?"M":"L")+X(i)+" "+MY(macd.dea[i])}
+    P.push(`<path d="${deaP}" fill="none" stroke="#bc8cff" stroke-width="1.1"/>`);
+    if(div&&div.divs.length){div.divs.forEach(d=>{
+      const col=d.type==="顶背驰"?"#f85149":"#2ea043";
+      if(d.seg1&&d.seg2){
+        // 两段面积阴影(seg1淡/seg2深,直观对比大小)
+        const x1a=X(Math.max(0,d.seg1[0])),x1b=X(Math.min(n-1,d.seg1[1]));
+        const x2a=X(Math.max(0,d.seg2[0])),x2b=X(Math.min(n-1,d.seg2[1]));
+        P.push(`<rect x="${x1a.toFixed(1)}" y="${macdTop}" width="${(x1b-x1a).toFixed(1)}" height="${macdH}" fill="${col}" opacity="0.1"/>`);
+        P.push(`<rect x="${x2a.toFixed(1)}" y="${macdTop}" width="${(x2b-x2a).toFixed(1)}" height="${macdH}" fill="${col}" opacity="0.2"/>`);
+        P.push(`<line x1="${x1b.toFixed(1)}" y1="${macdTop}" x2="${x1b.toFixed(1)}" y2="${macdBot}" stroke="${col}" stroke-width="0.6" stroke-dasharray="2,2" opacity="0.5"/>`);
+        // 面积标注
+        P.push(`<text x="${((x1a+x1b)/2).toFixed(1)}" y="${(macdBot-3).toFixed(1)}" fill="${col}" font-size="8.5" text-anchor="middle" opacity="0.85">a₁=${d.area1.toFixed(0)}</text>`);
+        P.push(`<text x="${((x2a+x2b)/2).toFixed(1)}" y="${(macdBot-3).toFixed(1)}" fill="${col}" font-size="8.5" text-anchor="middle" opacity="0.85">a₂=${d.area2.toFixed(0)}</text>`);
+        // 两顶/两底DIF连线(斜率体现背驰)
+        const p1=d.top1||d.bot1,p2=d.top2||d.bot2;
+        if(p1&&p2){const y1=MY(macd.dif[p1.i]),y2=MY(macd.dif[p2.i]);
+          P.push(`<line x1="${X(p1.i).toFixed(1)}" y1="${y1.toFixed(1)}" x2="${X(p2.i).toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${col}" stroke-width="1.4" opacity="0.85"/>`);
+          P.push(`<circle cx="${X(p1.i).toFixed(1)}" cy="${y1.toFixed(1)}" r="3.5" fill="${col}"/>`);
+          P.push(`<circle cx="${X(p2.i).toFixed(1)}" cy="${y2.toFixed(1)}" r="3.5" fill="none" stroke="${col}" stroke-width="1.5"/>`);
+        }
+        // 背驰标签
+        const lblX=x2b+3>ml+pw?x2a-50:x2b+3;
+        P.push(`<text x="${lblX.toFixed(1)}" y="${(macdTop+10).toFixed(1)}" fill="${col}" font-size="9" font-weight="bold">${d.type} ${(d.area2/d.area1*100).toFixed(0)}%</text>`);
+      }
+    })}
+    P.push(`<text x="${ml+pw-90}" y="${macdTop+11}" fill="#6e7681" font-size="9"><tspan fill="#e8b339">━DIF</tspan> <tspan fill="#bc8cff">━DEA</tspan></text>`);
+    P.push(`<text x="${ml+pw-3}" y="${macdTop+11}" fill="#6e7681" font-size="9" text-anchor="end">DIF ${macd.dif[n-1].toFixed(1)} · 柱 ${macd.hist[n-1].toFixed(1)}</text>`);
+  }
+  // ===== 成交量副图 =====
+  if(hasVol){
+    const vols=kls.map(k=>k[5]||0);
+    const vmax=Math.max(...vols)||1;
+    P.push(`<rect x="${ml}" y="${volTop}" width="${pw}" height="${volH}" fill="#0a0e14" stroke="#1c2230" rx="4"/>`);
+    P.push(`<text x="${ml+4}" y="${volTop+11}" fill="#6e7681" font-size="9.5">成交量</text>`);
+    for(let i=0;i<n;i+=step){P.push(`<line x1="${X(i)}" y1="${volTop}" x2="${X(i)}" y2="${volBot}" stroke="#141a24"/>`)}
+    const vcw=Math.max(1.5,pw/n*0.5);
+    for(let i=0;i<n;i++){const v=vols[i];const vh=(v/vmax)*(volH-16);const x=X(i);const up=kls[i][4]>=kls[i][1];P.push(`<rect x="${x-vcw/2}" y="${(volBot-3-vh).toFixed(1)}" width="${vcw}" height="${Math.max(0.5,vh).toFixed(1)}" fill="${up?'#2ebd85':'#f6465d'}" opacity="0.5"/>`)}
+    P.push(`<text x="${ml+pw-3}" y="${volTop+11}" fill="#6e7681" font-size="9" text-anchor="end">最大 ${formatVol(vmax)}</text>`);
+  }
+  // 时间轴(统一最下方)
+  for(let i=0;i<n;i+=step){P.push(`<text x="${X(i)}" y="${h-7}" fill="#6e7681" font-size="9" text-anchor="middle">${fmtTime(kls[i][0])}</text>`)}
+  // ===== 十字光标交互元素 =====
+  const crossBot=hasVol?volBot:(hasMacd?macdBot:kBot);
+  P.push(`<rect id="${divId}_hk" x="0" y="${mt}" width="${cw*2}" height="${ph}" fill="#e8b339" opacity="0" pointer-events="none"/>`);
+  P.push(`<line id="${divId}_cv" x1="0" y1="${mt}" x2="0" y2="${crossBot}" stroke="#e8b339" stroke-width="0.9" stroke-dasharray="3,3" opacity="0" pointer-events="none"/>`);
+  P.push(`<line id="${divId}_ch" x1="${ml}" y1="0" x2="${ml+pw}" y2="0" stroke="#e8b339" stroke-width="0.9" stroke-dasharray="3,3" opacity="0" pointer-events="none"/>`);
+  P.push(`<g id="${divId}_pt" opacity="0" pointer-events="none"><rect x="${ml+pw+2}" y="0" width="${mr-6}" height="16" fill="#58a6ff" rx="3"/><text id="${divId}_ptt" x="${ml+pw+6}" y="12" fill="#0d1117" font-size="10" font-weight="700"></text></g>`);
+  P.push(`<rect id="${divId}_ov" x="${ml}" y="${mt}" width="${pw}" height="${crossBot-mt}" fill="transparent" style="cursor:crosshair"/>`);
+  // ===== 买卖点标记(基于交易日志历史订单, B=买/S=卖) =====
+  try{
+    const tl=JSON.parse(localStorage.getItem("tradeLog")||"[]");
+    const pMs=n>1?kls[1][0]-kls[0][0]:0;
+    const t0=kls[0][0],t1=kls[n-1][0]+pMs;
+    const idxAt=tm=>{let idx=-1;for(let i=0;i<n;i++){if(kls[i][0]<=tm)idx=i;else break}return idx};
+    for(const t of tl){
+      if(t.sym!==curSym)continue;
+      const pts=[];
+      if(t.openTime&&t.entry!=null)pts.push({tm:new Date(t.openTime).getTime(),p:+t.entry,b:t.side==="多"});           // 进场:多→B 空→S
+      if(t.status==="已平仓"&&t.closeTime&&t.exit!=null)pts.push({tm:new Date(t.closeTime).getTime(),p:+t.exit,b:t.side!=="多"}); // 平仓:多→S 空→B
+      for(const m of pts){const i=idxAt(m.tm);if(i<0||m.tm<t0||m.tm>t1)continue;
+        const x=X(i).toFixed(1),y=Y(m.p).toFixed(1),col=m.b?"#3fb950":"#f85149";
+        P.push(`<g pointer-events="none"><circle cx="${x}" cy="${y}" r="9" fill="${col}" stroke="#0d1117" stroke-width="1.5"/><text x="${x}" y="${(+y+3.5).toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="#0d1117">${m.b?"B":"S"}</text></g>`);
+      }
+    }
+  }catch(e){}
+  P.push(`</svg>`);
+  document.getElementById(divId).innerHTML=P.join("");
+  // 存数据+绑定鼠标事件
+  chartData[divId]={kls,macd,S,n,ml,pw,X,cw,hasMacd,hasVol,kTop:mt,kBot,volTop,volBot,lo,hi};
+  const ov=document.getElementById(divId+"_ov");
+  if(ov){ov.addEventListener("mousemove",function(e){onMove(e,divId)});ov.addEventListener("mouseleave",function(){hideCross(divId)})}
+}
+
+// 设置持久化(localStorage)
+function saveSettings(){try{localStorage.setItem("chanSettings",JSON.stringify({sym:curSym,period:curPeriod,count:klineCount}))}catch(e){}}
+function applySettings(){
+  try{const s=JSON.parse(localStorage.getItem("chanSettings")||"{}");
+    if(s.sym)curSym=s.sym;if(s.period&&PERIODS[s.period])curPeriod=s.period;if(s.count)klineCount=s.count}catch(e){}
+  document.querySelectorAll("#symTabs button").forEach(b=>b.classList.toggle("active",b.dataset.sym===curSym));
+  document.querySelectorAll(".pcombo").forEach(b=>b.classList.toggle("active",b.dataset.p===curPeriod));
+  document.querySelectorAll(".cnt-btn").forEach(b=>b.classList.toggle("active",+b.dataset.c===klineCount));
+}
+applySettings();
+// 事件
+document.querySelectorAll("#symTabs button").forEach(b=>b.onclick=function(){document.querySelectorAll("#symTabs button").forEach(x=>x.classList.remove("active"));this.classList.add("active");curSym=this.dataset.sym;saveSettings();analyze()});
+document.getElementById("refreshBtn").onclick=analyze;
+// 自动刷新开关(默认开,可关闭,状态存localStorage)
+let autoRefreshOn=localStorage.getItem("autoRefresh")!=="off";
+const arBtn=document.getElementById("autoRefreshBtn");
+// 笔/线段显示开关
+let showBi=localStorage.getItem("showBi")!=="off";
+let showSeg=localStorage.getItem("showSeg")!=="off";
+let showEMA=localStorage.getItem("showEMA")!=="off";
+const biBtn=document.getElementById("biBtn"),segBtn=document.getElementById("segBtn"),emaBtn=document.getElementById("emaBtn");
+function syncBiSeg(){biBtn.classList.toggle("on",showBi);segBtn.classList.toggle("on",showSeg);emaBtn.classList.toggle("on",showEMA)}
+biBtn.onclick=function(){showBi=!showBi;localStorage.setItem("showBi",showBi?"on":"off");syncBiSeg();analyze()};
+segBtn.onclick=function(){showSeg=!showSeg;localStorage.setItem("showSeg",showSeg?"on":"off");syncBiSeg();analyze()};
+emaBtn.onclick=function(){showEMA=!showEMA;localStorage.setItem("showEMA",showEMA?"on":"off");syncBiSeg();analyze()};
+syncBiSeg();
+// 数据源选择
+function syncSrcBtns(){document.querySelectorAll(".src-btn").forEach(b=>b.classList.toggle("active",b.dataset.s===curSrc))}
+document.querySelectorAll(".src-btn").forEach(b=>b.onclick=function(){curSrc=this.dataset.s;try{localStorage.setItem("apiSource",curSrc)}catch(e){}fapiDownUntil=0;syncSrcBtns();analyze()});
+syncSrcBtns();
+// K线样式:空心阳线(缠论经典)/实心
+let hollowUp=localStorage.getItem("candleHollow")!=="off";   // 默认空心阳线
+const cdlBtn=document.getElementById("cdlBtn");
+function syncCdl(){cdlBtn.classList.toggle("on",hollowUp);cdlBtn.textContent=hollowUp?"🕯 空心阳线":"🕯 实心K线"}
+cdlBtn.onclick=function(){hollowUp=!hollowUp;localStorage.setItem("candleHollow",hollowUp?"on":"off");syncCdl();analyze()};
+syncCdl();
+function syncAutoRefresh(){arBtn.classList.toggle("on",autoRefreshOn);arBtn.textContent=autoRefreshOn?"🔄 自动刷新✓":"🔄 自动刷新(已关)"}
+syncAutoRefresh();
+arBtn.onclick=function(){autoRefreshOn=!autoRefreshOn;localStorage.setItem("autoRefresh",autoRefreshOn?"on":"off");syncAutoRefresh()};
+document.querySelectorAll(".pcombo").forEach(b=>b.onclick=function(){document.querySelectorAll(".pcombo").forEach(x=>x.classList.remove("active"));this.classList.add("active");curPeriod=this.dataset.p;saveSettings();analyze()});
+document.querySelectorAll(".cnt-btn").forEach(b=>b.onclick=function(){document.querySelectorAll(".cnt-btn").forEach(x=>x.classList.remove("active"));this.classList.add("active");klineCount=+this.dataset.c;saveSettings();analyze()});
+document.getElementById("chkTab").onclick=function(){document.getElementById("chkDrawer").classList.toggle("open")};
+document.getElementById("sigTab").onclick=function(){document.getElementById("sigDrawer").classList.toggle("open")};
+// ===== 价格预警 =====
+let alertEnabled=false,alertTimes={},audioCtx;
+document.getElementById("alertBtn").onclick=async function(){
+  const b=this;
+  function set(on){alertEnabled=on;b.classList.toggle("on",on);b.textContent=on?"🔔 预警已开启(点击关闭)":"🔔 开启预警";if(on)beep(660,0.15)}
+  if(!("Notification" in window)&&!("AudioContext" in window)){alert("浏览器不支持通知/声音");return}
+  if(!alertEnabled){
+    if("Notification" in window && Notification.permission==="default"){
+      const p=await Notification.requestPermission();
+      if(p!=="granted"){set(true)}  // 即使无通知权限,也开启声音预警
+      else set(true);
+    }else set(true);
+  }else set(false);
+};
+function beep(freq,dur){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.connect(g);g.connect(audioCtx.destination);
+    o.frequency.value=freq||880;o.type="sine";
+    g.gain.setValueAtTime(0.001,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.3,audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+(dur||0.4));
+    o.start();o.stop(audioCtx.currentTime+(dur||0.4));
+  }catch(e){}
+}
+function checkAlert(adv,divTr,divT,now,S,trAdv,segsT,tradeN){
+  if(!alertEnabled)return;
+  const sym=SYMS[curSym].name;
+  const alerts=[];
+  const cur=Math.floor(Date.now()/60000);  // 分钟级
+  // 0.趋势周期线段翻转(级别反转确认:反向三笔成段)
+  if(segsT&&segsT.length){
+    const dNow=segsT[segsT.length-1].dir>0?"up":"dn";
+    const prev=alertTimes["segdirT"];
+    if(prev&&prev!==dNow){
+      const key="segflip_"+dNow;
+      if(!alertTimes[key]||cur-alertTimes[key]>=10){
+        alertTimes[key]=cur;
+        alerts.push({key,pri:1,msg:sym+" 趋势周期线段翻转："+(prev==="up"?"上涨段 → 下跌段":"下跌段 → 上涨段")+"(反向三笔成段确认)"});
+      }
+    }
+    alertTimes["segdirT"]=dNow;
+  }
+  // 0.5 结构买卖点(交易周期一/二/三类买卖点,含试探)
+  if(trAdv&&trAdv.chan&&(trAdv.cls==="act-long"||trAdv.cls==="act-short")){
+    const key="chan_"+trAdv.chan;
+    if(!alertTimes[key]||cur-alertTimes[key]>=10){
+      alertTimes[key]=cur;
+      alerts.push({key,pri:1,msg:sym+" "+(tradeN||"交易周期")+" "+trAdv.title});
+    }
+  }
+  // 1.背驰信号(趋势周期+交易周期)
+  [divT,divTr].forEach((d,idx)=>{
+    if(!d||!d.divs.length)return;
+    d.divs.forEach(dd=>{
+      const key=idx+"_div_"+dd.type;
+      if(!alertTimes[key]||cur-alertTimes[key]>=3){  // 3分钟不重复
+        alertTimes[key]=cur;
+        alerts.push({key,pri:0,msg:sym+(idx===0?"趋势":"交易")+"周期 "+dd.type.replace(/<[^>]+>/g,"")});
+      }
+    });
+  });
+  // 2.可交易信号(共振做空/做多)
+  if(adv&&(adv.resonance==="ok")){
+    const key="trade_"+adv.cls;
+    if(!alertTimes[key]||cur-alertTimes[key]>=10){  // 10分钟不重复
+      alertTimes[key]=cur;
+      alerts.push({key,pri:1,msg:sym+" "+adv.title.replace(/[✓⚡]/g,"").trim()});
+    }
+  }
+  // 3.疑似见顶/见底
+  if(adv&&adv.title.indexOf("疑似见")>=0){
+    const key="reverse";
+    if(!alertTimes[key]||cur-alertTimes[key]>=10){
+      alertTimes[key]=cur;
+      alerts.push({key,pri:1,msg:sym+" "+adv.title});
+    }
+  }
+  // 触发(按优先级)
+  if(alerts.length){
+    alerts.sort((a,b)=>b.pri-a.pri);
+    const a=alerts[0];
+    if("Notification" in window && Notification.permission==="granted"){
+      try{new Notification("⚡ "+sym+" 缠论信号",{body:a.msg,icon:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14'>⚡</text></svg>"})}catch(e){}
+    }
+    beep(a.pri===1?[880,1100,880]:[660,880],0.25);  // 可交易:急促3连音;背驰:2连音
+    if(a.pri===1)setTimeout(()=>beep(1100,0.25),280);
+  }
+}
+analyze();
+setInterval(()=>{if(autoRefreshOn&&!document.hidden)analyze()},60000);
+</script>
+</body>
+</html>

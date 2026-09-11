@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>合约仓位计算器 · 分仓策略版</title>
+<style>
+:root{--bg:#0e1117;--card:#161b22;--card2:#1c2230;--line:#262d3a;--txt:#e6edf3;--sub:#8b949e;
+--gold:#e8b339;--green:#2ea043;--green-s:rgba(46,160,67,.15);--red:#f85149;--red-s:rgba(248,81,73,.15);
+--blue:#58a6ff;--purple:#bc8cff;--orange:#d29922}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);
+line-height:1.6;padding:20px;min-height:100vh;
+background-image:radial-gradient(1000px 500px at 85% -10%,rgba(232,179,57,.07),transparent),radial-gradient(800px 400px at -10% 110%,rgba(88,166,255,.05),transparent)}
+.wrap{max-width:1140px;margin:0 auto}
+header{padding:14px 0 12px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.badge{display:inline-block;font-size:11px;color:var(--gold);border:1px solid var(--gold);padding:2px 10px;border-radius:20px;letter-spacing:1px;margin-bottom:7px}
+h1{font-size:23px;font-weight:700;background:linear-gradient(90deg,#fff,#e8b339);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:3px}
+.sub{color:var(--sub);font-size:12px}
+/* 澄清说明 */
+.clarify{background:rgba(88,166,255,.08);border:1px solid var(--blue);border-radius:8px;padding:12px 16px;margin-bottom:18px;font-size:12.5px;color:#a9c7ee}
+.clarify b{color:#79c0ff}
+.clarify .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.clarify .layer{background:var(--card2);border-radius:6px;padding:9px 11px;border-left:3px solid}
+.clarify .layer.l1{border-color:var(--red)}.clarify .layer.l2{border-color:var(--blue)}.clarify .layer.l3{border-color:var(--gold)}
+.clarify .layer .lt{font-size:11px;color:var(--sub)}.clarify .layer .lv{font-size:13px;font-weight:600;margin-top:2px}
+/* 布局 */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.clarify .layers{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.panel h2{font-size:14px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel h2 .n{width:22px;height:22px;background:var(--gold);color:#000;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;color:var(--sub);margin-bottom:5px}
+.field label .hint{color:var(--sub);opacity:.6;font-size:11px}
+.iw{position:relative}
+input[type=number]{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit;transition:.15s}
+input[type=number]:focus{outline:none;border-color:var(--gold);background:#1f2632}
+.is{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:12px}
+.dir-toggle{display:flex;gap:8px}
+.dir-toggle button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card2);color:var(--sub);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.dir-toggle button.on-long{background:var(--green-s);color:#7ee787;border-color:var(--green)}
+.dir-toggle button.on-short{background:var(--red-s);color:#ffa198;border-color:var(--red)}
+.og{display:flex;gap:6px;flex-wrap:wrap}
+.og button{flex:1;min-width:46px;padding:8px 5px;border:1px solid var(--line);background:var(--card2);color:var(--sub);border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;text-align:center;transition:.15s}
+.og button:hover{border-color:var(--blue);color:var(--txt)}
+.og button.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:600}
+/* 模式切换 */
+.mode-tabs{display:flex;background:var(--card2);border-radius:8px;padding:3px;margin-bottom:14px}
+.mode-tabs button{flex:1;padding:9px;border:none;background:transparent;color:var(--sub);font-size:12.5px;cursor:pointer;border-radius:6px;font-family:inherit;transition:.15s}
+.mode-tabs button.active{background:var(--gold);color:#000;font-weight:600}
+.mode-desc{font-size:11.5px;color:var(--sub);margin:-8px 0 12px;padding:8px 11px;background:var(--card2);border-radius:6px;border-left:3px solid var(--purple)}
+/* 资金分配可视化 */
+.alloc{margin:14px 0}
+.alloc-bar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.alloc-seg{display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:10.5px;color:#fff;font-weight:600;transition:width .3s;padding:2px;line-height:1.2}
+.alloc-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:11px}
+.alloc-legend span{display:inline-flex;align-items:center;gap:5px}
+.alloc-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+/* 结果卡片 */
+.hero{background:linear-gradient(135deg,rgba(232,179,57,.1),rgba(46,160,67,.05));border:1px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.hero .hi{text-align:center}.hero .hi .hl{font-size:10.5px;color:var(--sub);margin-bottom:2px}.hero .hi .hv{font-size:18px;font-weight:700;font-family:"SF Mono",Consolas,monospace}
+.rbig{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.rc{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:12px;text-align:center}
+.rc.hl{border-color:var(--gold);background:rgba(232,179,57,.06)}
+.rc .rl{font-size:10.5px;color:var(--sub);margin-bottom:3px}
+.rc .rv{font-size:19px;font-weight:700;font-family:"SF Mono",Consolas,monospace}
+.rv.green{color:#7ee787}.rv.red{color:#ffa198}.rv.gold{color:var(--gold)}.rv.blue{color:#79c0ff}.rv.purple{color:#bc8cff}
+.rc .rs{font-size:10.5px;color:var(--sub);margin-top:2px}
+/* 分仓策略表 */
+.strategy{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:13px;margin:12px 0}
+.strategy h3{font-size:12.5px;color:var(--purple);margin-bottom:9px}
+.strategy table{width:100%;border-collapse:collapse;font-size:11.5px}
+.strategy th{color:var(--sub);font-weight:600;padding:6px 4px;text-align:center;border-bottom:1px solid var(--line)}
+.strategy td{padding:7px 4px;text-align:center;border-bottom:1px solid var(--line)}
+.strategy td.cur{background:rgba(232,179,57,.08);color:var(--gold);font-weight:600}
+.warn{border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;display:none}
+.warn.show{display:block}
+.warn.ok{background:var(--green-s);border:1px solid var(--green);color:#7ee787}
+.warn.mid{background:rgba(210,153,34,.12);border:1px solid var(--orange);color:#e3b341}
+.warn.bad{background:var(--red-s);border:1px solid var(--red);color:#ffa198}
+.presets{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:6px}
+.preset{background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:9px;cursor:pointer;transition:.15s;text-align:left;font-family:inherit;color:var(--txt)}
+.preset:hover{border-color:var(--purple);background:#1f2636}
+.preset .pn{font-size:12px;font-weight:600}.preset .pd{font-size:10.5px;color:var(--sub);margin-top:1px}
+.preset.hi{border-color:rgba(232,179,57,.4)}
+.divider{height:1px;background:var(--line);margin:14px 0}
+.formula{background:var(--card2);border-left:3px solid var(--purple);border-radius:6px;padding:11px 13px;margin-top:12px;font-size:11.5px;color:#c9d1d9}
+.formula code{background:#0d1117;padding:2px 5px;border-radius:3px;color:var(--gold);font-family:"SF Mono",Consolas,monospace;font-size:11px}
+footer{text-align:center;color:var(--sub);font-size:11px;margin-top:22px;padding-top:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="badge">缠论 · 分仓 · 资金管理三层</span>
+<h1>合约仓位计算器 · 分仓策略版</h1>
+<p class="sub">不是全仓梭哈 · 支持风险驱动/投入驱动双模式 · 含分仓规划与资金分配可视化</p>
+</header>
+
+<!-- 三层澄清 -->
+<div class="clarify">
+<b>💡 关键澄清：400U 是"账户总额"，不是每笔投入！</b> 资金管理分三层，计算器现在全部支持：
+<div class="layers">
+<div class="layer l1"><div class="lt">第1层 单笔风险</div><div class="lv">每次最多亏多少<br><span style="color:#ffa198">账户的 1~2%</span></div></div>
+<div class="layer l2"><div class="lt">第2层 单笔投入</div><div class="lv">每次拿多少保证金<br><span style="color:#79c0ff">账户的 5~20%</span></div></div>
+<div class="layer l3"><div class="lt">第3层 总仓规划</div><div class="lv">同时开几笔/总占用<br><span style="color:#e8b339">总保证金 ≤ 25%</span></div></div>
+</div>
+</div>
+
+<div class="grid">
+<!-- ============ 左：输入 ============ -->
+<div class="panel">
+<h2><span class="n">1</span>交易参数</h2>
+
+<div class="field">
+<label>账户总额 <span class="hint">(本金)</span></label>
+<div class="iw"><input type="number" id="capital" value="400" step="50"><span class="is">U</span></div>
+</div>
+
+<!-- 模式切换 -->
+<div class="mode-tabs">
+<button id="modeRisk" class="active">模式A · 风险驱动</button>
+<button id="modeAlloc">模式B · 投入驱动</button>
+</div>
+<div class="mode-desc" id="modeDesc">先定"单笔最多亏多少"，自动反推仓位与保证金。<b style="color:#bc8cff">专业标准做法</b>。</div>
+
+<!-- 模式A: 风险% -->
+<div class="field" id="fldRisk">
+<label>单笔风险 <span class="hint">(第1层：每次最多亏损 = 账户×此%)</span></label>
+<div class="og" id="riskGroup">
+<button data-r="0.01">1%·保守</button>
+<button data-r="0.015" class="active">1.5%·标准</button>
+<button data-r="0.02">2%·上限</button>
+</div>
+</div>
+
+<!-- 模式B: 投入% -->
+<div class="field" id="fldAlloc" style="display:none">
+<label>每笔投入保证金 <span class="hint">(第2层：每笔从账户拿出多少做保证金)</span></label>
+<div class="og" id="allocGroup">
+<button data-a="0.05">5%</button>
+<button data-a="0.08">8%</button>
+<button data-a="0.12" class="active">12%</button>
+<button data-a="0.18">18%</button>
+<button data-a="0.25">25%</button>
+</div>
+</div>
+
+<div class="field">
+<label>方向</label>
+<div class="dir-toggle">
+<button id="btnLong" class="on-long">▲ 做多</button>
+<button id="btnShort">▼ 做空</button>
+</div>
+</div>
+
+<div class="field">
+<label>进场价</label>
+<div class="iw"><input type="number" id="entry" value="65261" step="any"></div>
+</div>
+<div class="field">
+<label>止损价 <span class="hint">(缠论结构失效位)</span></label>
+<div class="iw"><input type="number" id="stop" value="66600" step="any"></div>
+</div>
+<div class="field">
+<label>止盈价 <span class="hint">(选填)</span></label>
+<div class="iw"><input type="number" id="target" value="62600" step="any"></div>
+</div>
+<div class="field">
+<label>杠杆</label>
+<div class="og" id="levGroup">
+<button data-l="5">5x</button>
+<button data-l="10" class="active">10x</button>
+<button data-l="15">15x</button>
+<button data-l="20">20x</button>
+<button data-l="50">50x</button>
+</div>
+</div>
+
+<div class="divider"></div>
+<h2 style="margin-top:2px"><span class="n">⚡</span>缠论周期预设</h2>
+<div class="presets">
+<button class="preset hi" data-preset="1h"><div class="pn">1H交易+4H趋势 ★</div><div class="pd">主力·止损1.8%</div></button>
+<button class="preset" data-preset="4h"><div class="pn">4H交易+日线趋势 ★</div><div class="pd">中波段·止损3.5%</div></button>
+<button class="preset" data-preset="ex8"><div class="pn">BTC 61901 二类买点</div><div class="pd">复刻 #8 最优多单</div></button>
+<button class="preset" data-preset="ex24"><div class="pn">BTC 65261 一类卖点</div><div class="pd">复刻 #24 抓顶空单</div></button>
+</div>
+</div>
+
+<!-- ============ 右：结果 ============ -->
+<div class="panel">
+<h2><span class="n">2</span>计算结果 <span style="font-size:11px;color:var(--sub);font-weight:400;margin-left:auto">实时更新</span></h2>
+
+<div class="hero">
+<div class="hi"><div class="hl">单笔风险金</div><div class="hv" id="oRisk" style="color:#ffa198">—</div></div>
+<div class="hi"><div class="hl">每笔投入保证金</div><div class="hv" id="oMargin" style="color:#79c0ff">—</div></div>
+<div class="hi"><div class="hl">名义价值</div><div class="hv" id="oNotional" style="color:#e8b339">—</div></div>
+<div class="hi"><div class="hl">仓位数量</div><div class="hv" id="oQty" style="color:#bc8cff;font-size:15px">—</div></div>
+</div>
+
+<div class="rbig">
+<div class="rc hl"><div class="rl">止损空间</div><div class="rv red" id="oStopPct">—</div><div class="rs" id="oStopPts">—</div></div>
+<div class="rc"><div class="rl">投入占账户</div><div class="rv gold" id="oMarginPct">—</div><div class="rs" id="oLeft">—</div></div>
+<div class="rc"><div class="rl">风险占账户</div><div class="rv" id="oRiskPct">—</div><div class="rs" id="oRiskPctDesc">—</div></div>
+<div class="rc"><div class="rl">爆仓价 / 安全垫</div><div class="rv red" id="oLiq">—</div><div class="rs" id="oSafe">—</div></div>
+</div>
+
+<!-- 资金分配可视化 -->
+<div class="alloc">
+<div style="font-size:12.5px;color:var(--gold);margin-bottom:6px">💰 账户资金分配（400U 怎么分）</div>
+<div class="alloc-bar" id="allocBar"></div>
+<div class="alloc-legend" id="allocLegend"></div>
+</div>
+
+<!-- 分仓策略表 -->
+<div class="strategy">
+<h3>📦 分仓策略对比（按当前每笔保证金规模，可同时开几笔）</h3>
+<table>
+<thead><tr><th>策略</th><th>每笔保证金</th><th>占账户</th><th>可同时持仓</th><th>总占用</th><th>总最大风险</th></tr></thead>
+<tbody id="stratTable"></tbody>
+</table>
+<div style="font-size:11px;color:var(--sub);margin-top:7px;line-height:1.6">
+📌 建议：<b>2-3 仓分散</b>。同一方向不叠加(已有多单不再开多)，<b>总保证金占用≤25%</b>，<b>总风险≤账户6%</b>。
+</div>
+</div>
+
+<!-- 盈亏比 -->
+<div class="strategy" style="border-left:3px solid var(--green)">
+<h3 style="color:#7ee787">📊 盈亏比 <span id="oRR" style="float:right">—</span></h3>
+<div style="display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:6px">
+<span style="color:#ffa198">风险 <b id="oRiskU">—</b></span>
+<div style="flex:1;height:20px;background:var(--card2);border-radius:4px;overflow:hidden;border:1px solid var(--line)">
+<div id="barWin" style="height:100%;background:linear-gradient(90deg,#2ea043,#7ee787);width:0%;transition:.3s"></div>
+</div>
+<span style="color:#7ee787">盈利 <b id="oWinU">—</b></span>
+</div>
+<div style="font-size:11.5px;color:var(--sub)" id="oRRHint">填入止盈价可计算盈亏比</div>
+</div>
+
+<div class="warn" id="warn"></div>
+
+<div class="formula">
+<b style="color:#bc8cff">双模式公式：</b><br>
+<span style="color:#ffa198">模式A 风险驱动：</span><code>名义价值 = 风险金 ÷ 止损%</code>，保证金=名义÷杠杆<br>
+<span style="color:#79c0ff">模式B 投入驱动：</span><code>名义价值 = 保证金 × 杠杆</code>，风险金=名义×止损%（需≤2%）<br>
+<span style="color:var(--sub);font-size:11px">两种殊途同归，模式A控制风险、模式B控制占用。建议先用模式A。</span>
+</div>
+</div>
+</div>
+<footer>缠论分仓策略 · 单笔风险≤2% · 杠杆10-15x · 总占用≤25% · 同向不叠加</footer>
+</div>
+
+<script>
+const S={capital:400,mode:"risk",risk:0.015,alloc:0.12,dir:"long",entry:65261,stop:66600,target:62600,lev:10};
+const MMR=0.005;
+function $(id){return document.getElementById(id)}
+function fmt(n,d=2){return Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d})}
+
+function calc(){
+  const cap=S.capital;
+  const entry=S.entry,stop=S.stop,target=S.target,lev=S.lev,dir=S.dir;
+  const stopPct=Math.abs(stop-entry)/entry;
+  const valid = stopPct>0.0001 && stopPct<0.5 && entry>0;
+  let riskU,notional,margin,marginPct;
+  if(S.mode==="risk"){
+    riskU=cap*S.risk;
+    notional=valid?riskU/stopPct:0;
+    margin=lev>0?notional/lev:0;
+    marginPct=cap>0?margin/cap:0;
+  } else {
+    margin=cap*S.alloc;
+    notional=margin*lev;
+    riskU=valid?notional*stopPct:0;
+    marginPct=S.alloc;
+  }
+  const qty=entry>0?notional/entry:0;
+  const riskPct=cap>0?riskU/cap:0;
+  let liq=dir==="long"?entry*(1-1/lev+MMR):entry*(1+1/lev-MMR);
+  let safeDist=dir==="long"?(stop-liq)/entry:(liq-stop)/entry;
+  const winPct=target>0?Math.abs(target-entry)/entry:0;
+  const rr=(valid&&winPct>0)?winPct/stopPct:0;
+  const winU=notional*winPct;
+
+  // 输出
+  $("oRisk").textContent=riskU>0?riskU.toFixed(1)+"U":"—";
+  $("oMargin").textContent=margin>0?margin.toFixed(1)+"U":"—";
+  $("oNotional").textContent=notional>0?fmt(notional,0)+"U":"—";
+  $("oQty").textContent=qty>0?fmt(qty,5):"—";
+  $("oStopPct").textContent=valid?(stopPct*100).toFixed(2)+"%":"—";
+  $("oStopPts").textContent=valid?Math.abs(stop-entry).toFixed(1)+"点":"检查止损";
+  $("oMarginPct").textContent=margin>0?(marginPct*100).toFixed(1)+"%":"—";
+  $("oLeft").textContent=margin>0?"剩余可用 "+(cap-margin).toFixed(0)+"U":"";
+  $("oRiskPct").textContent=riskU>0?(riskPct*100).toFixed(2)+"%":"—";
+  let rpsc; if(riskPct<=0.015)rpsc="✓安全";else if(riskPct<=0.02)rpsc="△上限";else rpsc="✗超限!";
+  $("oRiskPctDesc").textContent=riskU>0?rpsc:"";
+  $("oRiskPct").className="rv "+(riskPct>0.02?"red":(riskPct>0.015?"gold":"green"));
+  $("oLiq").textContent=fmt(liq,1);
+  let safeC="green",safeT="充足";
+  if(safeDist<0){safeC="red";safeT="止损超爆仓!"}
+  else if(safeDist<0.01){safeC="red";safeT="过窄"}
+  else if(safeDist<0.02){safeC="gold";safeT="偏窄"}
+  $("oSafe").textContent=safeDist>0?(safeDist*100).toFixed(2)+"%":"危险";
+  $("oSafe").className="rs";
+  $("oSafe").style.color=safeC==="green"?"#7ee787":(safeC==="red"?"#ffa198":"#e8b339");
+
+  // 资金分配可视化
+  const free=Math.max(0,cap-margin);
+  const segs=[];
+  if(margin>0) segs.push({name:"本笔保证金",val:margin,color:"#58a6ff",pct:margin/cap*100});
+  if(riskU>0) segs.push({name:"最大风险",val:riskU,color:"#f85149",pct:riskU/cap*100});
+  segs.push({name:"可用余额",val:free,color:"#262d3a",pct:free/cap*100,text:"#8b949e"});
+  $("allocBar").innerHTML=segs.map(s=>`<div class="alloc-seg" style="width:${Math.max(2,s.pct)}%;background:${s.color};color:${s.text||'#fff'}">${s.pct>=8?s.name+"<br>"+s.val.toFixed(0)+"U":""}</div>`).join("");
+  $("allocLegend").innerHTML=segs.map(s=>`<span><i style="background:${s.color}"></i>${s.name} <b>${s.val.toFixed(1)}U</b> (${s.pct.toFixed(1)}%)</span>`).join("");
+
+  // 分仓策略表
+  const m0=margin;
+  let rows="";
+  const strats=[
+    {n:"1仓·集中",mult:1.0},
+    {n:"2仓·标准",mult:0.5},
+    {n:"3仓·分散",mult:0.33},
+    {n:"4仓·轻仓",mult:0.25},
+  ];
+  strats.forEach(st=>{
+    const m=m0*st.mult;
+    const occ=st.n.match(/(\d)/)[0];
+    const tot=m*occ;
+    const totPct=tot/cap*100;
+    const totRisk=riskU*occ*(st.mult); // 风险随仓位等比
+    const tr=riskU*occ*st.mult;
+    const trPct=tr/cap*100;
+    const ok = totPct<=25 && trPct<=6;
+    rows+=`<tr${occ==="2"?' class="cur"':""}><td>${st.n}</td><td>${m.toFixed(1)}U</td><td>${(m/cap*100).toFixed(1)}%</td><td>${occ}笔</td><td style="color:${totPct>25?'#ffa198':'#7ee787'}">${totPct.toFixed(0)}%</td><td style="color:${trPct>6?'#ffa198':'#7ee787'}">${trPct.toFixed(1)}%</td></tr>`;
+  });
+  $("stratTable").innerHTML=rows;
+
+  // 盈亏比
+  $("oRR").textContent=rr>0?"1 : "+rr.toFixed(2):"—";
+  $("oRiskU").textContent=riskU>0?riskU.toFixed(1)+"U":"—";
+  $("oWinU").textContent=winU>0?winU.toFixed(1)+"U":"—";
+  if(rr>0){
+    $("barWin").style.width=Math.min(100,winPct/(winPct+stopPct)*100)+"%";
+    let h;
+    if(rr>=2)h="✓ 盈亏比优秀(≥1:2)，符合缠论趋势单标准";
+    else if(rr>=1.5)h="△ 盈亏比合格(≥1:1.5)，可交易";
+    else if(rr>=1)h="△ 盈亏比偏低，谨慎";
+    else h="✗ 盈亏比<1，不值得交易";
+    $("oRRHint").innerHTML=h+" · 止盈"+(winPct*100).toFixed(1)+"%/止损"+(stopPct*100).toFixed(1)+"%";
+  } else {$("barWin").style.width="0%"}
+
+  // 警告
+  let w=[];
+  if(!valid)w.push(["bad","⚠ 止损价无效，请检查方向与价位"]);
+  if(S.mode==="alloc"&&riskPct>0.02)w.push(["bad","⚠ 投入模式下风险达"+(riskPct*100).toFixed(1)+"%超2%上限，请降低投入%或杠杆"]);
+  if(marginPct>0.25)w.push(["bad","⚠ 单笔保证金占"+(marginPct*100).toFixed(0)+"%过高，建议≤20%"]);
+  if(safeDist<0.02&&valid)w.push(["bad","⚠ 止损距爆仓仅"+(safeDist*100).toFixed(1)+"%，请降杠杆"]);
+  if(marginPct>0.20&&marginPct<=0.25)w.push(["mid","△ 单笔投入偏高("+ (marginPct*100).toFixed(0)+"%)，建议降至12-18%"]);
+  if(valid&&riskPct<=0.02&&marginPct<=0.25&&safeDist>=0.02&&rr>=1.5)w.push(["ok","✓ 参数健康：风险"+(riskPct*100).toFixed(1)+"%·投入"+(marginPct*100).toFixed(0)+"%·安全垫"+(safeDist*100).toFixed(1)+"%·盈亏比1:"+rr.toFixed(2)]);
+  else if(valid&&w.length===0)w.push(["ok","✓ 参数合理，可执行"]);
+  const wn=$("warn");wn.className="warn show "+w[0][0];wn.innerHTML=w.map(x=>x[1]).join("<br>");
+}
+
+// 事件
+$("capital").oninput=e=>{S.capital=+e.target.value||0;calc()};
+$("entry").oninput=e=>{S.entry=+e.target.value||0;calc()};
+$("stop").oninput=e=>{S.stop=+e.target.value||0;calc()};
+$("target").oninput=e=>{S.target=+e.target.value||0;calc()};
+
+$("modeRisk").onclick=()=>{S.mode="risk";$("modeRisk").classList.add("active");$("modeAlloc").classList.remove("active");
+  $("fldRisk").style.display="";$("fldAlloc").style.display="none";
+  $("modeDesc").innerHTML='先定"单笔最多亏多少"，自动反推仓位与保证金。<b style="color:#bc8cff">专业标准做法</b>。';calc()};
+$("modeAlloc").onclick=()=>{S.mode="alloc";$("modeAlloc").classList.add("active");$("modeRisk").classList.remove("active");
+  $("fldRisk").style.display="none";$("fldAlloc").style.display="";
+  $("modeDesc").innerHTML='先定"每笔拿多少保证金"，再看风险是否可控。<b style="color:#79c0ff">直观，适合新手</b>。';calc()};
+
+document.querySelectorAll("#riskGroup button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#riskGroup button").forEach(x=>x.classList.remove("active"));b.classList.add("active");S.risk=+b.dataset.r;calc()});
+document.querySelectorAll("#allocGroup button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#allocGroup button").forEach(x=>x.classList.remove("active"));b.classList.add("active");S.alloc=+b.dataset.a;calc()});
+document.querySelectorAll("#levGroup button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#levGroup button").forEach(x=>x.classList.remove("active"));b.classList.add("active");S.lev=+b.dataset.l;calc()});
+$("btnLong").onclick=()=>{S.dir="long";$("btnLong").className="on-long";$("btnShort").className="";calc()};
+$("btnShort").onclick=()=>{S.dir="short";$("btnShort").className="on-short";$("btnLong").className="";calc()};
+
+const presets={
+  "1h":{entry:65261,stop:66600,target:62600,dir:"short",lev:10,mode:"risk",risk:0.015},
+  "4h":{entry:1858,stop:1790,target:1958,dir:"long",lev:10,mode:"risk",risk:0.015},
+  "ex8":{entry:61901,stop:61200,target:65000,dir:"long",lev:10,mode:"risk",risk:0.015},
+  "ex24":{entry:65261,stop:66600,target:62600,dir:"short",lev:15,mode:"risk",risk:0.015},
+};
+document.querySelectorAll(".preset").forEach(b=>b.onclick=()=>{
+  const p=presets[b.dataset.preset];if(!p)return;
+  Object.assign(S,p);
+  $("entry").value=p.entry;$("stop").value=p.stop;$("target").value=p.target;
+  if(p.dir==="long"){$("btnLong").className="on-long";$("btnShort").className=""}else{$("btnShort").className="on-short";$("btnLong").className=""}
+  document.querySelectorAll("#levGroup button").forEach(x=>x.classList.toggle("active",+x.dataset.l===p.lev));
+  document.querySelectorAll("#riskGroup button").forEach(x=>x.classList.toggle("active",Math.abs(+x.dataset.r-p.risk)<0.001));
+  if(p.mode==="risk"){$("modeRisk").click()}calc();
+});
+calc();
+</script>
+</body>
+</html>
