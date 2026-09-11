@@ -516,8 +516,11 @@ function mergeK(kls){
       const nl=dir>0?Math.max(m.l,l):Math.min(m.l,l);
       const oh=m.h,ol=m.l;
       m.h=nh;m.l=nl;m.i1=i;
-      m.hi=nh>oh?i:m.hi;   // 极值来自哪根原始K线(修复:原写法 nh===m.h 恒真,hi/lo 停留在组首根)
-      m.lo=nl<ol?i:m.lo;
+      // 极值来自哪根原始K线(修复v3:按方向判"当前K是否贡献了新极值"——
+      // 升合并 nh=max恒>=oh/nl=max恒>=ol, 降合并恒<=, 用 nh/ol 比较会留死角:
+      // 升合并的内包K抬高低点时lo不更新、降合并的内包K压低高点时hi不更新)
+      m.hi=(dir>0?h>oh:h<oh)?i:m.hi;
+      m.lo=(dir>0?l>ol:l<ol)?i:m.lo;
     }else{
       out.push({h,l,t:kls[i][0],i0:i,i1:i,hi:i,lo:i});
     }
@@ -657,13 +660,17 @@ function levelGates(kls,bi,macd,zs,kdj,now){
     const prevB=bots[bots.length-3];
     const a1=prevB?area(prevB.i,b1.i,-1):area(Math.max(0,b1.i-20),b1.i,-1);
     const a2=midT?area(midT.i,b2.i,-1):area(b1.i,b2.i,-1);
-    if(b2.price<b1.price&&macd.dif[b2.i]>macd.dif[b1.i])gateAnchor={price:b2.price,i:b2.i};  // 新低+DIF抬升=记录/刷新锚点
-    G("一买抄底",[
-      [gateAnchor?true:b2.price<b1.price,gateAnchor?`一买锚点 ${f(gateAnchor.price)} 已记录(时序记忆)`:`价格新低 ${f(b1.price)}→${f(b2.price)}`],
+    const c1raw=[   // 关1原始判定(锚点记录依据=完整触发,而非仅新低+DIF)
+      [b2.price<b1.price,`价格新低 ${f(b1.price)}→${f(b2.price)}`],
       [macd.dif[b2.i]>macd.dif[b1.i],`DIF低点抬高 ${f(macd.dif[b1.i])}→${f(macd.dif[b2.i])}`],
       [a2<a1/3,`绿柱面积 ${f(a1)}→${f(a2)} (需<1/3)`],
       [kdj.j[n-1]<0,`KDJ J=${kdj.j[n-1].toFixed(1)} (需<0)`],
       [last.type==="底"&&n-1-b2.i<=3,`底分型确认K线(距底${n-1-b2.i}根,需≤3)`],
+    ];
+    if(c1raw.every(c=>c[0]))gateAnchor={price:b2.price,i:b2.i};  // 关1完整触发才记录锚点(生命周期与显示一致)
+    G("一买抄底",[
+      [gateAnchor?true:c1raw[0][0],gateAnchor?`一买锚点 ${f(gateAnchor.price)} 已记录(时序记忆)`:c1raw[0][1]],
+      ...c1raw.slice(1),
     ],"开仓100%");
   }
   // 关2 二买确认: 回调不破一买低点 + 回调绿柱<红柱(动能衰竭) + 5m底分型确认
@@ -715,14 +722,20 @@ function levelGates(kls,bi,macd,zs,kdj,now){
   }
   // 关6 止损: 跌破一买低点 或 -2.5%
   if(b2){
-    const entryRef=b1&&b2.price<b1.price?b2:b1;  // 一买底=开仓参照
+    const entryRef=gateAnchor||(b1&&b2.price<b1.price?b2:b1);  // 出口闸锚定开仓点(有关1锚点用锚点,进场出场同一参照系;无锚点退化为当前底)
     G("止损",[
-      [entryRef&&now<entryRef.price,`现价${f(now)} vs 一买底${entryRef?f(entryRef.price):"—"}`],
-      [entryRef&&now<entryRef.price*0.975,`距一买底-2.5%线 ${entryRef?f(entryRef.price*0.975):"—"}`],
+      [entryRef&&now<entryRef.price,`现价${f(now)} vs 一买${gateAnchor?`锚点${f(entryRef.price)}`:`底${entryRef?f(entryRef.price):"—"}`}`],
+      [entryRef&&now<entryRef.price*0.975,`距-2.5%线 ${entryRef?f(entryRef.price*0.975):"—"}`],
     ],"全部止损离场",true);  // any=true: OR语义
-    if(gateAnchor&&now<gateAnchor.price*0.975)gateAnchor=null;  // 止损线破位=闯关流程重置
   }
-  // 当前关卡: 顺序不可跳关——第一关未全过的就是当前关
+  // 锚点生命周期(统一管理): 跌破锚点价=一买底失守(锚点价即失效线,消灭锚点价与-2.5%线之间的死区);
+  // 关5清仓触发=一轮走完;距锚点超48根K(30m的24h)=过期——创新低但DIF不抬升时锚点自然过期而非悬挂
+  if(gateAnchor){
+    if(now<gateAnchor.price)gateAnchor=null;
+    else if(rows.find(r=>r.name==="止盈二")&&rows.find(r=>r.name==="止盈二").ok)gateAnchor=null;
+    else if(n-1-gateAnchor.i>48)gateAnchor=null;
+  }
+  // 当前关卡: 顺序不可跳关——第一关未全过的就是当前关(注:单帧快照+锚点粘滞,显示≠真实持仓状态)
   let cur=null,phase="建仓期";
   for(const r of rows.slice(0,3)){if(!r.ok){cur=r;break}}
   if(!cur){cur=rows[3]||null;phase="持仓期(止盈/止损监控)"}
@@ -1334,7 +1347,7 @@ async function analyze(){
 <div style="display:flex;justify-content:space-between"><b style="color:${r.ok?"#7ee787":"var(--txt)"}">${r.ok?"✓":"○"} ${r.name}</b><span style="color:var(--gold);font-size:10px">${r.action}</span></div>
 ${r.conds.map(c=>`<div style="font-size:10px;color:${c[0]?"#7ee787":"var(--sub)"}">${c[0]?"✓":"✗"} ${c[1]}</div>`).join("")}
 </div>`}).join("")
-        +`</div><div style="font-size:9.5px;color:var(--sub);margin-top:4px;line-height:1.6">⚠️ ⑤顶背驰在本策略只用于止盈(关4)，不开空单；仓位=风险敞口占比；前一关未触发时后关满足也不进场（防追高）。学习检测工具，不构成执行指令。</div>`;
+        +`</div><div style="font-size:9.5px;color:var(--sub);margin-top:4px;line-height:1.6">⚠️ ⑤顶背驰在本策略只用于止盈(关4)，不开空单；仓位=风险敞口占比；前一关未触发时后关满足也不进场（防追高）；「当前关卡」为单帧检测+锚点粘滞的显示，不代表真实持仓状态。学习检测工具，不构成执行指令。</div>`;
     }
     // 清单
     document.getElementById("checklist").innerHTML=adv.checklist;

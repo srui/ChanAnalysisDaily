@@ -192,7 +192,7 @@ function mergeK(kls){const out=[];
   for(let i=0;i<kls.length;i++){const h=kls[i][2],l=kls[i][3];const m=out[out.length-1];
     if(m&&((m.h>=h&&m.l<=l)||(h>=m.h&&l<=m.l))){const prev=out[out.length-2];const dir=prev?(m.h>prev.h?1:-1):(h>=m.h?1:-1);
       const nh=dir>0?Math.max(m.h,h):Math.min(m.h,h);const nl=dir>0?Math.max(m.l,l):Math.min(m.l,l);
-      const oh=m.h,ol=m.l;m.h=nh;m.l=nl;m.i1=i;m.hi=nh>oh?i:m.hi;m.lo=nl<ol?i:m.lo;
+      const oh=m.h,ol=m.l;m.h=nh;m.l=nl;m.i1=i;m.hi=(dir>0?h>oh:h<oh)?i:m.hi;m.lo=(dir>0?l>ol:l<ol)?i:m.lo;
     }else out.push({h,l,t:kls[i][0],i0:i,i1:i,hi:i,lo:i});}
   return out;}
 function buildBiM(kls){const mg=mergeK(kls);const fr=[];
