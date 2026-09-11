@@ -340,42 +340,71 @@ function calcMACD(kls){
   return{dif,dea,hist};
 }
 // 背驰检测(缠论一类买卖点核心)
+// 背驰分量统一助手(正统口径单一入口): segA=参照段(中枢进入段/前一同向离开段), segB=被评段(当前离开段)
+// 返回 {area:柱面积比B/A, dif:DIF端点比B/A(|比|<1=背离), amp:幅度比B/A, difA, difB}
+// 各调用方显式声明用哪些分量与阈值(detectDiv:area<0.85+|dif|<1 / 关1:area<1/3 / 关4:area<0.8 / panoPhase:仅|dif|<1)
+function divergence(segA,segB,macd){
+  if(!segA||!segB||segA.i2<=segA.i1||segB.i2<=segB.i1)return null;
+  const ar=(i1,i2,sg)=>{let s=0;for(let i=Math.max(0,i1);i<=Math.min(macd.hist.length-1,i2);i++){if((macd.hist[i]>0)===(sg>0))s+=Math.abs(macd.hist[i])}return s};
+  const a1=ar(segA.i1,segA.i2,segA.dir),a2=ar(segB.i1,segB.i2,segB.dir);
+  const difA=macd.dif[segA.i2],difB=macd.dif[segB.i2];
+  return {area:a1>0?a2/a1:null,
+          dif:Math.abs(difA)>1e-12?difB/difA:null,
+          amp:Math.abs(segA.p2-segA.p1)>1e-12?Math.abs(segB.p2-segB.p1)/Math.abs(segA.p2-segA.p1):null,
+          difA,difB};
+}
+// 背驰检测 v2(中枢锚定·正统口径): 盘整背驰=同一中枢的离开段 vs 进入段比力度;
+// 趋势背驰=前一中枢离开段(连接段) vs 末中枢当前离开段。资格由"离开段价格创新高/新低(超出中枢范围)"授予——
+// 震荡中枢内部的相邻顶/底对比不再产生背驰信号(旧口径的假信号来源)。
 function detectDiv(sw,macd,S){
   const f=v=>v.toFixed(S.dec);
-  const cf=sw.filter(s=>s.confirmed);
-  const tops=cf.filter(s=>s.type==="顶"),bots=cf.filter(s=>s.type==="底");
-  const r={topDiv:false,botDiv:false,divs:[]};
-  // MACD柱子面积(缠论正宗:看区间内同向柱面积之和)
-  function area(i1,i2,sign){let s=0;for(let i=Math.max(0,i1);i<=i2;i++){if((macd.hist[i]>0)===(sign>0))s+=Math.abs(macd.hist[i])}return s}
-  // 顶背驰:两顶t1<t2,价格新高但红柱面积缩小
-  if(tops.length>=2){
-    const t2=tops[tops.length-1],t1=tops[tops.length-2];
-    const midB=bots.filter(b=>b.i>t1.i&&b.i<t2.i);
-    if(midB.length>0&&t2.price>=t1.price*0.998){
-      const b1=midB[0];
-      const prevB=bots.filter(b=>b.i<t1.i).slice(-1)[0];
-      const a1=prevB?area(prevB.i,t1.i,1):area(0,t1.i,1);
-      const a2=area(b1.i,t2.i,1);
-      if(a1>0&&a2<a1*0.85){
+  const r={topDiv:false,botDiv:false,divs:[],mode:"zs-anchored"};
+  const zs=buildZS(sw);
+  if(zs.length<1)return r;                         // 无中枢=无背驰资格授予者
+  const zsL=zs[zs.length-1];
+  const inZs=sw.filter(p=>p.i>=zsL.startI&&p.i<=zsL.endI);
+  const after=sw.filter(p=>p.i>zsL.endI);
+  if(inZs.length<2)return r;
+  const divJudge=(segA,segB,label)=>{
+    const d=divergence(segA,segB,macd);
+    if(!d||d.area==null||d.dif==null)return null;
+    return {d,label};
+  };
+  // === 顶背驰(向上离开段) ===
+  const lastInBot=[...inZs].reverse().find(p=>p.type==="底");       // 中枢内最后底=离开段起点
+  const lastTop=after.filter(p=>p.type==="顶").slice(-1)[0];        // 中枢后最后顶=离开段终点(未出现=还没完成向上离开)
+  if(lastInBot&&lastTop&&lastTop.price>zsL.ZG){                     // 资格:离开段创新高(超出中枢上沿)
+    const segB={i1:lastInBot.i,i2:lastTop.i,dir:1,p1:lastInBot.price,p2:lastTop.price};
+    const firstInTop=inZs.find(p=>p.type==="顶");
+    const preIdx=sw.findIndex(p=>p.i>=zsL.startI);
+    const enterBot=sw.slice(0,preIdx).filter(p=>p.type==="底").slice(-1)[0];  // 进入段起点=进入前的底
+    if(firstInTop&&enterBot){
+      const segA={i1:enterBot.i,i2:firstInTop.i,dir:1,p1:enterBot.price,p2:firstInTop.price};
+      const j=divJudge(segA,segB);
+      if(j&&j.d.area<0.85&&Math.abs(j.d.dif)<1){
         r.topDiv=true;
-        r.divs.push({type:"顶背驰",idx:t2.i,price:t2.price,t:t2.t,area1:a1,area2:a2,seg1:[prevB?prevB.i:0,t1.i],seg2:[b1.i,t2.i],top1:t1,top2:t2,
-          msg:`顶背驰：价格 ${f(t1.price)}→${f(t2.price)} 新高，MACD红柱面积 ${a1.toFixed(0)}→${a2.toFixed(0)} 缩小(${(a2/a1*100).toFixed(0)}%) → <b>一类卖点(抓顶)</b>`});
+        r.divs.push({type:"顶背驰·盘整",idx:lastTop.i,price:lastTop.price,t:lastTop.t,
+          area1:null,area2:null,seg1:[segA.i1,segA.i2],seg2:[segB.i1,segB.i2],top1:{price:segA.p2},top2:lastTop,
+          msg:`顶背驰(盘整·中枢锚定):离开段 ${f(segB.p1)}→${f(lastTop.price)} 创新高越过上沿${f(zsL.ZG)}，vs 进入段 ${f(segA.p1)}→${f(segA.p2)} 力度——面积比 ${(j.d.area*100).toFixed(0)}%(<85%) + DIF比 ${j.d.dif.toFixed(2)} → <b>一类卖点候选</b>`});
       }
     }
   }
-  // 底背驰:两底b1<b2,价格新低但绿柱面积(绝对值)缩小
-  if(bots.length>=2){
-    const b2=bots[bots.length-1],b1=bots[bots.length-2];
-    const midT=tops.filter(t=>t.i>b1.i&&t.i<b2.i);
-    if(midT.length>0&&b2.price<=b1.price*1.002){
-      const t1=midT[0];
-      const prevT=tops.filter(t=>t.i<b1.i).slice(-1)[0];
-      const a1=prevT?area(prevT.i,b1.i,-1):area(0,b1.i,-1);
-      const a2=area(t1.i,b2.i,-1);
-      if(a1>0&&a2<a1*0.85){
+  // === 底背驰(向下离开段) ===
+  const lastInTop=[...inZs].reverse().find(p=>p.type==="顶");
+  const lastBot=after.filter(p=>p.type==="底").slice(-1)[0];
+  if(lastInTop&&lastBot&&lastBot.price<zsL.ZD){                     // 资格:离开段创新低
+    const segB={i1:lastInTop.i,i2:lastBot.i,dir:-1,p1:lastInTop.price,p2:lastBot.price};
+    const firstInBot=inZs.find(p=>p.type==="底");
+    const preIdx=sw.findIndex(p=>p.i>=zsL.startI);
+    const enterTop=sw.slice(0,preIdx).filter(p=>p.type==="顶").slice(-1)[0];
+    if(firstInBot&&enterTop){
+      const segA={i1:enterTop.i,i2:firstInBot.i,dir:-1,p1:enterTop.price,p2:firstInBot.price};
+      const j=divJudge(segA,segB);
+      if(j&&j.d.area<0.85&&Math.abs(j.d.dif)<1){
         r.botDiv=true;
-        r.divs.push({type:"底背驰",idx:b2.i,price:b2.price,t:b2.t,area1:a1,area2:a2,seg1:[prevT?prevT.i:0,b1.i],seg2:[t1.i,b2.i],bot1:b1,bot2:b2,
-          msg:`底背驰：价格 ${f(b1.price)}→${f(b2.price)} 新低，MACD绿柱面积 ${a1.toFixed(0)}→${a2.toFixed(0)} 缩小(${(a2/a1*100).toFixed(0)}%) → <b>一类买点(抄底)</b>`});
+        r.divs.push({type:"底背驰·盘整",idx:lastBot.i,price:lastBot.price,t:lastBot.t,
+          area1:null,area2:null,seg1:[segA.i1,segA.i2],seg2:[segB.i1,segB.i2],bot1:{price:segA.p2},bot2:lastBot,
+          msg:`底背驰(盘整·中枢锚定):离开段 ${f(segB.p1)}→${f(lastBot.price)} 创新低越过下沿${f(zsL.ZD)}，vs 进入段 ${f(segA.p1)}→${f(segA.p2)} 力度——面积比 ${(j.d.area*100).toFixed(0)}%(<85%) + DIF比 ${j.d.dif.toFixed(2)} → <b>一类买点候选</b>`});
       }
     }
   }
@@ -660,10 +689,13 @@ function levelGates(kls,bi,macd,zs,kdj,now){
     const prevB=bots[bots.length-3];
     const a1=prevB?area(prevB.i,b1.i,-1):area(Math.max(0,b1.i-20),b1.i,-1);
     const a2=midT?area(midT.i,b2.i,-1):area(b1.i,b2.i,-1);
+    const dG1=divergence(   // 统一背驰助手(关1显式声明用area分量,阈值1/3)
+      {i1:prevB?prevB.i:0,i2:b1.i,dir:-1,p1:prevB?prevB.price:b1.price,p2:b1.price},
+      {i1:midT?midT.i:b1.i,i2:b2.i,dir:-1,p1:midT?midT.price:b1.price,p2:b2.price},macd);
     const c1raw=[   // 关1原始判定(锚点记录依据=完整触发,而非仅新低+DIF)
       [b2.price<b1.price,`价格新低 ${f(b1.price)}→${f(b2.price)}`],
       [macd.dif[b2.i]>macd.dif[b1.i],`DIF低点抬高 ${f(macd.dif[b1.i])}→${f(macd.dif[b2.i])}`],
-      [a2<a1/3,`绿柱面积 ${f(a1)}→${f(a2)} (需<1/3)`],
+      [dG1&&dG1.area!=null&&dG1.area<1/3,`绿柱面积比 ${dG1&&dG1.area!=null?(dG1.area*100).toFixed(0)+"%":"—"} (需<33%,绝对值${f(a1)}→${f(a2)})`],
       [kdj.j[n-1]<0,`KDJ J=${kdj.j[n-1].toFixed(1)} (需<0)`],
       [last.type==="底"&&n-1-b2.i<=3,`底分型确认K线(距底${n-1-b2.i}根,需≤3)`],
     ];
@@ -704,11 +736,14 @@ function levelGates(kls,bi,macd,zs,kdj,now){
   // 关4 止盈一: 新高+顶背驰(DIF高点降低+红柱面积<80%)
   if(t1&&t2){
     const midB=bots.find(b=>b.i>t1.i&&b.i<t2.i);
+    const dG4=divergence(   // 统一背驰助手(关4显式声明用area分量,阈值0.8)
+      {i1:t1.i,i2:midB?midB.i:t1.i,dir:1,p1:t1.price,p2:midB?midB.price:t1.price},
+      {i1:midB?midB.i:t1.i,i2:t2.i,dir:1,p1:midB?midB.price:t1.price,p2:t2.price},macd);
     const r1=midB?area(t1.i,midB.i,1):0,r2=midB?area(midB.i,t2.i,1):0;
     G("止盈一",[
       [t2.price>t1.price,`新高 ${f(t1.price)}→${f(t2.price)}`],
       [macd.dif[t2.i]<macd.dif[t1.i],`DIF高点降低 ${f(macd.dif[t1.i])}→${f(macd.dif[t2.i])}`],
-      [r1>0&&r2<r1*0.8,`红柱面积 ${f(r1)}→${f(r2)} (需<80%)`],
+      [dG4&&dG4.area!=null&&dG4.area<0.8,`红柱面积比 ${dG4&&dG4.area!=null?(dG4.area*100).toFixed(0)+"%":"—"} (需<80%,绝对值${f(r1)}→${f(r2)})`],
     ],"减仓50%");
   }
   // 关5 止盈二: 跌破上涨中枢ZD 或 二买低点(先到者)
@@ -996,9 +1031,17 @@ function panoPhase(bi,zs,macd,now){
     else if(lT.price<tops[tops.length-2].price&&lB.price<bots[bots.length-2].price)dir="下跌";
   }
   // 动能背离(粗版灰带): 价格新高/新低而DIF不同步
-  let weak=false;
-  if(tops.length>=2&&lT.price>tops[tops.length-2].price&&macd.dif[lT.i]<macd.dif[tops[tops.length-2].i])weak=true;
-  if(bots.length>=2&&lB.price<bots[bots.length-2].price&&macd.dif[lB.i]>macd.dif[bots[bots.length-2].i])weak=true;
+  let weak=false;   // 末期背离: 价新高/新低时 DIF端点不跟随(显式声明: 仅divergence的dif分量,阈值|比|<1)
+  if(tops.length>=2&&lT.price>tops[tops.length-2].price){
+    const dW=divergence({i1:lB?lB.i:lT.i,i2:tops[tops.length-2].i,dir:1,p1:lB?lB.price:lT.price,p2:tops[tops.length-2].price},
+                        {i1:tops[tops.length-2].i,i2:lT.i,dir:1,p1:tops[tops.length-2].price,p2:lT.price},macd);
+    if(dW&&dW.difB<dW.difA)weak=true;   // 有符号比较(与原逻辑等价;比值口径在DIF跨零区语义不稳)
+  }
+  if(bots.length>=2&&lB.price<bots[bots.length-2].price){
+    const dW=divergence({i1:lT?lT.i:lB.i,i2:bots[bots.length-2].i,dir:-1,p1:lT?lT.price:lB.price,p2:bots[bots.length-2].price},
+                        {i1:bots[bots.length-2].i,i2:lB.i,dir:-1,p1:bots[bots.length-2].price,p2:lB.price},macd);
+    if(dW&&dW.difB>dW.difA)weak=true;   // 底:有符号DIF抬升(与原逻辑等价)
+  }
   const zsL=zs[zs.length-1];
   let phase;
   if(!lT||!lB)phase="结构不足";
@@ -1107,9 +1150,19 @@ function tradeAdvice(nowPrice,sw,S,div,zs,rawSw){
   if(div&&div.topDiv&&nearTop)return {title:`一类卖点·背驰抓顶${tag}`,cls:"act-short",dir:"short",desc:`顶背驰+反弹到前高${f(lT.price)}，一类卖点(趋势末段反转)`,signals:[{type:"short",label:"一类卖点做空",zone:z(nowPrice,lT.price),note:shortStop+tag}],lT,lB,leg,chan:"一类卖点",tentative};
   if(belowBot)return {title:"创新低·等反弹做空",cls:"act-wait",dir:"wait",desc:`跌破前底${f(lB.price)}，等反弹做空`,signals:[{type:"wait",label:"等反弹做空区",zone:`${f(lB.price)} ~ ${f(lB.price*1.015)}`}],lT,lB,leg,chan:"",tentative};
   if(aboveTop)return {title:"创新高·等回调做多",cls:"act-wait",dir:"wait",desc:`突破前高${f(lT.price)}，等回调做多`,signals:[{type:"wait",label:"等回调做多区",zone:`${f(lT.price*0.985)} ~ ${f(lT.price)}`}],lT,lB,leg,chan:"",tentative};
-  // 三类:中枢突破后顺势(不在顶/底极端,才算回踩确认)
-  if(zs&&nowPrice>zs.ZG&&!nearTop)return {title:`三类买点·突破中枢${tag}`,cls:"act-long",dir:"long",desc:`站上中枢上沿${f(zs.ZG)}未跌回，三类买点(突破后顺势)`,signals:[{type:"long",label:"三类买点做多",zone:z(zs.ZG,lT.price),note:longStop+tag}],lT,lB,leg,chan:"三类买点",tentative};
-  if(zs&&nowPrice<zs.ZD&&!nearBot)return {title:`三类卖点·跌破中枢${tag}`,cls:"act-short",dir:"short",desc:`跌破中枢下沿${f(zs.ZD)}未升回，三类卖点(破位后顺势)`,signals:[{type:"short",label:"三类卖点做空",zone:z(lB.price,zs.ZD),note:shortStop+tag}],lT,lB,leg,chan:"三类卖点",tentative};
+  // 三类:中枢突破后回抽不回(正统确认:回抽才是信号,不是突破K本身——与qjtPatterns二式同口径:回踩低点不跌回ZG)
+  if(zs&&nowPrice>zs.ZG&&!nearTop){
+    const pullB=sw.filter(p=>p.type==="底"&&p.i>zs.endI).slice(-1)[0];   // 突破后最近完成的回抽底分型
+    if(pullB&&pullB.price>zs.ZG)
+      return {title:`三类买点·突破后回抽确认${tag}`,cls:"act-long",dir:"long",desc:`站上中枢上沿${f(zs.ZG)}后回抽底${f(pullB.price)}未跌回，三类买点(回抽确认·正统)`,signals:[{type:"long",label:"三类买点做多",zone:z(zs.ZG,lT.price),note:longStop+tag}],lT,lB,leg,chan:"三类买点",tentative};
+    return {title:`三类候选·等回抽确认${tag}`,cls:"act-wait",dir:"wait",desc:`已站上${f(zs.ZG)}但回抽底分型未完成/回抽未确认不跌回——突破K本身不是信号,等回抽`,signals:[{type:"wait",label:"等回抽不回ZG",zone:z(zs.ZG,lT?lT.price:nowPrice),note:"回抽底>"+f(zs.ZG)+"才确认"+tag}],lT,lB,leg,chan:"三类候选",tentative};
+  }
+  if(zs&&nowPrice<zs.ZD&&!nearBot){
+    const pullT=sw.filter(p=>p.type=="顶"&&p.i>zs.endI).slice(-1)[0];   // 跌破后最近完成的反抽顶分型
+    if(pullT&&pullT.price<zs.ZD)
+      return {title:`三类卖点·跌破后反抽确认${tag}`,cls:"act-short",dir:"short",desc:`跌破中枢下沿${f(zs.ZD)}后反抽顶${f(pullT.price)}未升回，三类卖点(反抽确认·正统)`,signals:[{type:"short",label:"三类卖点做空",zone:z(lB.price,zs.ZD),note:shortStop+tag}],lT,lB,leg,chan:"三类卖点",tentative};
+    return {title:`三类候选·等反抽确认${tag}`,cls:"act-wait",dir:"wait",desc:`已跌破${f(zs.ZD)}但反抽顶分型未完成/反抽未确认不升回——破位K本身不是信号,等反抽`,signals:[{type:"wait",label:"等反抽不回ZD",zone:z(lB?lB.price:nowPrice,zs.ZD),note:"反抽顶<"+f(zs.ZD)+"才确认"+tag}],lT,lB,leg,chan:"三类候选",tentative};
+  }
   // 二类:回调企稳(leg up&近底)/反弹受阻(leg down&近顶)
   if(leg==="up"&&nearBot)return {title:`二类买点·回调企稳${tag}`,cls:"act-long",dir:"long",desc:`回调到前底${f(lB.price)}止跌，二类买点`,signals:[{type:"long",label:"二类买点做多",zone:z(nowPrice,lB.price),note:longStop+tag}],lT,lB,leg,chan:"二类买点",tentative};
   if(leg==="down"&&nearTop)return {title:`二类卖点·反弹受阻${tag}`,cls:"act-short",dir:"short",desc:`反弹到前高${f(lT.price)}受阻，二类卖点`,signals:[{type:"short",label:"二类卖点做空",zone:z(nowPrice,lT.price),note:shortStop+tag}],lT,lB,leg,chan:"二类卖点",tentative};
