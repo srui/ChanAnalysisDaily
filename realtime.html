@@ -170,6 +170,7 @@ footer{text-align:center;color:var(--sub);font-size:10.5px;margin-top:18px;paddi
 <button class="btn" id="segBtn" title="线段破坏=反向三笔构成新线段(第三笔突破第一笔终点)">📐 线段</button>
 <button class="btn" id="cdlBtn" title="阳线空心(缠论经典画法)/实心切换">🕯 K线样式</button>
 <button class="btn" id="emaBtn" title="EMA21/55/144(教练系统·大趋势方向肉眼判据)">📈 均线</button>
+      <button class="btn" id="fibBtn" title="斐波那契回撤/扩展·循环切换:关→视图区间→末笔→末中枢(金=0/100 橙=61.8 紫=扩展161.8)">📎 斐波那契</button>
 </div>
 </div>
 <!-- 周期选择器 -->
@@ -1765,6 +1766,31 @@ function drawChart(divId,kls,now,S,periodName,trendDir,isTrade,trAdv,macd,div,tr
       P.push(`<text x="${(lblX+6).toFixed(1)}" y="${mt+13}" fill="#000" font-size="10" font-weight="700">◧ 交易周期 ${spanTxt}</text>`);
     }
   }
+  // ===== 斐波那契回撤/扩展(与回放页同口径: 金=0/100 橙=61.8 紫=扩展161.8) =====
+  if(typeof fibMode!=="undefined"&&fibMode!=="off"){
+    let fib=null;
+    if(fibMode==="view"&&n>2){
+      fib={a:kls[iL][3],b:kls[iH][2],dir:kls[iL][0]<=kls[iH][0]?1:-1};   // 视图区间低→高=上涨段回撤口径
+    }else if(fibMode==="bi"&&cfAll.length>=2){
+      const p1=cfAll[cfAll.length-2],p2=cfAll[cfAll.length-1];
+      fib={a:p1.price,b:p2.price,dir:p2.price>=p1.price?1:-1};            // 末笔两端的回撤
+    }else if(fibMode==="zs"&&biZs.length){
+      const z=biZs[biZs.length-1];
+      fib={a:z.ZD,b:z.ZG,dir:now>=(z.ZG+z.ZD)/2?1:-1};                   // 末中枢ZD~ZG作区间
+    }
+    if(fib&&Math.abs(fib.b-fib.a)>1e-9){
+      const {a,b,dir}=fib;
+      const rows=[[0,"#e8b339","0",1.6,0.85],[0.236,"#8b949e","23.6",1,0.5],[0.382,"#8b949e","38.2",1,0.5],[0.5,"#8ea0bd","50",1,0.55],[0.618,"#f0b90b","61.8",1.4,0.8],[1,"#e8b339","100",1.6,0.85],[-0.618,"#bc8cff","ext161.8",1.4,0.75]];
+      P.push(`<text x="${(ml+4).toFixed(1)}" y="${(mt+11).toFixed(1)}" fill="#e8b339" font-size="9.5" font-weight="700">斐波(${dir>0?"上涨段回撤":"下跌段反弹"} ${a.toFixed(S.dec)}→${b.toFixed(S.dec)})</text>`);
+      for(const [r,col,lab,w2,op] of rows){
+        const price=b-(b-a)*r;
+        if(price>hi+pad||price<lo-pad)continue;
+        const fy=Y(price);
+        P.push(`<line x1="${ml}" y1="${fy.toFixed(1)}" x2="${(ml+pw).toFixed(1)}" y2="${fy.toFixed(1)}" stroke="${col}" stroke-width="${w2}" opacity="${op}" stroke-dasharray="${(r===0.618||r===1||r===-0.618)?"":"3,3"}"/>`);
+        P.push(`<text x="${(ml+pw-4).toFixed(1)}" y="${(fy-3).toFixed(1)}" fill="${col}" font-size="9" font-weight="700" text-anchor="end">${lab}% ${price.toFixed(S.dec)}</text>`);
+      }
+    }
+  }
   // 现价线
   const ny=Y(now);P.push(`<line x1="${ml}" y1="${ny}" x2="${ml+pw}" y2="${ny}" stroke="#e8b339" stroke-width="1.1" stroke-dasharray="4,3"/>`);
   P.push(`<rect x="${ml+pw+2}" y="${ny-8}" width="${mr-4}" height="16" fill="#e8b339" rx="3"/><text x="${ml+pw+6}" y="${ny+4}" fill="#000" font-size="10" font-weight="700">${now.toFixed(S.dec)}</text>`);
@@ -1884,6 +1910,13 @@ function syncBiSeg(){biBtn.classList.toggle("on",showBi);segBtn.classList.toggle
 biBtn.onclick=function(){showBi=!showBi;localStorage.setItem("showBi",showBi?"on":"off");syncBiSeg();analyze()};
 segBtn.onclick=function(){showSeg=!showSeg;localStorage.setItem("showSeg",showSeg?"on":"off");syncBiSeg();analyze()};
 emaBtn.onclick=function(){showEMA=!showEMA;localStorage.setItem("showEMA",showEMA?"on":"off");syncBiSeg();analyze()};
+// 斐波那契: 循环四档(关→视图区间→末笔→末中枢),口径与回放页一致
+const FIB_MODES=[["off","📎 斐波那契"],["view","📎 斐波·视图"],["bi","📎 斐波·末笔"],["zs","📎 斐波·中枢"]];
+let fibMode=localStorage.getItem("fibMode")||"off";
+const fibBtn=document.getElementById("fibBtn");
+function syncFib(){fibBtn.classList.toggle("on",fibMode!=="off");fibBtn.textContent=(FIB_MODES.find(m=>m[0]===fibMode)||FIB_MODES[0])[1]}
+fibBtn.onclick=function(){const fi=FIB_MODES.findIndex(m=>m[0]===fibMode);fibMode=FIB_MODES[(fi+1)%FIB_MODES.length][0];try{localStorage.setItem("fibMode",fibMode)}catch(e){}syncFib();analyze()};
+syncFib();
 syncBiSeg();
 // 数据源选择
 function syncSrcBtns(){document.querySelectorAll(".src-btn").forEach(b=>b.classList.toggle("active",b.dataset.s===curSrc))}
