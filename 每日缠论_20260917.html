@@ -168,7 +168,32 @@ const API="https://fapi.binance.com/fapi/v1";
 const F=(v,d=0)=>(+v).toFixed(d);
 const fmtT=(t,wd)=>{const d=new Date(t),p=n=>String(n).padStart(2,"0");return (wd?(d.getMonth()+1)+"/"+p(d.getDate())+" ":"")+p(d.getHours())+":"+p(d.getMinutes())};
 async function fetchK(iv,lim){const d=await fetch(`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=${lim}`).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
-async function fetchK2(iv,s,e){let u=`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=300`;if(s)u+=`&startTime=${s}`;if(e)u+=`&endTime=${e}`;const d=await fetch(u).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
+let fapiDownUntil=0;   // fapi拒连冷却(60s): 浏览器环境间歇到不了fapi时切OKX备援(与实时页同款)
+const OKX_SYM={BTCUSDT:"BTC-USDT-SWAP",ETHUSDT:"ETH-USDT-SWAP",SOLUSDT:"SOL-USDT-SWAP",BNBUSDT:"BNB-USDT-SWAP",ZECUSDT:"ZEC-USDT-SWAP",TAOUSDT:"TAO-USDT-SWAP",XAUUSDT:"PAXG-USDT"};
+const OKX_IV={"1w":"1W","1d":"1D","4h":"4H","1h":"1H","30m":"30m","15m":"15m","5m":"5m"};
+async function okxK(sym,iv,s,e,limit){          // OKX备援: candles最新在前需reverse,after向前翻页
+  const inst=OKX_SYM[sym]||sym,bar=OKX_IV[iv]||iv;
+  let all=[],after=e?""+e:"";
+  while(all.length<limit){
+    let u=`https://www.okx.com/api/v5/market/candles?instId=${inst}&bar=${bar}&limit=100`+(after?`&after=${after}`:"");
+    const j=await fetch(u).then(r=>r.json());
+    if(j.code&&j.code!=="0")throw new Error("okx "+(j.msg||j.code));
+    const rows=(j.data||[]).map(r=>({t:+r[0],o:+r[1],h:+r[2],l:+r[3],c:+r[4]}));
+    if(!rows.length)break;
+    all=rows.concat(all);
+    after=""+rows[0].t;
+    if(rows.length<100)break;
+    if(s&&all[0].t<=s)break;
+  }
+  return all.filter(k=>(!s||k.t>=s)&&(!e||k.t<=e));
+}
+async function fetchK2(iv,s,e){
+  if(Date.now()>=fapiDownUntil){
+    try{let u=`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=300`;if(s)u+=`&startTime=${s}`;if(e)u+=`&endTime=${e}`;const d=await fetch(u).then(r=>r.json());if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}catch(e2){}
+    fapiDownUntil=Date.now()+60000;
+  }
+  return okxK("BTCUSDT",iv,s,e,300).catch(()=>[]);
+}
 /* 标准管线 */
 function mEma(a,n){const k=2/(n+1);let e=a[0];return a.map(v=>e=v*k+e*(1-k))}
 function calcMACD(arr){const c=arr.map(k=>k[4]);const dif=mEma(c,12).map((v,i)=>v-mEma(c,26)[i]);const dea=mEma(dif,9);return{dif,dea,hist:dif.map((v,i)=>v-dea[i])}}
@@ -396,7 +421,11 @@ async function load(){
     ],{title:"演化C(35%)·消化震荡|ZEC逼空与主板修复的分裂行情延续,等4h定方向",H:360,now:76380,
        lines:[{p:LV.zsHi,col:"#f0b90b",lab:"76,096",w:1.8},{p:LV.preZsLo,col:"#f0883e",lab:"76,667"}],
        macd:calcMACD(aC)});
-    async function fetchSym(sym,iv,st){const u=`${API}/klines?symbol=${sym}&interval=${iv}&startTime=${st}&endTime=${FREEZE}&limit=300`;const d=await fetch(u).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
+    async function fetchSym(sym,iv,st){
+      if(Date.now()<fapiDownUntil)return okxK(sym,iv,st,FREEZE,300).catch(()=>[]);
+      try{const u=`${API}/klines?symbol=${sym}&interval=${iv}&startTime=${st}&endTime=${FREEZE}&limit=300`;const d=await fetch(u).then(r=>r.json());if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}catch(e2){fapiDownUntil=Date.now()+60000}
+      return okxK(sym,iv,st,FREEZE,300).catch(()=>[]);
+    }
     // ETH
     const kE=await fetchSym("ETHUSDT","4h",T("2026-09-08T00:00:00"));
     draw("chartETH",kE,[
