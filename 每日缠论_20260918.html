@@ -474,8 +474,9 @@ async function load(){
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @76,446 · 冻结于 9/18 09:00（fapi）";
   }catch(e){
-    document.getElementById("verdict").innerHTML="加载失败："+e.message;
+    document.getElementById("verdict").innerHTML="⚠ 数据加载失败："+e.message+" —— 已尝试 fapi 与 OKX 备援双源。排查：① ⌘⇧R 强制刷新（清缓存）② F12→Console 看红字 ③ 若显示 Failed to fetch=当前网络到两个数据源均不通（代理/VPN切换后重试）";
     document.getElementById("verdict").className="verdict r";
+    document.getElementById("updTag").textContent="数据源连接失败";
   }
 }
 function renderVerdict(now){
