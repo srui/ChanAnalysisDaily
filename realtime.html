@@ -156,6 +156,7 @@ footer{text-align:center;color:var(--sub);font-size:10.5px;margin-top:18px;paddi
 <button data-sym="ZECUSDT">ZEC</button>
 <button data-sym="TAOUSDT">TAO</button>
 <button data-sym="XAUUSDT">XAU</button>
+<button data-sym="NEARUSDT">NEAR</button>
 </div>
 <button class="btn" id="alertBtn">🔔 开启预警</button>
 <button class="btn" id="refreshBtn">⟳ 刷新</button>
@@ -318,7 +319,7 @@ footer{text-align:center;color:var(--sub);font-size:10.5px;margin-top:18px;paddi
 
 <script>
 const API="https://fapi.binance.com/fapi/v1";
-const SYMS={BTCUSDT:{name:"BTC",dec:1},ETHUSDT:{name:"ETH",dec:2},SOLUSDT:{name:"SOL",dec:2},BNBUSDT:{name:"BNB",dec:2},ZECUSDT:{name:"ZEC",dec:2},TAOUSDT:{name:"TAO",dec:2},XAUUSDT:{name:"XAU",dec:2}};
+const SYMS={BTCUSDT:{name:"BTC",dec:1},ETHUSDT:{name:"ETH",dec:2},SOLUSDT:{name:"SOL",dec:2},BNBUSDT:{name:"BNB",dec:2},ZECUSDT:{name:"ZEC",dec:2},TAOUSDT:{name:"TAO",dec:2},XAUUSDT:{name:"XAU",dec:2},NEARUSDT:{name:"NEAR",dec:2}};
 // 周期组合配置: trade=交易周期, trend=趋势周期, limit=K线根数
 const PERIODS={
   "5m_30m":{trade:"5m",trend:"30m",tradeN:"5分钟",trendN:"30分钟",tradeLimit:250,trendLimit:250,label:"超短线"},
@@ -438,7 +439,7 @@ async function fetchJSON(u){const r=await fetch(u);if(!r.ok)throw new Error("HTT
 let curSrc=localStorage.getItem("apiSource")||"auto";      // auto | fapi | okx
 let activeSrc="fapi";                                      // 本次实际生效的源
 let fapiDownUntil=0;                                       // fapi失败后的冷却截止时间戳
-const SYM_MAP={BTCUSDT:"BTC-USDT-SWAP",ETHUSDT:"ETH-USDT-SWAP",SOLUSDT:"SOL-USDT-SWAP",BNBUSDT:"BNB-USDT-SWAP",ZECUSDT:"ZEC-USDT-SWAP",TAOUSDT:"TAO-USDT-SWAP",XAUUSDT:"PAXG-USDT-SWAP"};
+const SYM_MAP={BTCUSDT:"BTC-USDT-SWAP",ETHUSDT:"ETH-USDT-SWAP",SOLUSDT:"SOL-USDT-SWAP",BNBUSDT:"BNB-USDT-SWAP",ZECUSDT:"ZEC-USDT-SWAP",TAOUSDT:"TAO-USDT-SWAP",XAUUSDT:"PAXG-USDT-SWAP",NEARUSDT:"NEAR-USDT-SWAP"};
 const IV_MAP={"5m":"5m","15m":"15m","30m":"30m","1h":"1H","4h":"4H","1d":"1D"};
 const OKX_BASE="https://www.okx.com/api/v5/market";
 async function fetchTO(u,ms){                              // 带超时的fetch, 防单源挂死
