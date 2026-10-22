@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>每日缠论 · 2026-10-22</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b111e;color:#cdd6e6;font:14px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:14px 16px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px}
+h1{font-size:19px;color:#f6465d;margin-right:auto}
+h1 small{font-size:11.5px;color:#7b8aa5;font-weight:400;margin-left:8px}
+.btn{background:#161f33;border:1px solid #2a3852;color:#cdd6e6;border-radius:7px;padding:5px 12px;cursor:pointer;font-size:13px}
+.btn:hover{border-color:#f6465d;color:#f6465d}
+.sub{font-size:12.5px;color:#8ea0bd;margin-bottom:10px;line-height:1.7}
+.sub b{color:#e8eefb}
+.verdict{border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:12px;line-height:1.8}
+.verdict.g{background:rgba(46,189,133,.08);border:1px solid rgba(46,189,133,.35)}
+.verdict.y{background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.35)}
+.verdict.r{background:rgba(246,70,93,.08);border:1px solid rgba(246,70,93,.35)}
+.chart-card{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:8px;margin-bottom:14px;position:relative}
+svg{display:block;width:100%;height:auto;cursor:crosshair}
+.ctip{position:absolute;pointer-events:none;background:rgba(10,16,28,.95);border:1px solid #33445f;border-radius:8px;padding:7px 10px;font-size:12px;line-height:1.7;display:none;z-index:5;white-space:nowrap}
+.ctip b{color:#f0b90b}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:12px 0}
+.pcard{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:13px 15px}
+.pcard h3{font-size:13.5px;margin-bottom:8px}
+.jrow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #223049;font-size:12.8px}
+.jrow:last-child{border:none}
+.jrow .v{text-align:right;color:#e8eefb}
+.g{color:#2ebd85}.r{color:#f6465d}.y{color:#f0b90b}.b{color:#58a6ff}
+.tips{margin-top:8px;padding-left:17px;font-size:12.4px;color:#aeb9cf;line-height:1.8}
+.note{margin-top:10px;font-size:11.5px;color:#66748f}
+.sec{font-size:15px;color:#f6465d;font-weight:700;margin:20px 0 8px;padding-left:10px;border-left:3px solid #f6465d}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>📖 每日缠论 · 2026-10-22 <small>📈 A 二连兑现 · 昨夜 84,875 破日线中枢次级位 · 日线 MACD 金叉 · Tesla"beat 也跌"二连 · ZEC/NEAR/BNB 中枢离开共振 · 今晨回踩 83,463 · BTC/ETH/SOL/BNB/ZEC/TAO/XAU/NEAR</small></h1>
+<span class="btn" style="cursor:default">🔒 10/22 09:55 快照</span>
+<span class="btn" style="cursor:default" id="updTag">—</span>
+</header>
+<div class="sub"><a class="back" href="index.html">← 主页</a> ｜ 级别结论先行：<b>周K顶分型后下跌笔（87,385/87,249 双顶未破坏，本周周 K 已收复 82,500=周线反弹段基本确认，此笔=日线多段）、日K金叉（日线中枢 [82,500~87,249] 5 段内，DIF 上穿 DEA 转正，10/21 大阳线 H84,875，此笔=4h 一段）、4h 上涨笔顶分型候选（84,340→84,875 <b>双顶递增=趋势强非背驰</b>，中枢 [80,985~84,117] 7 段，MACD 零上张开，此笔=30m 多段）、30m 回调笔（84,875→83,463 高位死叉，中枢 [82,346~83,195] 4 段上方，此笔=5m 一段）、5m 中枢群 [84,364~84,811] 下方</b>。昨夜：美股盘+Tesla 财报时点冲 84,875 → 今晨回踩 83,463（-1.7%）→ 09:55 反弹 83,470。板块：ZEC 中枢有效离开（顶 1,368·三日 +30%）、NEAR 顶 5.5 离开后回抽、BNB 顶 752 离开。<b>本页为快照分析，不构成执行指令。</b></div>
+<div id="verdict" class="verdict y">加载中…</div>
+<div class="chart-card" id="chart4h"></div>
+<div class="chart-card" id="chart30m"></div>
+<div class="chart-card" id="chart15m"></div>
+
+<div class="pcard fix" style="grid-column:1/-1;border-left:3px solid #e8b339"><h3>📌 TL;DR（09:55 @83,470 · fapi）</h3>
+<div class="jrow"><span>级别结论</span><span class="v"><b class="g">日线金叉·4h 零上张开（多头趋势初成）· 30m 高位死叉回调中（84,875→83,463）· 5m 中枢群下方</b>——A 二连兑现后的第一次显著回调，82,900 确认线未破=二式三买的回抽确认窗口</span></div>
+<div class="jrow"><span>关键位</span><span class="v">84,875（昨夜高=A 目标）／84,340（次级位·得而复失）／83,463（今晨低）／<b>82,900（二式确认线=回调裁判）</b>／82,595/82,346（回踩区）／87,249（日线中枢上沿=终极目标）</span></div>
+<div class="jrow"><span>纪律</span><span class="v">82,900 不破=浅回踩（A）；得而复失=深回调（B→82,595/82,346 再测）；今晚 20:30 初请（固定时点）是回调中的变量；财报"beat 也跌"模式二连——追高风险大于踏空</span></div>
+</div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>⏱ 时间线：10/21 09:50 → 10/22 09:55（A 二连兑现 → 首次显著回调）</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0">10/21 09:50 冻结 83,023 → 10:30 回踩 82,689（未及 82,346·B 触发 0 根）→ 13:30 针低 82,595 → 白天 38/48 根 30m 收上 82,900（<b>二式确认线站稳</b>）→ <b>22:00~00:30 美股盘放量上涨笔</b>：83,195 → <b>顶 84,875（10/22 00:30）</b>——突破 T1 83,420、T2 84,340（日线中枢次级位，超 535 点）→ 04:55~05:50 <b>Tesla 财报时点</b>二测 84,811 → 财报 beat 但冲高回落 → 07:30 回踩 84,019 → 08:30 反弹 84,330 → <b>09:30 回落 83,463</b>（自 84,875 计 -1.7%，30m 高位死叉）→ 09:55 报 83,470。<b>结果：日线 MACD 金叉（10/21 大阳线 O82,985 H84,875 C84,050）；84,340 得而复失=今晨回调已回中枢次级位下方，但 82,900 未破</b>。板块共振：ZEC 顶 1,368（4h 中枢 [1,122~1,254] 有效离开·三日 +30%）、NEAR 顶 5.5（[4.8~5.4] 离开后回抽 5.19）、BNB 顶 752（[708~737] 离开）——<b>七币三个完成中枢离开</b>，主板与板块同频。</div>
+</div>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.3);border-radius:8px;font-size:14.5px;font-weight:600;color:#58a6ff">📖 复盘 · 10/21 三演化·二值打分 3✓2✗（复盘窗口=10/21 09:50→10/22 09:55 · 判定基准=fapi 30m）（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1"><h3>📋 打分表：10/21 三演化</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">预判条目（出处）</td><td>判定标准</td><td>结果</td><td>事实</td></tr>
+<tr><td style="padding:5px">A·82,900 站稳·二式三买（10/21 演化A 40%）</td><td>30m 收盘站稳 82,900</td><td class="g"><b>✓</b></td><td>38/48 根收上，最高收盘 84,800</td></tr>
+<tr><td style="padding:5px">A·T1 83,420</td><td>触及</td><td class="g"><b>✓</b></td><td>昨夜 00:30 顶 84,875（超 1,455 点）</td></tr>
+<tr><td style="padding:5px">A·T2 84,340（日线中枢次级位）</td><td>触及</td><td class="g"><b>✓</b></td><td>84,875 突破后 83,463 回落——触及并突破 ✓（是否站稳看今天）</td></tr>
+<tr><td style="padding:5px">B·82,346 跌破→回踩失败（35%）</td><td>30m 收盘 &lt;82,346</td><td class="r"><b>✗</b></td><td>0 根收盘（最低针 82,595 @13:30 未破）</td></tr>
+<tr><td style="padding:5px">C·82,900~83,400 消化（25%）</td><td>区间内延伸</td><td class="r"><b>✗</b></td><td>昨夜冲出区间上沿 1,475 点</td></tr>
+</table>
+<div style="margin-top:8px;font-size:12.5px">📊 预判 <b class="g">3✓</b> <b class="r">2✗</b>（60%）· 纪律栏：A 进场条件"回踩 83,000 不破"在 82,689/82,595 <b>再度未完美成立→不进场=✓执行</b>。<b>系统性观察（连续第三天）</b>：方向与目标连对（A 两日全兑现），但进场条件连续三日"过严未触发"——固定百分比回踩位（83,000/81,900）与结构位（82,346/82,900）不一致是根因，<b>改进：今后回踩条件一律用当日预案中的结构位</b>。本周四日累计 10✓10✗（50%·其中 A 剧本连续两日 6 项全中）。</div>
+</div>
+<div class="pcard"><h3>速览预判复盘（10/21 · 不计分）</h3>
+<div style="font-size:12.5px;line-height:1.8;color:#c9d4e0">① <b>ZEC"1,285 有效离开=量度按日线"</b>✓<b>兑现</b>（昨夜顶 1,368，现 1,306——离开后首日 +2.8%）；② <b>NEAR"5.1 上方=偏强"</b>✓（昨夜顶 5.5=中枢离开，现 5.19 回抽 5.4 下沿）；③ <b>BNB"744 延续=领涨结构"</b>✓（顶 752，现 745）；④ ETH"2,494 同步确认"○（昨夜高 2,478 未破上沿，现 2,451）；⑤ TAO 285 ○（顶 278 未到）；⑥ XAU 弱势延续（4,118）。<b>九段卡验证</b>：昨天点名"ZEC 8 段+针破上沿=离开尝试"→ 当晚离开兑现——满九系列第六例（离开分支）。</div>
+</div>
+</div></details>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>五级递归联立：本级别一笔=次级别一段（每级配 K 线证据）</h3>
+<div style="font-size:13px;line-height:1.95;color:#c9d4e0">
+<b class="b">① 周K：顶分型下跌笔·本周周 K 修复</b>——87,385/87,249 双顶未破坏（终极裁判仍是 87,249）；本周周K（10/19 开周）O82,078 H84,875 L81,146 现 83,470——<b>已收复 82,500=周线下跌笔内的反弹段基本确认</b>（除非周五跌回 81,146 下方）；周 MACD 柱 1,656→1,740 拐头扩大（反弹动能）。周线这笔=日线级别多段。
+<b class="b">② 日K：金叉（DIF 60&gt;DEA 48·柱转正）·中枢 [82,500~87,249] 5 段内</b>——10/21 日K O82,985 H84,875 L82,595 C84,050（大阳线+上影）；10/22 进行中 O84,050 H84,330 L83,458 C83,500（回调阴线）；<b>中枢口径说明</b>：以确认端点计算回归 [82,500~87,249]（84,340 为中枢内次级高点/10/11 顶，84,875 是 80,622 起进行中笔的当前高点）——中枢口径随进行中 K 摆动属数据敏感性，以确认端点为准。日线这笔=4h 级别一段（80,622 起的 4h 上涨）。
+<b class="b">③ 4h：上涨笔顶分型候选（84,340→84,875 双顶<b>递增</b>=趋势强·非背驰）</b>——4h 中枢 [80,985~84,117] <b>7 段</b>；昨夜 82,595→84,875 上涨笔后今晨回踩 83,463——回调未破 82,900；4h MACD 零上张开（DIF 519&gt;DEA 337，hist 182）；<b>递增双顶意味着回调属中枢内整理，非反转结构</b>。4h 裁判=82,900（跌破=回调升级回中枢中下部）。4h 这笔=30m 级别一段。
+<b class="b">④ 30m：回调笔（84,875→83,463·高位死叉）</b>——昨夜以来：底 82,595→顶 84,875（00:30）→底 84,019（07:30）→顶 84,330（08:30）→<b>底 83,463（09:30）</b>；中枢 [82,346~83,195] 4 段——现价 83,470 在中枢上沿上方一点；30m MACD 零上高位死叉、柱负扩大——回调动能释放中，83,463 的底分型未确认。30m 这笔=5m 级别一段。
+<b class="b">⑤ 5m：中枢群 [84,364~84,811] 下方</b>——昨夜高位的三个窄中枢已被跌破（84,364 下沿失守）——回调在 5m 级别已离开中枢群=短线转弱确认；5m MACD 负收敛——回调动能也在衰减。
+<b class="y">递归读法</b>：周线反弹段基本确认、日线金叉、4h 趋势强（递增双顶）——<b>中期多头结构初成</b>；短线 30m/5m 双双回调中（高位死叉+中枢群跌破）。矛盾点="趋势初成 vs 短线过热回调"——这正是<b>二式三买的回抽确认窗口</b>：82,900 不破=浅回踩（黄金加仓点），破=深回调（82,595/82,346 再测，中枢内类二买）。Tesla"beat 也跌"+初请今晚=回调时点的变量。</div>
+</div>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.3);border-radius:8px;font-size:14.5px;font-weight:600;color:#58a6ff">📰 消息面 · Tesla"beat 也跌"二连 + 板块离开共振（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1"><h3>⏱ 启动时间线 vs 新闻时点</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0">
+· <b>10/21 22:00~10/22 00:30 CST（美股盘）BTC 放量 83,195→84,875</b> ↔ 美股盘中科技延续反弹+财报周乐观（Bitkub/Schwab 口径延续）——放量上涨笔先于 Tesla 财报 5 小时启动 ✓。
+· <b>10/22 04:55~05:50（Tesla 财报时点）BTC 二测 84,811 后回落</b> ↔ <a href="https://au.investing.com/news/stock-market-news/earnings-call-transcript-tesla-beats-q3-2026-estimates-as-stock-slips-after-hours-93CH-4706005" style="color:#58a6ff">Tesla Q3：EPS $0.48 超预期（终结四连 miss）、营收微超、交付 486,532（+5.3%）——但盘后小跌</a>——<b>"beat 也跌"二连</b>（Netflix 之后）：财报周定价严苛期的判断连续第二天被验证 ✓；BTC 与 TSLA 同步冲高回落。
+· <b>ZEC/NEAR/BNB 三币中枢离开（昨夜~今晨）</b> ↔ 无独立新闻=结构自身行为（九段系列"离开"分支兑现）——量能是消息的体：ZEC 离开段放量 ✓。<br>
+<b>矛盾点</b>：基本面 beat（Tesla 终结四连 miss）vs 价格回落——市场要的是"指引惊喜"而非"符合预期"；BTC 昨夜放量突破 vs ETF 流出背景未变——趋势与资金面的背离仍未收敛。<b>缠论点评</b>：结构是骨——84,340→84,875 的<b>递增双顶</b>把昨夜定性为"趋势强"而非"背驰"，今晨 -1.7% 回调在中枢整理范畴；消息（财报）只解释了 05:00 的回落时点，解释不了 22:00 的启动——启动是结构（82,900 确认后的量度释放）。</div>
+</div>
+</div></details>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(46,189,133,.08);border:1px solid rgba(46,189,133,.35);border-radius:8px;font-size:14.5px;font-weight:600;color:#2ebd85">📅 本周金融日历（10/19~10/25）· 已发生回顾 + 待发生关注 + 结论（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1"><h3>✅ 已发生（周一 → 今晨）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px;width:14%">时点</td><td style="width:32%">事件</td><td>结果与结论</td></tr>
+<tr><td style="padding:5px">10/19(一)~10/20(二)</td><td>财报周首两日·科技反弹</td><td>BTC 82,645→83,420 放量收复中枢下沿——风险偏好修复两连（详见前两页）</td></tr>
+<tr><td style="padding:5px">10/20(二)盘后</td><td>Netflix Q3</td><td>EPS beat 但指引疲软盘后跌——<b>"beat 也跌"第一例</b>（定价转向指引质量）</td></tr>
+<tr><td style="padding:5px">10/21(三)盘中</td><td>美股延续反弹</td><td>BTC 38 根站稳 82,900 → 84,875（+2.3%）——A 二连兑现·日线金叉</td></tr>
+<tr><td style="padding:5px"><b>10/22(四)晨</b></td><td><b>Tesla Q3</b>（<a href="https://au.investing.com/news/stock-market-news/earnings-call-transcript-tesla-beats-q3-2026-estimates-as-stock-slips-after-hours-93CH-4706005" style="color:#58a6ff">Investing.com</a>·<a href="https://ir.tesla.com/press-release/earnings-consensus-third-quarter-2026" style="color:#58a6ff">Tesla IR</a>）</td><td>EPS $0.48 beat（终结四连 miss）、交付 486,532（+5.3%）——<b>但盘后小跌="beat 也跌"二连</b>。结论：财报周定价严苛期确认——beat 是入场券，指引才是定价器；BTC 同步冲高回落（84,811→83,463）</td></tr>
+<tr><td style="padding:5px">10/21~22 夜</td><td>板块结构事件</td><td>ZEC 中枢离开（顶 1,368）/NEAR 顶 5.5/BNB 顶 752——九段系列"离开"分支三币共振兑现</td></tr>
+</table>
+</div>
+<div class="pcard" style="grid-column:1/-1"><h3>⏳ 待发生（今日 → 周末）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px;width:14%">时点</td><td style="width:32%">事件</td><td>关注点与预案</td></tr>
+<tr><td style="padding:5px"><b class="y">今晚 20:30</b></td><td>初请失业金（周四固定时点）</td><td>回调中的变量——强于预期=收益率上行=82,900 确认线受试加深；数据后第一根 30m 收完再定性</td></tr>
+<tr><td style="padding:5px">10/23(五)</td><td>26 家财报+月末数据窗口</td><td>月末机构调仓+财报尾波——82,346/84,875 边沿纪律优先；本周周 K 收官前的最后变数</td></tr>
+<tr><td style="padding:5px">10/25(日)</td><td>周线收官</td><td>本周 O82,078 H84,875 L81,146——现 83,470：<b>收 82,500 上方=周线反弹段确认</b>（87,385 下跌笔内第一个周线级别反弹）；跌回 81,146 下方=反弹段否定</td></tr>
+<tr><td style="padding:5px">下周预告</td><td>FOMC（10 月底）+月末</td><td>利率锚的下一个大考——日线金叉后的趋势能否延续取决于此</td></tr>
+</table>
+<div class="tips">📊 结论汇总：本周至今="beat 也跌"的定价严苛期（Netflix/Tesla 二连验证）+ 结构的胜利（BTC 两日放量兑现 A、三币中枢离开）——<b>消息越来越挑（基本面好也要跌），结构越来越顺（递增双顶+金叉）</b>；对缠论的意义不变：财报解释时点，中枢决定方向——84,875 与 82,900 是今天的两个结构裁判，初请只是时点扰动。剩余变数：初请（今晚）、月末调仓（周五）、周线收官定性（周日）。</div>
+</div>
+</div></details>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(232,179,57,.08);border:1px solid rgba(232,179,57,.3);border-radius:8px;font-size:14.5px;font-weight:600;color:#e8b339">🏛 九段升级检查——离开分支三连兑现·ZEC 量度进行中（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard fix" style="grid-column:1/-1"><h3>🏛 九段升级检查（中枢延伸满 9 段→升级大一级别）</h3>
+<div class="jrow"><span><b class="g">ZEC 离开兑现·量度进行中</b></span><span class="v">[1,122~1,254] 中枢（昨日 8 段口径）<b>有效离开</b>：顶 1,368（三日 +30%）→ 现 1,306 回踩中枢上沿上方——<b>离开后量度按日线算</b>：中枢高度 132，向上投影 1,254+132×N；回抽不回 1,254=离开确认（九段系列第六例·离开分支）</span></div>
+<div class="jrow"><span><b class="y">NEAR 离开后回抽</b></span><span class="v">顶 5.5（[4.8~5.4] 上沿之上）→ 现 5.19 回抽至 5.4 下沿——离开的"回抽不跌回"确认未完成（与 BTC 82,900 同构同频）</span></div>
+<div class="jrow"><span><b class="y">BNB 离开领先</b></span><span class="v">顶 752（[708~737] 上沿之上）→ 现 745 站住上沿上方——三币中最先完成"离开+回抽不跌回"=领涨结构确认</span></div>
+<div class="jrow"><span>BTC 4h 中枢 7 段</span><span class="v">[80,985~84,117]（5→7）——84,875 已破中枢上沿，回踩 83,463 在中枢上部；若回抽不跌回 84,117=主板离开确认（距 9 段尚远，但离开优先于计数）</span></div>
+<div class="jrow"><span>各币费率</span><span class="v">BTC +0.0055% / ETH +0.0056% / SOL -0.0026% / BNB 0 / ZEC -0.0040% / TAO +0.0050% / XAU +0.0140% / NEAR +0.0100%（10/21 口径）——涨后仍温和=无过热</span></div>
+<div class="tips">📋 离开分支三连（ZEC/NEAR/BNB）+BTC 84,875 破上沿——满九系列的"离开"分支首次成规模兑现；BTC 自己的 4h 上沿（84,117）回抽确认与三币离开后的回抽同步=今日盘中最大的同频观察点。<b>计数纪律重申</b>：离开优先于计数——ZEC 8 段未满 9 已离开，量度照样按大级别算。</div>
+</div></div></details>
+
+<div class="sec">🗺 趋势全景地图（09:55 · 五周期联立 + 八币种速览）</div>
+
+<div class="pcard" style="grid-column:1/-1"><h3>BTC 全景表（09:55 @83,470——日线金叉·4h 趋势强·30m 回调中）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:11.8px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">周期</td><td>方向·阶段</td><td>当前在走</td><td>防守位</td><td>目标(剩余)</td><td>预计持仓·类型</td><td>我的选择</td></tr>
+<tr><td style="padding:5px"><b class="b">1d</b></td><td class="g">金叉<br>反弹段确认中</td><td>中枢 [82,500~87,249] 5 段内，10/21 大阳后回踩</td><td>82,595</td><td>87,249（+4.5%）</td><td>1-2周·波段</td><td>回调加仓窗口（等 82,900 裁判）</td></tr>
+<tr><td style="padding:5px"><b class="b">4h</b></td><td class="g">上涨·中枢内整理</td><td>84,875 递增双顶后回踩 83,463（未破 82,900）</td><td>82,900</td><td>84,875/87,249（+1.7~4.5%）</td><td>1-3天·波段</td><td class="g"><b>可参与</b>（82,900 回抽不破=加仓点）</td></tr>
+<tr><td style="padding:5px"><b class="b">1h</b></td><td class="y">回调</td><td>84,875→83,463</td><td>83,463</td><td>84,330（+1.0%）</td><td>数小时·短线</td><td>剩余尚可·等企稳</td></tr>
+<tr><td style="padding:5px"><b class="b">30m</b></td><td class="r">回调笔·动能释放</td><td>中枢 [82,346~83,195] 4 段上沿</td><td>83,195</td><td>视 5m 修复</td><td>—</td><td>挂 82,900/83,463 预警</td></tr>
+<tr><td style="padding:5px"><b class="b">15m</b></td><td>回调</td><td>5m 中枢群 [84,364~84,811] 下方</td><td>83,463</td><td>—</td><td>—</td><td>不参与</td></tr>
+</table>
+<div class="tips">读法：<b>4h 仍是可参与档</b>——递增双顶+零上张开=趋势强；82,900 回抽不破=二式三买加仓点（83,000~83,500 区间企稳信号：30m 收复 83,463+底分型）；跌破 82,900=回调升级（82,595/82,346 类二买区）。271 口径：4h 动能 8 分强趋势——可左侧小仓+右侧 82,900 确认加仓。</div>
+</div>
+
+<div class="pcard" style="grid-column:1/-1"><h3>八币种全景速览（09:55 · 4h 主行）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">币种</td><td>现价</td><td>4h 结构</td><td>一句话</td></tr>
+<tr><td style="padding:5px"><b>BTC</b></td><td>83,470</td><td>中枢 [80,985~84,117] 7 段·84,875 破上沿后回踩</td><td>82,900 回抽不破=加仓；84,117 站回=主板离开确认</td></tr>
+<tr><td style="padding:5px"><b>ETH</b></td><td>2,451</td><td>中枢 [2,407~2,530] 7 段·昨夜高 2,478 未破上沿</td><td>2,478/2,530=同步确认裁判；2,407 防守</td></tr>
+<tr><td style="padding:5px"><b>SOL</b></td><td>106.1</td><td>中枢 [101.6~108.7] 7 段·108.2 昨夜高未有效离开</td><td>108.7 上沿=三买裁判；100.3 双底防守</td></tr>
+<tr><td style="padding:5px"><b class="g">BNB</b></td><td>745.1</td><td>[708~737] 离开+回抽不跌回=<b>确认</b></td><td>三币中最先完成离开确认——752 延续=领涨</td></tr>
+<tr><td style="padding:5px"><b class="g">ZEC</b></td><td>1,306</td><td>[1,122~1,254] <b>有效离开</b>·顶 1,368 回踩上沿上方</td><td>离开量度按日线；1,254 回抽不回=确认</td></tr>
+<tr><td style="padding:5px"><b>TAO</b></td><td>267.9</td><td>中枢 [262~285] 6 段·顶 278 回落</td><td>未离开=跟随主板；262 防守</td></tr>
+<tr><td style="padding:5px"><b>XAU</b></td><td>4,118</td><td>中枢 [4,191~4,212] 下方·连续走弱</td><td>风险偏好回升周避险失血——4,081 防守</td></tr>
+<tr><td style="padding:5px"><b class="y">NEAR</b></td><td>5.19</td><td>顶 5.5 离开 [4.8~5.4] 后回抽下沿</td><td>5.4 回抽不跌回=与 BTC 82,900 同构确认；4.8 防守</td></tr>
+</table>
+</div>
+
+<div class="chart-card" id="chartETH"></div>
+<div class="chart-card" id="chartSOL"></div>
+<div class="chart-card" id="chartBNB"></div>
+<div class="chart-card" id="chartZEC"></div>
+<div class="chart-card" id="chartTAO"></div>
+<div class="chart-card" id="chartXAU"></div>
+<div class="chart-card" id="chartNEAR"></div>
+
+<div class="sec">🎯 今日三演化（金叉后的回抽裁判日 · 按结构结果三分 · 互斥）</div>
+
+<div class="pcard fix" style="grid-column:1/-1">
+<div class="jrow"><span><b class="g">A · 浅回踩·二式完成（40%）</span></span><span class="v">83,000~83,500 企稳（<b>82,900 不破</b>+30m 收复 83,463 底分型）→ 84,330 → <b>84,875 再测</b> → 87,249（日线中枢上沿）；初请温和=无干扰；BNB/ZEC 的离开确认结构支撑。</span></div>
+<div class="jrow"><span><b class="r">B · 深回调（35%）</span></span><span class="v">82,900 得而复失 → 82,595/82,346 再测（不破=中枢内类二买·回调加仓区）→ 跌破 82,346 看 80,622 重测；初请强于预期或财报周获利了结=催化。84,875 顶分型在 4h 级别成立。</span></div>
+<div class="jrow"><span><b class="y">C · 83,500~84,300 消化（25%）</span></span><span class="v">回调与反弹在窄区间对峙——等今晚初请（20:30）+周五月末给方向。</span></div>
+</div>
+
+<div class="chart-card" id="chartEvoA"></div>
+<div class="chart-card" id="chartEvoB"></div>
+<div class="chart-card" id="chartEvoC"></div>
+
+<div class="pcard" style="grid-column:1/-1"><h3>📋 预案表（回抽裁判版 · 含教练 271 列）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">演化</td><td>概率</td><td>触发</td><td>进场/271方式</td><td>止损</td><td>目标(T1/T2)</td></tr>
+<tr><td style="padding:5px">A · 二式完成</td><td>40%</td><td>30m 收复 83,463 + 82,900 不破</td><td>右侧多：低2/回抽确认（271：4h 8 分强趋势——<b>可左侧小仓+82,900 确认加仓</b>；回踩条件用结构位 82,900 而非固定点位）</td><td>82,595</td><td>T1 84,875<br>T2 87,249</td></tr>
+<tr><td style="padding:5px">B · 深回调</td><td>35%</td><td>30m 跌破 82,900</td><td>82,595/82,346 再测不破=类二买多（回调加仓区）；跌破 82,346 减仓等 80,622</td><td>82,346</td><td>多 T1 84,875<br>防守 80,622</td></tr>
+<tr><td style="padding:5px">C · 消化</td><td>25%</td><td>83,500~84,300 延伸</td><td>不做（今晚初请前轻仓；84,875/82,900 两预警）</td><td>—</td><td>等方向</td></tr>
+</table>
+<div class="tips">💡 首要观察位：<b>82,900</b>（二式确认线=回抽裁判）／<b>83,463</b>（今晨低=A 第一步）／<b>84,875</b>（昨夜高）／<b>82,595/82,346</b>（回踩区）／<b>87,249</b>（日线中枢上沿=终极目标）。速览焦点：ZEC 1,254 回抽确认、NEAR 5.4 回抽、BNB 752 领涨延续、SOL 108.7 三买。</div>
+</div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>📖 理论（《二买点交易计划》第二课：先选级别，再做二买计划）</h3>
+<div class="jrow"><span>核心思想</span><span class="v">做交易计划前先把每个周期的立场拍在一张表上——方向、阶段（<b>生长→简单回调→复杂回调→末期</b>）、防守位、目标、<b>剩余利润×预计持仓</b>、我的选择；只在"可参与"的周期里等二买/类二买</span></div>
+<div class="jrow"><span>参与裁定纪律</span><span class="v">剩余利润≥3% 且阶段为生长/简单回调 →"✓ 可参与"；复杂回调/末期 → 等结构；&lt;1% → 放弃；交易区间 → 只做边沿</span></div>
+<div class="tips">本期应用：日线金叉+87,249 目标（距现价 +4.5%）=<b>生长阶段·✓ 可参与</b>——1d/4h 双可参与档；纪律点：87,249 是日线中枢上沿+周线双顶——到那里要按"边沿"处理（减仓/反转观察），不是追卖点；当前 83,470 在中枢中上部=只做回调加仓（82,900/82,346），不做区间中部追涨。</div>
+</div>
+<div class="note">⚠️ 财报周纪律：今晚 20:30 初请（固定时点）——数据后第一根 30m 收完再定性；周五月末调仓+财报尾波。走势终完美视角：日线金叉=80,622 起的上涨笔在日线级别获得动能确认，但 87,385/87,249 周线双顶未破之前它仍是"下跌笔内的反弹段"——<b>反弹段的完美终点由 87,249 裁判</b>；ZEC 的离开量度按日线算是本周九段系列的最大看点。概率纪律（10/21 固化）执行第二日：A(40%)/B(35%) 与递归读法（趋势初成+短线回调）同源 ✓。本页为分析快照（数据源 OKX 备援，与 fapi 价差&lt;0.1%），不构成执行指令。</div>
+</div>
+<script>
+"use strict";
+const API="https://fapi.binance.com/fapi/v1";
+const F=(v,d=0)=>(+v).toFixed(d);
+const fmtT=(t,wd)=>{const d=new Date(t),p=n=>String(n).padStart(2,"0");return (wd?(d.getMonth()+1)+"/"+p(d.getDate())+" ":"")+p(d.getHours())+":"+p(d.getMinutes())};
+async function fetchK(iv,lim){const d=await fetch(`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=${lim}`).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
+let fapiDownUntil=0;
+const OKX_SYM={BTCUSDT:"BTC-USDT-SWAP",ETHUSDT:"ETH-USDT-SWAP",SOLUSDT:"SOL-USDT-SWAP",BNBUSDT:"BNB-USDT-SWAP",ZECUSDT:"ZEC-USDT-SWAP",TAOUSDT:"TAO-USDT-SWAP",XAUUSDT:"PAXG-USDT",NEARUSDT:"NEAR-USDT-SWAP"};
+const OKX_IV={"1w":"1W","1d":"1D","4h":"4H","1h":"1H","30m":"30m","15m":"15m","5m":"5m"};
+async function okxK(sym,iv,s,e,limit){
+  const inst=OKX_SYM[sym]||sym,bar=OKX_IV[iv]||iv;
+  let all=[],after=e?""+e:"";
+  while(all.length<limit){
+    let u=`https://www.okx.com/api/v5/market/candles?instId=${inst}&bar=${bar}&limit=100`+(after?`&after=${after}`:"");
+    const j=await fetch(u).then(r=>r.json());
+    if(j.code&&j.code!=="0")throw new Error("okx "+(j.msg||j.code));
+    const rows=(j.data||[]).map(r=>({t:+r[0],o:+r[1],h:+r[2],l:+r[3],c:+r[4]}));
+    if(!rows.length)break;
+    all=rows.concat(all);
+    after=""+rows[0].t;
+    if(rows.length<100)break;
+    if(s&&all[0].t<=s)break;
+  }
+  return all.filter(k=>(!s||k.t>=s)&&(!e||k.t<=e));
+}
+async function fetchK2(iv,s,e){
+  if(Date.now()>=fapiDownUntil){
+    try{let u=`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=300`;if(s)u+=`&startTime=${s}`;if(e)u+=`&endTime=${e}`;const d=await fetch(u).then(r=>r.json());if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}catch(e2){}
+    fapiDownUntil=Date.now()+60000;
+  }
+  return okxK("BTCUSDT",iv,s,e,300).catch(()=>[]);
+}
+function mEma(a,n){const k=2/(n+1);let e=a[0];return a.map(v=>e=v*k+e*(1-k))}
+function calcMACD(arr){const c=arr.map(k=>k[4]);const dif=mEma(c,12).map((v,i)=>v-mEma(c,26)[i]);const dea=mEma(dif,9);return{dif,dea,hist:dif.map((v,i)=>v-dea[i])}}
+function mergeK(kls){const out=[];
+  for(let i=0;i<kls.length;i++){const h=kls[i][2],l=kls[i][3];const m=out[out.length-1];
+    if(m&&((m.h>=h&&m.l<=l)||(h>=m.h&&l<=m.l))){const prev=out[out.length-2];const dir=prev?(m.h>prev.h?1:-1):(h>=m.h?1:-1);
+      const nh=dir>0?Math.max(m.h,h):Math.min(m.h,h);const nl=dir>0?Math.max(m.l,l):Math.min(m.l,l);
+      const oh=m.h,ol=m.l;m.h=nh;m.l=nl;m.i1=i;m.hi=(dir>0?h>oh:h<oh)?i:m.hi;m.lo=(dir>0?l>ol:l<ol)?i:m.lo;
+    }else out.push({h,l,t:kls[i][0],i0:i,i1:i,hi:i,lo:i});}
+  return out;}
+function buildBiM(kls){const mg=mergeK(kls);const fr=[];
+  for(let j=1;j<mg.length-1;j++){
+    if(mg[j].h>mg[j-1].h&&mg[j].h>mg[j+1].h)fr.push({i:mg[j].hi,type:"顶",price:mg[j].h,t:mg[j].t});
+    else if(mg[j].l<mg[j-1].l&&mg[j].l<mg[j+1].l)fr.push({i:mg[j].lo,type:"底",price:mg[j].l,t:mg[j].t});}
+  const bi=[];for(const f of fr){const last=bi[bi.length-1];
+    if(!last){bi.push(f);continue}
+    if(last.type===f.type){if(last.type==="顶"?f.price>=last.price:f.price<=last.price)bi[bi.length-1]=f}
+    else if(f.i-last.i>=4)bi.push(f);}
+  return bi;}
+function buildZS(pts){if(pts.length<5)return[];
+  const st=[];for(let k=0;k<pts.length-1;k++)st.push({hi:Math.max(pts[k].price,pts[k+1].price),lo:Math.min(pts[k].price,pts[k+1].price),i0:pts[k].i,i1:pts[k+1].i,ep:pts[k+1].price});
+  const out=[];let k=1;
+  while(k+2<st.length){
+    const ZG=Math.min(st[k].hi,st[k+1].hi,st[k+2].hi),ZD=Math.max(st[k].lo,st[k+1].lo,st[k+2].lo);
+    if(ZG>ZD){const inR=v=>v>=ZD&&v<=ZG;
+      const z={ZG,ZD,startI:pts[k].i,endI:pts[k+3].i,segs:3};
+      let j=k+3;
+      while(j<st.length){
+        if(inR(st[j].ep)){z.endI=st[j].i1;z.segs++;j++;continue}
+        if(j+1<st.length&&inR(st[j+1].ep)){z.endI=st[j+1].i1;z.segs+=2;j+=2;continue}
+        break;}
+      out.push(z);k=j+1;
+    }else k++;}
+  return out;}
+function buildSegs(bi){const segs=[];if(bi.length<2)return segs;
+  let dir=bi[1].price>=bi[0].price?1:-1,start=bi[0],ext=bi[1],firstR=null,revCnt=0;
+  for(let i=2;i<bi.length;i++){const p=bi[i];
+    if(dir>0){
+      if(p.type==="顶"){if(p.price>ext.price){ext=p;firstR=null;revCnt=0}}
+      else{
+        if(p.price<start.price){segs.push({dir,from:start,to:ext});start=ext;dir=-1;ext=p;firstR=null;revCnt=0}
+        else{revCnt++;if(revCnt===1)firstR=p;else if(firstR&&p.price<firstR.price){segs.push({dir,from:start,to:ext});start=ext;dir=-1;ext=p;firstR=null;revCnt=0}}
+      }
+    }else{
+      if(p.type==="底"){if(p.price<ext.price){ext=p;firstR=null;revCnt=0}}
+      else{
+        if(p.price>start.price){segs.push({dir,from:start,to:ext});start=ext;dir=1;ext=p;firstR=null;revCnt=0}
+        else{revCnt++;if(revCnt===1)firstR=p;else if(firstR&&p.price>firstR.price){segs.push({dir,from:start,to:ext});start=ext;dir=1;ext=p;firstR=null;revCnt=0}}
+      }
+    }}
+  segs.push({dir,from:start,to:ext,running:true});return segs;}
+function draw(boxId,ks,anns,opts){
+  opts=opts||{};
+  const n=ks.length,W=1420,H=(opts.H||440)+(opts.macd?118:0),ml=70,mr=110,mt=42,mb=26,pw=W-ml-mr,ph=(opts.H||440)-mt-mb;
+  const lo0=Math.min(...ks.map(k=>k.l)),hi0=Math.max(...ks.map(k=>k.h));
+  let lo=lo0,hi=hi0;
+  (opts.lines||[]).forEach(l=>{lo=Math.min(lo,l.p);hi=Math.max(hi,l.p)});
+  (opts.bands||[]).forEach(b=>{lo=Math.min(lo,b.lo);hi=Math.max(hi,b.hi)});
+  const pad=(hi-lo)*0.05;lo-=pad;hi+=pad;
+  const Y=p=>mt+(hi-p)/(hi-lo)*ph;
+  const at=t=>{let i=0,best=1e18;ks.forEach((k,q)=>{const d=Math.abs(k.t-t);if(d<best){best=d;i=q}});return i};
+  const bw=Math.max(2,pw/n*0.6);
+  let s=`<svg viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#0a0f1a" rx="10"/>`;
+  for(let g=0;g<=5;g++){const p=lo+(hi-lo)*g/5,y=Y(p);
+    s+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${ml+pw}" y2="${y.toFixed(1)}" stroke="#151d2e"/><text x="${ml-8}" y="${(y+4).toFixed(1)}" fill="#66748f" font-size="10.5" text-anchor="end">${F(p)}</text>`;}
+  const step=Math.max(1,Math.floor(n/9));
+  ks.forEach((k,q)=>{if(q%step===0)s+=`<text x="${(ml+(q+0.5)*pw/n).toFixed(1)}" y="${H-8}" fill="#66748f" font-size="10" text-anchor="middle">${fmtT(k.t,true)}</text>`});
+  (opts.bands||[]).forEach(b=>{const y1=Y(b.hi),y2=Y(b.lo);
+    s+=`<rect x="${ml}" y="${y1.toFixed(1)}" width="${pw}" height="${Math.max(3,y2-y1).toFixed(1)}" fill="${b.col}" opacity="0.16"/>`
+     +`<text x="${ml+6}" y="${(y1-4).toFixed(1)}" fill="${b.col}" font-size="11" font-weight="700">${b.lab}</text>`;});
+  (opts.lines||[]).forEach(l=>{const y=Y(l.p);
+    s+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${ml+pw}" y2="${y.toFixed(1)}" stroke="${l.col}" stroke-width="${l.w||1.2}" stroke-dasharray="${l.d||"7,4"}" opacity=".85"/>`
+     +(l.side==="r"
+       ?`<text x="${ml+pw-6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700" text-anchor="end">${l.lab}</text>`
+       :`<text x="${ml+6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700">${l.lab}</text>`);});
+  (opts.tlines||[]).forEach(l=>{const q1=at(l.t1),q2=at(l.t2);
+    const x1=ml+(q1+0.5)*pw/n,x2=ml+(q2+0.5)*pw/n;
+    s+=`<line x1="${x1.toFixed(1)}" y1="${Y(l.p1).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${Y(l.p2).toFixed(1)}" stroke="${l.col}" stroke-width="1.6" opacity=".9" stroke-dasharray="${l.d||"8,4"}"/>`;
+    if(l.lab)s+=`<text x="${((x1+x2)/2).toFixed(1)}" y="${((Y(l.p1)+Y(l.p2))/2-5).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0f1a;stroke-width:3px">${l.lab}</text>`;});
+  ks.forEach(k=>{const q=at(k.t),x=ml+(q+0.5)*pw/n,up=k.c>=k.o,col=up?"#2ebd85":"#f6465d";
+    s+=`<line x1="${x.toFixed(1)}" y1="${Y(k.h).toFixed(1)}" x2="${x.toFixed(1)}" y2="${Y(k.l).toFixed(1)}" stroke="${col}" stroke-width="1"/>`;
+    const by=Y(Math.max(k.o,k.c)),bh=Math.max(2,Math.abs(Y(k.c)-Y(k.o)));
+    s+=up?`<rect x="${(x-bw/2).toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="#0a0f1a" stroke="${col}" stroke-width="1"/>`
+         :`<rect x="${(x-bw/2).toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="${col}"/>`;});
+  if(opts.struct){
+    const xi=i=>ml+(i+0.5)*pw/n;
+    opts.struct.segs.forEach(sg=>{s+=`<line x1="${xi(sg.from.i).toFixed(1)}" y1="${Y(sg.from.price).toFixed(1)}" x2="${xi(sg.to.i).toFixed(1)}" y2="${Y(sg.to.price).toFixed(1)}" stroke="#f6465d" stroke-width="2.2" opacity="0.8" stroke-linecap="round"/>`});
+    const rs=opts.struct.segs[opts.struct.segs.length-1];
+    if(rs&&rs.running)s+=`<line x1="${xi(rs.to.i).toFixed(1)}" y1="${Y(rs.to.price).toFixed(1)}" x2="${(ml+pw).toFixed(1)}" y2="${Y(opts.struct.lastPrice).toFixed(1)}" stroke="#f6465d" stroke-width="2.2" stroke-dasharray="6,4" opacity="0.7"/>`;
+    const bi=opts.struct.bi;
+    if(bi.length){s+=`<polyline points="${bi.map(p=>xi(p.i).toFixed(1)+","+Y(p.price).toFixed(1)).join(" ")}" fill="none" stroke="#58a6ff" stroke-width="1.4" opacity="0.85"/>`;
+      bi.forEach(p=>{s+=`<circle cx="${xi(p.i).toFixed(1)}" cy="${Y(p.price).toFixed(1)}" r="1.7" fill="#58a6ff" opacity="0.9"/>`});}
+    opts.struct.zs.forEach(z=>{const x1=xi(z.startI),x2=xi(Math.min(z.endI,n-1));
+      s+=`<rect x="${x1.toFixed(1)}" y="${Y(z.ZG).toFixed(1)}" width="${(x2-x1).toFixed(1)}" height="${(Y(z.ZD)-Y(z.ZG)).toFixed(1)}" fill="#58a6ff" opacity="0.16" stroke="#58a6ff" stroke-width="1.2" stroke-dasharray="4,2" rx="3"/>`;});
+  }
+  (opts.entries||[]).forEach(en=>{const q=at(en.t),x=ml+(q+0.5)*pw/n,y=Y(en.p);
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${en.col}" stroke="#0a0f1a" stroke-width="2"/>`;
+    s+=`<text x="${x.toFixed(1)}" y="${(y+4.5).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="800" fill="#0d1117">${en.lab}</text>`;});
+  (anns||[]).forEach(a=>{const q=at(a.t),x=ml+(q+0.5)*pw/n,y=Y(a.p);
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="none" stroke="${a.col}" stroke-width="2.2"/>`;
+    const ty=a.below?y+22:y-14;
+    (a.txt||"").split("|").forEach((ln,li)=>{s+=`<text x="${x.toFixed(1)}" y="${(ty+li*13).toFixed(1)}" fill="${a.col}" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0f1a;stroke-width:3px">${ln}</text>`});});
+  const ny=Y(opts.now);
+  s+=`<line x1="${ml}" y1="${ny.toFixed(1)}" x2="${ml+pw}" y2="${ny.toFixed(1)}" stroke="#e8b339" stroke-width="1.2" stroke-dasharray="4,3"/>`
+   +`<rect x="${ml+pw+2}" y="${(ny-9).toFixed(1)}" width="${mr-6}" height="18" fill="#e8b339" rx="3"/><text x="${ml+pw+6}" y="${(ny+4).toFixed(1)}" fill="#000" font-size="10.5" font-weight="700">${F(opts.now)}</text>`;
+  s+=`<text x="${ml+4}" y="${mt-10}" fill="#e8eefb" font-size="12.5" font-weight="600">${opts.title||""}</text>`;
+  if(opts.macd){
+    const mh=104,mtop=mt+ph+14,m=opts.macd;
+    const mv=Math.max(...m.hist.map(Math.abs),...m.dif.map(Math.abs))*1.15||1;
+    const MY=v=>mtop+mh/2-(v/mv)*(mh/2-4);
+    s+=`<rect x="${ml}" y="${mtop}" width="${pw}" height="${mh}" fill="#0a0e14" stroke="#1c2230" rx="4"/>`;
+    s+=`<line x1="${ml}" y1="${mtop+mh/2}" x2="${ml+pw}" y2="${mtop+mh/2}" stroke="#3a4250" stroke-width="0.7"/>`;
+    s+=`<text x="${ml+4}" y="${mtop+11}" fill="#8ea0bd" font-size="9.5">MACD(12,26,9) · 动能</text>`;
+    const mcw=Math.max(1.5,pw/n*0.5);
+    ks.forEach((k,q)=>{const hh=m.hist[q];if(Math.abs(hh)<mv*0.002)return;
+      const x=ml+(q+0.5)*pw/n;
+      s+=`<rect x="${(x-mcw/2).toFixed(1)}" y="${Math.min(mtop+mh/2,MY(hh)).toFixed(1)}" width="${mcw.toFixed(1)}" height="${Math.max(0.5,Math.abs(MY(hh)-(mtop+mh/2))).toFixed(1)}" fill="${hh>=0?"#f6465d":"#2ebd85"}" opacity="0.85"/>`});
+    s+=`<polyline points="${m.dif.map((v,q)=>(ml+(q+0.5)*pw/n).toFixed(1)+","+MY(v).toFixed(1)).join(" ")}" fill="none" stroke="#e8b339" stroke-width="1.1"/>`;
+    s+=`<polyline points="${m.dea.map((v,q)=>(ml+(q+0.5)*pw/n).toFixed(1)+","+MY(v).toFixed(1)).join(" ")}" fill="none" stroke="#bc8cff" stroke-width="1.1"/>`;
+  }
+  s+=`<line id="${boxId}_cv" x1="0" y1="${mt}" x2="0" y2="${mt+ph}" stroke="#e8b339" stroke-width="0.9" stroke-dasharray="3,3" opacity="0" pointer-events="none"/>`;
+  s+=`<line id="${boxId}_ch" x1="${ml}" y1="0" x2="${ml+pw}" y2="0" stroke="#e8b339" stroke-width="0.9" stroke-dasharray="3,3" opacity="0" pointer-events="none"/>`;
+  s+=`<g id="${boxId}_pt" opacity="0" pointer-events="none"><rect x="${ml+pw+2}" y="0" width="${mr-6}" height="16" fill="#58a6ff" rx="3"/><text id="${boxId}_ptt" x="${ml+pw+6}" y="12" fill="#0d1117" font-size="10" font-weight="700"></text></g>`;
+  s+="</svg>";
+  document.getElementById(boxId).innerHTML=s;
+  enableCross(boxId,ks,{n,ml,pw,mt,ph,lo,hi,W,H});
+}
+function enableCross(boxId,ks,g){
+  const host=document.getElementById(boxId);
+  const svg=host.querySelector("svg");if(!svg)return;
+  let tip=host.querySelector(".ctip");
+  if(!tip){tip=document.createElement("div");tip.className="ctip";host.appendChild(tip)}
+  svg.addEventListener("mousemove",e=>{
+    const r=svg.getBoundingClientRect();
+    const vx=(e.clientX-r.left)/r.width*g.W,vy=(e.clientY-r.top)/r.height*g.H;
+    let idx=Math.round((vx-g.ml)/(g.pw/g.n)-0.5);idx=Math.max(0,Math.min(g.n-1,idx));
+    const k=ks[idx];if(!k)return;
+    const x=g.ml+(idx+0.5)*g.pw/g.n;
+    const a=host.querySelector("#"+boxId+"_cv"),b=host.querySelector("#"+boxId+"_ch"),pg=host.querySelector("#"+boxId+"_pt"),tx=host.querySelector("#"+boxId+"_ptt");
+    if(a){a.setAttribute("x1",x);a.setAttribute("x2",x);a.setAttribute("opacity",0.7)}
+    if(b&&vy>=g.mt&&vy<=g.mt+g.ph){b.setAttribute("y1",vy);b.setAttribute("y2",vy);b.setAttribute("opacity",0.45);
+      if(pg){const pr=g.hi-(vy-g.mt)/g.ph*(g.hi-g.lo);pg.setAttribute("opacity",0.95);pg.setAttribute("transform","translate(0,"+(vy-8).toFixed(1)+")");if(tx)tx.textContent=pr.toFixed(0)}
+    }else{if(b)b.setAttribute("opacity",0);if(pg)pg.setAttribute("opacity",0)}
+    const up=k.c>=k.o,col=up?"#2ebd85":"#f6465d";
+    tip.innerHTML=`<b>${fmtT(k.t,true)}</b><br>O ${F(k.o)} H <span style="color:#2ebd85">${F(k.h)}</span><br>L <span style="color:#f6465d">${F(k.l)}</span> C <b style="color:${col}">${F(k.c)}</b><br><span style="color:${col}">${up?"▲":"▼"} ${(up?"+":"")+F((k.c-k.o)/k.o*100,2)}%</span>`;
+    tip.style.display="block";
+    let lx=e.clientX-r.left+14,ly=e.clientY-r.top-10;
+    if(lx+170>r.width)lx=e.clientX-r.left-185;
+    if(ly+110>r.height)ly=r.height-115;
+    tip.style.left=Math.max(2,lx)+"px";tip.style.top=Math.max(2,ly)+"px";
+  });
+  svg.addEventListener("mouseleave",()=>{tip.style.display="none";
+    [host.querySelector("#"+boxId+"_cv"),host.querySelector("#"+boxId+"_ch"),host.querySelector("#"+boxId+"_pt")].forEach(el=>{if(el)el.setAttribute("opacity",0)})});
+}
+const T=ds=>new Date(ds).getTime();
+const FREEZE=T("2026-10-22T09:55:00");
+const LV={reTop:87385,dayZG:87249,dayZD:82500,hi22:84875,h4sub:84340,lo22:83463,cfm:82900,reLo:82346,reLo2:82595,h4zg:84117,lowB:80622};
+const fmtLV=x=>Math.round(x).toLocaleString("en-US");
+async function load(){
+  try{
+    const now=83470;
+    const k4=await fetchK2("4h",T("2026-10-08T00:00:00"),FREEZE);
+    const a4=k4.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi4=buildBiM(a4);
+    draw("chart4h",k4,[
+      {t:T("2026-10-19T00:00:00"),p:LV.lowB,col:"#2ebd85",txt:"①80,622|双底起点|作废线",below:true},
+      {t:T("2026-10-20T22:30:00"),p:83420,col:"#8b949e",txt:"②83,420|破中枢上沿|A一连"},
+      {t:T("2026-10-22T00:30:00"),p:LV.hi22,col:"#f6465d",txt:"③84,875|A二连|递增双顶"},
+      {t:T("2026-10-22T09:30:00"),p:LV.lo22,col:"#58a6ff",txt:"④83,463|Tesla后回落|82,900未破",below:true}
+    ],
+    {title:"BTC 4h · 84,340→84,875递增双顶(趋势强非背驰)·中枢[80,985~84,117]7段——回抽裁判=82,900(不破=加仓,破=82,595/82,346再测)",H:430,now,
+     bands:[{lo:LV.h4zg===84117?80985:80985,hi:LV.h4zg,col:"#8b949e",lab:"4h中枢 [80,985~84,117] 7段"},{lo:LV.dayZD,hi:LV.dayZG,col:"#58a6ff",lab:"日线中枢 [82,500~87,249] 5段"}],
+     lines:[{p:LV.cfm,col:"#f0b90b",lab:"82,900 回抽裁判",w:1.8},{p:LV.hi22,col:"#f6465d",lab:"84,875"},
+            {p:LV.dayZG,col:"#f6465d",lab:"87,249 终极目标",side:"r"},{p:LV.reLo,col:"#58a6ff",lab:"82,346",side:"r"}],
+     macd:calcMACD(a4),struct:{bi:bi4,segs:buildSegs(bi4),zs:buildZS(bi4),lastPrice:k4[k4.length-1].c}});
+    const k30=await fetchK2("30m",T("2026-10-21T00:00:00"),FREEZE);
+    const a30=k30.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi30=buildBiM(a30);
+    draw("chart30m",k30,[
+      {t:T("2026-10-21T13:30:00"),p:82595,col:"#2ebd85",txt:"①82,595|回踩低|82,346未破",below:true},
+      {t:T("2026-10-22T00:30:00"),p:LV.hi22,col:"#f6465d",txt:"②84,875|38根站稳82,900后|量度释放"},
+      {t:T("2026-10-22T05:50:00"),p:84811,col:"#f0b90b",txt:"③84,811|Tesla时点二测|beat也跌"},
+      {t:T("2026-10-22T09:30:00"),p:LV.lo22,col:"#58a6ff",txt:"④83,463|高位死叉回调|底分型未确认",below:true}
+    ],
+    {title:"BTC 30m · 回调笔(84,875→83,463·零上高位死叉)——A第一步=收复83,463出底分型;82,900=二式裁判",H:420,now,
+     bands:[{lo:LV.reLo,hi:83195,col:"#58a6ff",lab:"30m中枢 82,346~83,195(4段)"}],
+     lines:[{p:LV.lo22,col:"#f0883e",lab:"83,463 今晨低",w:1.8},{p:LV.cfm,col:"#f0b90b",lab:"82,900 裁判"},
+            {p:LV.hi22,col:"#f6465d",lab:"84,875",side:"r"}],
+     macd:calcMACD(a30),struct:{bi:bi30,segs:buildSegs(bi30),zs:buildZS(bi30),lastPrice:k30[k30.length-1].c}});
+    const k15=await fetchK2("15m",T("2026-10-21T18:00:00"),FREEZE);
+    const a15=k15.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi15=buildBiM(a15);
+    draw("chart15m",k15,[
+      {t:T("2026-10-22T00:30:00"),p:LV.hi22,col:"#f6465d",txt:"①84,875 昨夜顶"},
+      {t:T("2026-10-22T09:30:00"),p:LV.lo22,col:"#58a6ff",txt:"②83,463 回调低",below:true}
+    ],{title:"BTC 15m · 5m中枢群[84,364~84,811]已跌破——回调在5m级别离开中枢群,83,463出底分型=回调止跌信号",H:400,now,
+       bands:[{lo:84364,hi:84811,col:"#8b949e",lab:"5m中枢群[84,364~84,811](已跌破)"}],
+       lines:[{p:LV.lo22,col:"#f0b90b",lab:"83,463",w:1.8},{p:LV.cfm,col:"#f0883e",lab:"82,900",side:"r"}],
+       macd:calcMACD(a15),struct:{bi:bi15,segs:buildSegs(bi15),zs:buildZS(bi15),lastPrice:k15[k15.length-1].c}});
+    const kA=await fetchK2("30m",T("2026-10-21T00:00:00"),FREEZE);
+    const aA=kA.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    draw("chartEvoA",kA,[
+      {t:T("2026-10-22T04:00:00"),p:83300,col:"#2ebd85",txt:"①82,900不破+收复83,463|底分型|→84,875/87,249",below:true}
+    ],{title:"演化A(40%)·浅回踩·二式完成→84,875再测→87,249(日线中枢上沿)|初请温和配合",H:360,now:83300,
+       lines:[{p:LV.cfm,col:"#2ebd85",lab:"82,900 不破",w:1.8},{p:LV.hi22,col:"#f0b90b",lab:"T1 84,875"},{p:LV.dayZG,col:"#f6465d",lab:"T2 87,249",side:"r"}],
+       macd:calcMACD(aA)});
+    const kB=await fetchK2("30m",T("2026-10-21T00:00:00"),FREEZE);
+    const aB=kB.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    draw("chartEvoB",kB,[
+      {t:T("2026-10-22T04:00:00"),p:82600,col:"#f6465d",txt:"①82,900得而复失|→82,595/82,346|类二买再测",below:true}
+    ],{title:"演化B(35%)·深回调→82,595/82,346再测(不破=类二买加仓区)|初请强于预期=催化",H:360,now:82600,
+       lines:[{p:LV.cfm,col:"#f6465d",lab:"82,900 跌破",w:1.8},{p:LV.reLo2,col:"#f0883e",lab:"82,595"},{p:LV.reLo,col:"#2ebd85",lab:"82,346"},{p:LV.lowB,col:"#2ebd85",lab:"80,622",side:"r"}],
+       macd:calcMACD(aB)});
+    const kC=await fetchK2("15m",T("2026-10-21T18:00:00"),FREEZE);
+    const aC=kC.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    draw("chartEvoC",kC,[
+      {t:T("2026-10-22T04:00:00"),p:83900,col:"#f0b90b",txt:"①83,500~84,300对峙|等今晚初请",below:true}
+    ],{title:"演化C(25%)·窄区间消化|初请20:30+周五月末给方向",H:360,now:83900,
+       lines:[{p:LV.lo22,col:"#f0b90b",lab:"83,463",w:1.8},{p:LV.h4sub,col:"#f0883e",lab:"84,340"}],
+       macd:calcMACD(aC)});
+    async function fetchSym(sym,iv,st){
+      if(Date.now()<fapiDownUntil)return okxK(sym,iv,st,FREEZE,300).catch(()=>[]);
+      try{const u=`${API}/klines?symbol=${sym}&interval=${iv}&startTime=${st}&endTime=${FREEZE}&limit=300`;const d=await fetch(u).then(r=>r.json());if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}catch(e2){fapiDownUntil=Date.now()+60000}
+      return okxK(sym,iv,st,FREEZE,300).catch(()=>[]);
+    }
+    const kE=await fetchSym("ETHUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartETH",kE,[
+      {t:T("2026-10-20T22:00:00"),p:2477.7,col:"#f6465d",txt:"①2,478|昨夜前高"},
+      {t:T("2026-10-22T00:00:00"),p:2478,col:"#f0b90b",txt:"②2,478|二测未破上沿"}
+    ],{title:"ETH 4h · 中枢[2,407~2,530]7段·2,478二测未破上沿(现2,451)——2,478/2,530=同步确认裁判",H:300,now:2451,
+       lines:[{p:2478,col:"#f0b90b",lab:"2,478 前高",w:1.8},{p:2530,col:"#f6465d",lab:"2,530 上沿"},{p:2407,col:"#2ebd85",lab:"2,407",side:"r"}]});
+    const kS=await fetchSym("SOLUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartSOL",kS,[
+      {t:T("2026-10-21T22:00:00"),p:108.2,col:"#f6465d",txt:"①108.2 二测上沿"},
+      {t:T("2026-10-19T00:00:00"),p:100.3,col:"#2ebd85",txt:"②100.3 双底",below:true}
+    ],{title:"SOL 4h · 中枢[101.6~108.7]7段·108.2二测未有效离开(现106.1)——108.7=三买裁判",H:300,now:106.1,
+       lines:[{p:108.7,col:"#f0b90b",lab:"108.7 上沿",w:1.8},{p:101.6,col:"#2ebd85",lab:"101.6"},{p:100.3,col:"#2ebd85",lab:"100.3",side:"r"}]});
+    const kB2=await fetchSym("BNBUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartBNB",kB2,[
+      {t:T("2026-10-22T00:00:00"),p:752.2,col:"#f6465d",txt:"①752|离开后新高"},
+      {t:T("2026-10-19T00:00:00"),p:706,col:"#2ebd85",txt:"②706 低",below:true}
+    ],{title:"BNB 4h · [708~737]离开+回抽不跌回=确认(现745)——三币中最先完成离开确认=领涨结构",H:300,now:745.1,
+       lines:[{p:752,col:"#f0b90b",lab:"752",w:1.8},{p:737,col:"#f0883e",lab:"737"},{p:706,col:"#2ebd85",lab:"706",side:"r"}]});
+    const kZ=await fetchSym("ZECUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartZEC",kZ,[
+      {t:T("2026-10-22T00:00:00"),p:1368,col:"#f6465d",txt:"①1,368|有效离开|三日+30%"},
+      {t:T("2026-10-19T00:00:00"),p:1048,col:"#2ebd85",txt:"②1,048 低",below:true}
+    ],{title:"ZEC 4h · [1,122~1,254]有效离开(顶1,368·现1,306回踩上沿上方)——离开量度按日线;1,254回抽不回=确认",H:300,now:1306,
+       lines:[{p:1254,col:"#f0b90b",lab:"1,254",w:1.8},{p:1368,col:"#f6465d",lab:"1,368"},{p:1122,col:"#2ebd85",lab:"1,122",side:"r"}]});
+    const kT=await fetchSym("TAOUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartTAO",kT,[
+      {t:T("2026-10-21T22:00:00"),p:278.4,col:"#f6465d",txt:"①278.4 顶|未离开"},
+      {t:T("2026-10-19T00:00:00"),p:254,col:"#2ebd85",txt:"②254 防守",below:true}
+    ],{title:"TAO 4h · 中枢[262~285]6段·顶278未离开(现267.9)——跟随主板;262防守",H:300,now:267.9,
+       lines:[{p:285,col:"#f0b90b",lab:"285",w:1.8},{p:262,col:"#f0883e",lab:"262"},{p:254,col:"#2ebd85",lab:"254",side:"r"}]});
+    const kX=await fetchSym("XAUUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartXAU",kX,[
+      {t:T("2026-10-12T08:00:00"),p:4222.6,col:"#f6465d",txt:"①4,223 顶"},
+      {t:T("2026-10-22T00:00:00"),p:4112.8,col:"#2ebd85",txt:"②4,113|风险偏好周失血",below:true}
+    ],{title:"XAU 4h · 中枢[4,191~4,212]下方连续走弱(现4,118)——风险偏好回升周避险失血;4,081防守",H:300,now:4118,
+       lines:[{p:4191,col:"#f0b90b",lab:"4,191",w:1.8},{p:4081,col:"#2ebd85",lab:"4,081",side:"r"}]});
+    const kN=await fetchSym("NEARUSDT","4h",T("2026-10-08T00:00:00"));
+    draw("chartNEAR",kN,[
+      {t:T("2026-10-22T00:00:00"),p:5.5,col:"#f6465d",txt:"①5.5|离开[4.8~5.4]"},
+      {t:T("2026-10-19T00:00:00"),p:4.6,col:"#2ebd85",txt:"②4.6 双底",below:true}
+    ],{title:"NEAR 4h · 顶5.5离开[4.8~5.4]后回抽5.19(下沿下方)——5.4回抽不跌回=与BTC 82,900同构确认",H:300,now:5.19,
+       lines:[{p:5.4,col:"#f0b90b",lab:"5.4",w:1.8},{p:5.5,col:"#f6465d",lab:"5.5"},{p:4.8,col:"#2ebd85",lab:"4.8",side:"r"}]});
+
+    renderVerdict(now);
+    document.getElementById("updTag").textContent="BTC 快照 @83,470 · 冻结于 10/22 09:55（fapi）";
+  }catch(e){
+    document.getElementById("verdict").innerHTML="⚠ 数据加载失败："+e.message+" —— 已尝试 fapi 与 OKX 备援双源。排查：① ⌘⇧R 强制刷新（清缓存）② F12→Console 看红字 ③ 若显示 Failed to fetch=当前网络到两个数据源均不通（代理/VPN切换后重试）";
+    document.getElementById("verdict").className="verdict r";
+    document.getElementById("updTag").textContent="数据源连接失败";
+  }
+}
+function renderVerdict(now){
+  const el=document.getElementById("verdict");
+  el.className="verdict y";
+  el.innerHTML=`📈 <b>A 二连兑现：昨夜放量 84,875 突破 T2 84,340（超 535 点）——日线 MACD 金叉，但 Tesla"beat 也跌"（EPS $0.48 终结四连 miss 仍盘后小跌）后冲高回落，今晨回踩 83,463（-1.7%，82,900 未破）</b>。复盘 10/21：3✓2✗（60%·A 三项全中）；纪律 ✓（回踩条件再度未触发——连续三天方向对而条件严，改进：回踩条件一律用结构位）。速览：ZEC 中枢有效离开（顶 1,368·三日 +30%）✓、NEAR 顶 5.5 离开回抽、BNB 离开确认=三币共振。今晨递归：<b>周线反弹段基本确认（收复 82,500）· 日线金叉 · 4h 递增双顶（趋势强非背驰）· 30m 高位死叉回调 · 5m 中枢群跌破</b>——中期多头初成 vs 短线过热回调。三演化：<b>A(40%) 82,900 不破+收复 83,463→84,875/87,249；B(35%) 82,900 失守→82,595/82,346 类二买再测；C(25%) 消化等今晚初请</b>。<b>本页为分析快照，不构成执行指令</b>。`;
+}
+load();
+</script>
+</body>
+</html>
