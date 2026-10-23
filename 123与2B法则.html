@@ -34,8 +34,8 @@ table{border-collapse:collapse;width:100%;font-size:12px}
 tr.hd{color:#8ea0bd;font-size:11px}
 td{padding:5px 6px;border-bottom:1px dashed #223049}
 .sym-tabs{display:flex;gap:6px;flex-wrap:wrap}
-#cases tr:hover{background:#141d31;cursor:default}
-#cases tr.cur{background:#1a2440}
+#cases tr[data-num]:hover{background:#141d31;cursor:pointer}
+#cases tr.cur{background:#1a2440;outline:1px solid #bc8cff}
 </style>
 </head>
 <body>
@@ -49,6 +49,7 @@ td{padding:5px 6px;border-bottom:1px dashed #223049}
 <button class="btn" data-iv="30m">30分钟</button>
 </div>
 <button class="btn" id="refreshBtn">⟳ 重新扫描</button>
+<button class="btn" id="backBtn" style="display:none">⤴ 返回总览</button>
 <span class="btn" style="cursor:default" id="updTag">—</span>
 </header>
 <div class="sub"><a class="back" href="index.html">← 主页</a> ｜ <b class="p">2B 法则</b>：跌破前低后快速收回前低上方（新低失败=反转信号，顶部镜像）——对应缠论<b>背驰段的针破收回（假跌破/假突破）</b>；<b class="g">123 法则</b>：①趋势线突破（本页以「下跌线段背景」代替画线）②回测前低失败（低点抬高）③突破前方反弹高点——对应缠论<b>一买（背驰底分型）→ 二买确认（回抽不破前低）→ 突破中枢</b>的确认链。检测基于笔分型端点（mergeK→buildBiM），同源代码与每日缠论一致。<b>本页为学习工具，不构成执行指令。</b></div>
@@ -66,7 +67,7 @@ td{padding:5px 6px;border-bottom:1px dashed #223049}
 
 <div class="chart-card" id="chartMain"></div>
 
-<div class="sec">📋 案例清单（时间倒序 · 点击行高亮图上标注）</div>
+<div class="sec">📋 案例清单（时间倒序 · 点击行=主图聚焦该案例并标①②③ · 再点一次或点「⤴ 返回总览」恢复）</div>
 <div class="pcard" style="grid-column:1/-1">
 <table id="cases">
 <tr class="hd"><td>#</td><td>类型</td><td>时点</td><td>关键位</td><td>确认后幅度</td><td>其后最大延续</td><td>备注</td></tr>
@@ -183,6 +184,7 @@ function draw(boxId,ks,anns,opts){
   const lo0=Math.min(...ks.map(k=>k.l)),hi0=Math.max(...ks.map(k=>k.h));
   let lo=lo0,hi=hi0;
   (opts.lines||[]).forEach(l=>{lo=Math.min(lo,l.p);hi=Math.max(hi,l.p)});
+  (opts.plines||[]).forEach(l=>{lo=Math.min(lo,l.p1,l.p2);hi=Math.max(hi,l.p1,l.p2)});
   const pad=(hi-lo)*0.05;lo-=pad;hi+=pad;
   const Y=p=>mt+(hi-p)/(hi-lo)*ph;
   const at=t=>{let i=0,best=1e18;ks.forEach((k,q)=>{const d=Math.abs(k.t-t);if(d<best){best=d;i=q}});return i};
@@ -196,7 +198,11 @@ function draw(boxId,ks,anns,opts){
   // 结构连线(2B/123 关键点连线)
   (opts.plines||[]).forEach(l=>{const q1=at(l.t1),q2=at(l.t2);
     const x1=xi(q1),x2=xi(q2);
-    s+=`<line x1="${x1.toFixed(1)}" y1="${Y(l.p1).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${Y(l.p2).toFixed(1)}" stroke="${l.col}" stroke-width="1.6" opacity=".9"/>`;});
+    s+=`<line x1="${x1.toFixed(1)}" y1="${Y(l.p1).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${Y(l.p2).toFixed(1)}" stroke="${l.col}" stroke-width="${l.w||1.6}"${l.dash?` stroke-dasharray="${l.dash}"`:""} opacity="${l.op||".9"}"/>`;});
+  // 水平参考线(前低/前高虚线)
+  (opts.lines||[]).forEach(l=>{const y=Y(l.p).toFixed(1);
+    s+=`<line x1="${ml}" y1="${y}" x2="${ml+pw}" y2="${y}" stroke="${l.col||"#66748f"}" stroke-width="1" stroke-dasharray="4,4" opacity=".5"/>`
+     +`<text x="${ml+pw+4}" y="${+y+4}" fill="${l.col||"#8ea0bd"}" font-size="10">${l.lab||F(l.p)}</text>`;});
   ks.forEach(k=>{const q=at(k.t),x=xi(q),up=k.c>=k.o,col=up?"#2ebd85":"#f6465d";
     s+=`<line x1="${x.toFixed(1)}" y1="${Y(k.h).toFixed(1)}" x2="${x.toFixed(1)}" y2="${Y(k.l).toFixed(1)}" stroke="${col}" stroke-width="1"/>`;
     const by=Y(Math.max(k.o,k.c)),bh=Math.max(2,Math.abs(Y(k.c)-Y(k.o)));
@@ -206,7 +212,8 @@ function draw(boxId,ks,anns,opts){
     s+=`<polyline points="${opts.bi.map(p=>xi(p.i).toFixed(1)+","+Y(p.price).toFixed(1)).join(" ")}" fill="none" stroke="#58a6ff" stroke-width="1.3" opacity="0.7"/>`;
   }
   (anns||[]).forEach(a=>{const q=at(a.t),x=xi(q),y=Y(a.p);
-    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10" fill="none" stroke="${a.col}" stroke-width="2.4"/>`;
+    if(a.dot){s+=`<circle data-num="${a.num}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${a.r||5}" fill="${a.col}" opacity=".85" style="cursor:pointer"><title>案例#${a.num} ${a.kind}</title></circle>`;return}
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="none" stroke="${a.col}" stroke-width="2.4"/>`;
     const ty=a.below?y+24:y-16;
     (a.txt||"").split("|").forEach((ln,li)=>{s+=`<text x="${x.toFixed(1)}" y="${(ty+li*13).toFixed(1)}" fill="${a.col}" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0f1a;stroke-width:3px">${ln}</text>`});});
   const ny=Y(opts.now);
@@ -265,43 +272,121 @@ function enableCross(boxId,ks,g){
 const IVCFG={ "1d":{days:300,label:"日线"},"4h":{days:120,label:"4小时"},"1h":{days:40,label:"1小时"},"30m":{days:15,label:"30分钟"} };
 let curIv="1d";
 const COL={"2B底":"#bc8cff","2B顶":"#f0883e","123底":"#2ebd85","123顶":"#f6465d"};
+const G={kls:[],bi:[],all:[],macd:null};
+let curCase=0;   // 0=总览模式, >0=聚焦的案例编号
+/* 线性外推: 已知端点A/B(全量索引与价格), 求线上 i 处的价格 */
+function extAt(A,B,i){return A.price+(B.price-A.price)*(i-A.i)/(B.i-A.i)}
+function confPoint(c){return c.kind==="123底"?c.T3:c.kind==="123顶"?c.B3:c.kind==="2B底"?c.T2:c.B2}
+function spanOf(c){
+  if(c.kind==="123底")return[c.T1.i,c.T3.i];
+  if(c.kind==="123顶")return[c.B1.i,c.B3.i];
+  if(c.kind==="2B底")return[c.B1.i,c.T2.i];
+  return[c.T1.i,c.B2.i];
+}
+/* 总览: 干净K线+笔+各案例确认点圆点(点击圆点=聚焦该案例) */
+function renderOverview(){
+  const cfg=IVCFG[curIv];
+  const now=G.kls[G.kls.length-1][4];
+  const kc=k=>G.all.filter(c=>c.kind===k).length;
+  const anns=G.all.map((c,q)=>({t:confPoint(c).t,p:confPoint(c).price,col:COL[c.kind],dot:true,num:q+1,kind:c.kind}));
+  draw("chartMain",G.kls.map(k=>({t:k[0],o:k[1],h:k[2],l:k[3],c:k[4]})),anns,
+   {title:`BTC ${cfg.label} 总览 · 笔${G.bi.length} · 2B底${kc("2B底")}/2B顶${kc("2B顶")}/123底${kc("123底")}/123顶${kc("123顶")} · 圆点=确认点(点击查看单个形态)`,H:470,now,
+    bi:G.bi,macd:G.macd});
+}
+/* 聚焦单个案例: 窗口=形态前后各留缓冲, 按法则步骤①②③逐点标注 */
+function renderCase(num){
+  const c=G.all[num-1];if(!c)return;
+  const cfg=IVCFG[curIv];
+  const [s0,e0]=spanOf(c);
+  const a=Math.max(0,s0-14), b=Math.min(G.kls.length,e0+34);
+  const kw=G.kls.slice(a,b);
+  const biW=G.bi.filter(p=>p.i>=a&&p.i<b).map(p=>({...p,i:p.i-a}));
+  const macdW={dif:G.macd.dif.slice(a,b),dea:G.macd.dea.slice(a,b),hist:G.macd.hist.slice(a,b)};
+  const col=COL[c.kind];
+  const anns=[],plines=[],lines=[];
+  const P=(pt,txt,below)=>anns.push({t:pt.t,p:pt.price,col,txt,below});
+  const SK="#8ea0bd";  // 趋势线/骨架灰
+  if(c.kind==="2B底"){
+    lines.push({p:c.B1.price,col:"#5a6a85",lab:"B1 前低 "+F(c.B1.price)});
+    P(c.B1,"B1 前低");
+    P(c.B2,"① 创新低 B2<B1",true);
+    P(c.T2,"② 收回前低上方=确认");
+    plines.push({t1:c.B1.t,t2:c.B2.t,p1:c.B1.price,p2:c.B2.price,col,w:2});
+    plines.push({t1:c.B2.t,t2:c.T2.t,p1:c.B2.price,p2:c.T2.price,col,w:2});
+  }else if(c.kind==="2B顶"){
+    lines.push({p:c.T1.price,col:"#5a6a85",lab:"T1 前高 "+F(c.T1.price)});
+    P(c.T1,"T1 前高");
+    P(c.T2,"① 创新高 T2>T1");
+    P(c.B2,"② 跌回前高下方=确认",true);
+    plines.push({t1:c.T1.t,t2:c.T2.t,p1:c.T1.price,p2:c.T2.price,col,w:2});
+    plines.push({t1:c.T2.t,t2:c.B2.t,p1:c.T2.price,p2:c.B2.price,col,w:2});
+  }else if(c.kind==="123底"){
+    const endI=Math.min(G.kls.length-1,c.T3.i+8);
+    const extEnd=extAt(c.T1,c.B1,endI), extT2=extAt(c.T1,c.B1,c.T2.i);
+    plines.push({t1:c.T1.t,t2:c.B1.t,p1:c.T1.price,p2:c.B1.price,col:SK,w:1.5});
+    plines.push({t1:c.B1.t,t2:G.kls[endI][0],p1:c.B1.price,p2:extEnd,col:SK,dash:"5,4",w:1.3,op:".75"});
+    lines.push({p:c.B1.price,col:"#3a4658",lab:"B1 前低"});
+    lines.push({p:c.T2.price,col:"#3a4658",lab:"T2 反弹顶"});
+    P(c.T1,"T1");
+    P(c.B1,"B1 前低");
+    anns.push({t:c.T2.t,p:extT2,col:SK,txt:"① 跌破下降趋势线"});
+    P(c.B2,"② 回测不破前低|B2>B1 低点抬高",true);
+    P(c.T3,"③ 突破前反弹顶|T3>T2 确认");
+    plines.push({t1:c.T1.t,t2:c.B1.t,p1:c.T1.price,p2:c.B1.price,col,w:2});
+    plines.push({t1:c.B1.t,t2:c.T2.t,p1:c.B1.price,p2:c.T2.price,col,w:2});
+    plines.push({t1:c.T2.t,t2:c.B2.t,p1:c.T2.price,p2:c.B2.price,col,w:2});
+    plines.push({t1:c.B2.t,t2:c.T3.t,p1:c.B2.price,p2:c.T3.price,col,w:2});
+  }else{ // 123顶
+    const endI=Math.min(G.kls.length-1,c.B3.i+8);
+    const extEnd=extAt(c.B1,c.B2,endI), extB3=extAt(c.B1,c.B2,c.B3.i);
+    plines.push({t1:c.B1.t,t2:c.B2.t,p1:c.B1.price,p2:c.B2.price,col:SK,w:1.5});
+    plines.push({t1:c.B2.t,t2:G.kls[endI][0],p1:c.B2.price,p2:extEnd,col:SK,dash:"5,4",w:1.3,op:".75"});
+    lines.push({p:c.T1.price,col:"#3a4658",lab:"T1 前高"});
+    lines.push({p:c.B2.price,col:"#3a4658",lab:"B2 回调底"});
+    P(c.B1,"B1");
+    P(c.T1,"T1 前高");
+    P(c.B2,"B2 回调底");
+    P(c.T2,"② 高点降低|T2<T1 回测前高失败");
+    anns.push({t:c.B3.t,p:extB3,col:SK,txt:"① 跌破上升趋势线"});
+    P(c.B3,"③ 跌破前回调底|B3<B2 确认",true);
+    plines.push({t1:c.B1.t,t2:c.T1.t,p1:c.B1.price,p2:c.T1.price,col,w:2});
+    plines.push({t1:c.T1.t,t2:c.B2.t,p1:c.T1.price,p2:c.B2.price,col,w:2});
+    plines.push({t1:c.B2.t,t2:c.T2.t,p1:c.B2.price,p2:c.T2.price,col,w:2});
+    plines.push({t1:c.T2.t,t2:c.B3.t,p1:c.T2.price,p2:c.B3.price,col,w:2});
+  }
+  const now=kw[kw.length-1][4];
+  draw("chartMain",kw.map(k=>({t:k[0],o:k[1],h:k[2],l:k[3],c:k[4]})),anns,
+   {title:`案例 #${num} · ${c.kind} · ${fmtT(c.t,true)} · 确认后 ${c.conf>=0?"+":""}${c.conf.toFixed(1)}% · 其后最大延续 ${c.ext>=0?"+":""}${c.ext.toFixed(1)}%`,H:470,now,
+    bi:biW,plines,lines,macd:macdW});
+}
+function selectCase(num){
+  curCase=(curCase===num)?0:num;   // 再点一次=取消
+  document.querySelectorAll("#cases tr.cur").forEach(tr=>tr.classList.remove("cur"));
+  if(curCase){
+    renderCase(curCase);
+    const tr=document.querySelector(`#cases tr[data-num="${curCase}"]`);if(tr)tr.classList.add("cur");
+    document.getElementById("backBtn").style.display="inline-block";
+    document.getElementById("chartMain").scrollIntoView({behavior:"smooth",block:"nearest"});
+  }else{
+    renderOverview();
+    document.getElementById("backBtn").style.display="none";
+  }
+}
 async function scan(){
   const cfg=IVCFG[curIv];
+  curCase=0;document.getElementById("backBtn").style.display="none";
+  document.querySelectorAll("#cases tr.cur").forEach(tr=>tr.classList.remove("cur"));
   const nowK=await fetchK(curIv,null,null);
   if(!nowK.length){document.getElementById("updTag").textContent="数据源连接失败";return}
   const cutoff=nowK[nowK.length-1].t-cfg.days*86400000;
-  const kls=nowK.filter(k=>k.t>=cutoff).map(k=>[k.t,k.o,k.h,k.l,k.c]);
-  const bi=buildBiM(kls);
-  const c2b=detect2B(bi,kls), c123=detect123(bi,kls);
-  const all=c2b.concat(c123).sort((a,b)=>a.t-b.t);
-  const now=kls[kls.length-1][4];
-  // 标注(全案例;文字标注只放最近14个防重叠,连线全放)
-  const anns=[],plines=[];
-  const shown=all.slice(-14);
-  shown.forEach((c,q)=>{
-    const col=COL[c.kind], num=q+1;
-    if(c.kind==="2B底"){
-      anns.push({t:c.B2.t,p:c.B2.price,col,below:true,txt:num+" 2B底"});
-      plines.push({t1:c.B1.t,t2:c.B2.t,p1:c.B1.price,p2:c.B2.price,col});
-      plines.push({t1:c.B2.t,t2:c.T2.t,p1:c.B2.price,p2:c.T2.price,col});
-    }else if(c.kind==="2B顶"){
-      anns.push({t:c.T2.t,p:c.T2.price,col,txt:num+" 2B顶"});
-      plines.push({t1:c.T1.t,t2:c.T2.t,p1:c.T1.price,p2:c.T2.price,col});
-      plines.push({t1:c.T2.t,t2:c.B2.t,p1:c.T2.price,p2:c.B2.price,col});
-    }else if(c.kind==="123底"){
-      anns.push({t:c.B2.t,p:c.B2.price,col:"g"==="g"?"#2ebd85":"",below:true,txt:num+" 123底|B2>B1"});
-      anns.push({t:c.T3.t,p:c.T3.price,col,txt:"③突破"});
-      plines.push({t1:c.B1.t,t2:c.B2.t,p1:c.B1.price,p2:c.B2.price,col});
-    }else{
-      anns.push({t:c.T2.t,p:c.T2.price,col,txt:num+" 123顶|T2<T1"});
-      anns.push({t:c.B3.t,p:c.B3.price,col,below:true,txt:"③跌破"});
-      plines.push({t1:c.T1.t,t2:c.T2.t,p1:c.T1.price,p2:c.T2.price,col});
-    }
-  });
-  draw("chartMain",kls.map(k=>({t:k[0],o:k[1],h:k[2],l:k[3],c:k[4]})),anns,
-    {title:`BTC ${cfg.label} · 笔${bi.length} · 2B底${c2b.filter(c=>c.kind==="2B底").length}/2B顶${c2b.filter(c=>c.kind==="2B顶").length}/123底${c123.filter(c=>c.kind==="123底").length}/123顶${c123.filter(c=>c.kind==="123顶").length} · 文字标注=最近14例(连线=全部)`,H:470,now,
-     bi,plines,macd:calcMACD(kls)});
+  G.kls=nowK.filter(k=>k.t>=cutoff).map(k=>[k.t,k.o,k.h,k.l,k.c]);
+  G.bi=buildBiM(G.kls);
+  const c2b=detect2B(G.bi,G.kls), c123=detect123(G.bi,G.kls);
+  G.all=c2b.concat(c123).sort((x,y)=>x.t-y.t);
+  G.macd=calcMACD(G.kls);
+  renderOverview();
   // 统计卡
+  const all=G.all;
   const cnt=k=>all.filter(c=>c.kind===k).length;
   const winR=k=>{const arr=all.filter(c=>c.kind===k&&c.ext!==undefined);if(!arr.length)return "—";const w=arr.filter(c=>k.includes("底")?c.ext>0:c.ext<0).length;return (w/arr.length*100).toFixed(0)+"%"};
   document.getElementById("statCard").innerHTML=`<h3>📊 ${cfg.label} 扫描统计（近 ${cfg.days} 天）</h3>
@@ -335,6 +420,14 @@ document.getElementById("ivTabs").addEventListener("click",e=>{
   b.classList.add("active");curIv=b.dataset.iv;scan();
 });
 document.getElementById("refreshBtn").addEventListener("click",scan);
+document.getElementById("backBtn").addEventListener("click",()=>{if(curCase)selectCase(curCase)});
+document.getElementById("cases").addEventListener("click",e=>{
+  const tr=e.target.closest("tr[data-num]");if(tr)selectCase(+tr.dataset.num);
+});
+document.getElementById("chartMain").addEventListener("click",e=>{
+  const el=e.target;
+  if(el.dataset&&el.dataset.num)selectCase(+el.dataset.num);
+});
 scan();
 </script>
 </body>
