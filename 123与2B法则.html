@@ -50,6 +50,7 @@ td{padding:5px 6px;border-bottom:1px dashed #223049}
 </div>
 <button class="btn" id="refreshBtn">⟳ 重新扫描</button>
 <button class="btn" id="backBtn" style="display:none">⤴ 返回总览</button>
+<button class="btn" id="zoomBtn" style="display:none">🔍 放大案例</button>
 <span class="btn" style="cursor:default" id="updTag">—</span>
 </header>
 <div class="sub"><a class="back" href="index.html">← 主页</a> ｜ <b class="p">2B 法则</b>：跌破前低后快速收回前低上方（新低失败=反转信号，顶部镜像）——对应缠论<b>背驰段的针破收回（假跌破/假突破）</b>；<b class="g">123 法则（由空转多）</b>：①下跌趋势线被突破 ②价格不创新低（B2&gt;B1）③突破前一个小反弹高点（T3&gt;T2）；<b class="r">（由多转空）</b>：①上涨趋势线被跌破 ②价格不创新高（T2&lt;T1）③跌破前一个小回调低点（B3&lt;B2）。<b>变形：①②顺序实盘常互换</b>（先不创新高/低、后破线），①②是警告、③是最终确认——对应缠论<b>一买→二买确认→突破中枢</b>的确认链。检测基于笔分型端点（mergeK→buildBiM），与每日缠论同源。<b>本页为学习工具，不构成执行指令。</b></div>
@@ -195,6 +196,9 @@ function draw(boxId,ks,anns,opts){
   const step=Math.max(1,Math.floor(n/10));
   ks.forEach((k,q)=>{if(q%step===0)s+=`<text x="${(ml+(q+0.5)*pw/n).toFixed(1)}" y="${H-8}" fill="#66748f" font-size="10" text-anchor="middle">${fmtT(k.t,true)}</text>`});
   const xi=i=>ml+(i+0.5)*pw/n;
+  // 案例高亮带(全景模式下标示案例所在区间)
+  (opts.vzones||[]).forEach(z=>{const q1=at(z.t1),q2=at(z.t2);
+    s+=`<rect x="${xi(q1).toFixed(1)}" y="${mt}" width="${Math.max(2,(xi(q2)-xi(q1))).toFixed(1)}" height="${ph}" fill="${z.col||"rgba(240,185,11,.08)"}" stroke="${z.stroke||"none"}" stroke-width="0.6"/>`});
   // 结构连线(2B/123 关键点连线)
   (opts.plines||[]).forEach(l=>{const q1=at(l.t1),q2=at(l.t2);
     const x1=xi(q1),x2=xi(q2);
@@ -274,6 +278,7 @@ let curIv="1d";
 const COL={"2B底":"#bc8cff","2B顶":"#f0883e","123底":"#2ebd85","123顶":"#f6465d"};
 const G={kls:[],bi:[],all:[],macd:null};
 let curCase=0;   // 0=总览模式, >0=聚焦的案例编号
+let curZoom=false; // 案例视图: false=全景(全量K线) true=近景(形态窗口)
 /* 线性外推: 已知端点A/B(全量索引与价格), 求线上 i 处的价格 */
 function extAt(A,B,i){return A.price+(B.price-A.price)*(i-A.i)/(B.i-A.i)}
 /* 趋势线实际穿越点: iFrom..iTo 间第一根 越上/跌破 趋势线的K线, 返回{i,lp}或null */
@@ -296,19 +301,26 @@ function renderOverview(){
    {title:`BTC ${cfg.label} 总览 · 笔${G.bi.length} · 2B底${kc("2B底")}/2B顶${kc("2B顶")}/123底${kc("123底")}/123顶${kc("123顶")} · 圆点=确认点(点击查看单个形态)`,H:470,now,
     bi:G.bi,macd:G.macd});
 }
-/* 聚焦单个案例: 窗口=形态前后各留缓冲, 按法则步骤①②③逐点标注 */
-function renderCase(num){
+/* 聚焦单个案例: zoom=false 全景(全量K线+案例高亮带), zoom=true 近景(形态前后窗口); 按法则步骤①②③逐点标注 */
+function renderCase(num,zoom){
   const c=G.all[num-1];if(!c)return;
   const cfg=IVCFG[curIv];
-  const [s0,e0]=spanOf(c);
-  const a=Math.max(0,s0-14), b=Math.min(G.kls.length,e0+34);
-  const kw=G.kls.slice(a,b);
-  const biW=G.bi.filter(p=>p.i>=a&&p.i<b).map(p=>({...p,i:p.i-a}));
-  const macdW={dif:G.macd.dif.slice(a,b),dea:G.macd.dea.slice(a,b),hist:G.macd.hist.slice(a,b)};
+  let kw,biW,macdW,vzones=[];
+  if(zoom){
+    const [s0,e0]=spanOf(c);
+    const a=Math.max(0,s0-14), b=Math.min(G.kls.length,e0+34);
+    kw=G.kls.slice(a,b);
+    biW=G.bi.filter(p=>p.i>=a&&p.i<b).map(p=>({...p,i:p.i-a}));
+    macdW={dif:G.macd.dif.slice(a,b),dea:G.macd.dea.slice(a,b),hist:G.macd.hist.slice(a,b)};
+  }else{
+    kw=G.kls;biW=G.bi;macdW=G.macd;
+    const [s0,e0]=spanOf(c);
+    vzones=[{t1:G.kls[s0][0],t2:G.kls[Math.min(e0,G.kls.length-1)][0],stroke:"rgba(240,185,11,.4)"}];
+  }
   const col=COL[c.kind];
   const anns=[],plines=[],lines=[];
   const P=(pt,txt,below)=>anns.push({t:pt.t,p:pt.price,col,txt,below});
-  const SK="#8ea0bd";  // 趋势线/骨架灰
+  const SK="#f0b90b";  // 趋势线金色
   if(c.kind==="2B底"){
     lines.push({p:c.B1.price,col:"#5a6a85",lab:"B1 前低 "+F(c.B1.price)});
     P(c.B1,"B1 前低");
@@ -363,25 +375,32 @@ function renderCase(num){
   }
   const now=kw[kw.length-1][4];
   draw("chartMain",kw.map(k=>({t:k[0],o:k[1],h:k[2],l:k[3],c:k[4]})),anns,
-   {title:`案例 #${num} · ${c.kind} · ${fmtT(c.t,true)} · 确认后 ${c.conf>=0?"+":""}${c.conf.toFixed(1)}% · 其后最大延续 ${c.ext>=0?"+":""}${c.ext.toFixed(1)}%`,H:470,now,
-    bi:biW,plines,lines,macd:macdW});
+   {title:`案例 #${num} · ${c.kind} · ${fmtT(c.t,true)} · 确认后 ${c.conf>=0?"+":""}${c.conf.toFixed(1)}% · 其后最大延续 ${c.ext>=0?"+":""}${c.ext.toFixed(1)}%${zoom?" · 近景":" · 全景(🔍可放大)"}`,H:470,now,
+    bi:biW,plines,lines,macd:macdW,vzones});
 }
 function selectCase(num){
   curCase=(curCase===num)?0:num;   // 再点一次=取消
+  curZoom=false;
   document.querySelectorAll("#cases tr.cur").forEach(tr=>tr.classList.remove("cur"));
+  const zoomBtn=document.getElementById("zoomBtn");
+  zoomBtn.textContent="🔍 放大案例";
   if(curCase){
-    renderCase(curCase);
+    renderCase(curCase,false);   // 默认全景(全量K线)
     const tr=document.querySelector(`#cases tr[data-num="${curCase}"]`);if(tr)tr.classList.add("cur");
     document.getElementById("backBtn").style.display="inline-block";
+    zoomBtn.style.display="inline-block";
     document.getElementById("chartMain").scrollIntoView({behavior:"smooth",block:"nearest"});
   }else{
     renderOverview();
     document.getElementById("backBtn").style.display="none";
+    zoomBtn.style.display="none";
   }
 }
 async function scan(){
   const cfg=IVCFG[curIv];
-  curCase=0;document.getElementById("backBtn").style.display="none";
+  curCase=0;curZoom=false;
+  document.getElementById("backBtn").style.display="none";
+  document.getElementById("zoomBtn").style.display="none";
   document.querySelectorAll("#cases tr.cur").forEach(tr=>tr.classList.remove("cur"));
   const nowK=await fetchK(curIv,null,null);
   if(!nowK.length){document.getElementById("updTag").textContent="数据源连接失败";return}
@@ -428,6 +447,12 @@ document.getElementById("ivTabs").addEventListener("click",e=>{
 });
 document.getElementById("refreshBtn").addEventListener("click",scan);
 document.getElementById("backBtn").addEventListener("click",()=>{if(curCase)selectCase(curCase)});
+document.getElementById("zoomBtn").addEventListener("click",()=>{
+  if(!curCase)return;
+  curZoom=!curZoom;
+  renderCase(curCase,curZoom);
+  document.getElementById("zoomBtn").textContent=curZoom?"↔ 缩回全景":"🔍 放大案例";
+});
 document.getElementById("cases").addEventListener("click",e=>{
   const tr=e.target.closest("tr[data-num]");if(tr)selectCase(+tr.dataset.num);
 });
