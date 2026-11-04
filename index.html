@@ -8,22 +8,36 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0b111e;color:#cdd6e6;font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh;
 background-image:radial-gradient(1000px 500px at 80% -10%,rgba(240,185,11,.07),transparent),radial-gradient(800px 400px at -10% 110%,rgba(88,166,255,.05),transparent)}
-.wrap{max-width:860px;margin:0 auto;padding:48px 20px 60px}
-header{text-align:center;margin-bottom:34px}
-.badge{display:inline-block;font-size:11px;color:#f0b90b;border:1px solid #f0b90b;padding:3px 14px;border-radius:20px;letter-spacing:2px;margin-bottom:14px}
-h1{font-size:32px;font-weight:700;background:linear-gradient(90deg,#fff 20%,#f0b90b 85%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.wrap{max-width:860px;margin:0 auto;padding:36px 20px 50px}
+header{text-align:center;margin-bottom:26px}
+.badge{display:inline-block;font-size:11px;color:#f0b90b;border:1px solid #f0b90b;padding:3px 14px;border-radius:20px;letter-spacing:2px;margin-bottom:12px}
+h1{font-size:30px;font-weight:700;background:linear-gradient(90deg,#fff 20%,#f0b90b 85%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
 .sub{color:#8ea0bd;font-size:14px}
-.list{display:flex;flex-direction:column;gap:12px;margin-bottom:30px}
-a.card{display:block;background:#0e1626;border:1px solid #223049;border-radius:14px;padding:18px 22px;text-decoration:none;color:#cdd6e6;transition:.2s;position:relative;overflow:hidden}
+.list{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+a.card{display:block;background:#0e1626;border:1px solid #223049;border-radius:14px;padding:16px 20px;text-decoration:none;color:#cdd6e6;transition:.2s;position:relative;overflow:hidden}
 a.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#f0b90b;opacity:0;transition:.2s}
 a.card:hover{border-color:#f0b90b;transform:translateY(-2px);box-shadow:0 8px 24px rgba(240,185,11,.1)}
 a.card:hover::before{opacity:1}
 .card .date{font-size:12px;color:#f0b90b;letter-spacing:1px;margin-bottom:4px}
-.card .name{font-size:17px;font-weight:700;color:#e8eefb;margin-bottom:4px}
-.card .desc{font-size:13px;color:#8ea0bd}
+.card .name{font-size:16px;font-weight:700;color:#e8eefb;margin-bottom:4px;line-height:1.5}
+.card .desc{font-size:12.8px;color:#8ea0bd;line-height:1.7}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .feat{font-size:10.5px;padding:2px 9px;border-radius:11px;background:#161f33;color:#8ea0bd;border:1px solid #223049}
-footer{text-align:center;color:#66748f;font-size:12px;line-height:2;border-top:1px solid #1c2942;padding-top:22px}
+.sec{margin:22px 0 10px;font-size:13px;font-weight:600;padding-left:12px;border-left:3px solid}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:680px){.tools{grid-template-columns:1fr}}
+.arch{margin:10px 0 24px}
+.arch summary{cursor:pointer;padding:10px 16px;background:rgba(88,166,255,.06);border:1px solid rgba(88,166,255,.25);border-radius:10px;font-size:14px;font-weight:600;color:#58a6ff;list-style:none}
+.arch summary::-webkit-details-marker{display:none}
+.arch summary::before{content:"▸ ";transition:.2s}
+.arch[open] summary::before{content:"▾ "}
+.arc-list{display:flex;flex-direction:column;margin-top:8px;border:1px solid #1c2942;border-radius:10px;overflow:hidden}
+a.arc{display:flex;gap:12px;align-items:baseline;padding:8px 16px;text-decoration:none;color:#cdd6e6;background:#0e1626;border-bottom:1px solid #1a2438;font-size:13px;transition:.15s}
+a.arc:last-child{border-bottom:none}
+a.arc:hover{background:#141d31;color:#fff}
+a.arc .d{color:#f0b90b;font-size:12px;min-width:58px}
+a.arc .t{color:#8ea0bd;font-size:12.3px}
+footer{text-align:center;color:#66748f;font-size:12px;line-height:2;border-top:1px solid #1c2942;padding-top:20px}
 footer a{color:#58a6ff;text-decoration:none}
 </style>
 </head>
@@ -32,277 +46,104 @@ footer a{color:#58a6ff;text-decoration:none}
 <header>
 <span class="badge">CHAN · 缠论 · DAILY</span>
 <h1>ChanAnalysisDaily</h1>
-<p class="sub">每日缠论学习与行情问答 · 新闻买入简报 · 一天一页</p>
-<div style="margin-top:14px">
-<a href="realtime.html" style="display:inline-block;padding:9px 26px;background:linear-gradient(90deg,#f0b90b,#e8b339);color:#0b111e;font-weight:700;font-size:15px;border-radius:24px;text-decoration:none;box-shadow:0 2px 12px rgba(240,185,11,.35)">⚡ 实时缠论分析（七币种·多级别联立）</a>
+<p class="sub">每日缠论复盘与推演 · 学习读图工具 · 一天一页</p>
+<div style="margin-top:12px">
+<a href="realtime.html" style="display:inline-block;padding:9px 26px;background:linear-gradient(90deg,#f0b90b,#e8b339);color:#0b111e;font-weight:700;font-size:15px;border-radius:24px;text-decoration:none;box-shadow:0 2px 12px rgba(240,185,11,.35)">⚡ 实时缠论分析（八币种·多级别联立）</a>
 </div>
 </header>
 
-<div style="display:flex;gap:8px;margin-bottom:20px;justify-content:center">
-<span style="font-size:11px;color:#f0b90b;border:1px solid #f0b90b;padding:2px 12px;border-radius:20px">📈 每日缠论</span>
-<span style="font-size:11px;color:#4f9cf9;border:1px solid #4f9cf9;padding:2px 12px;border-radius:20px">📰 新闻简报</span>
-</div>
-
-<div style="margin-bottom:8px;font-size:13px;color:#4f9cf9;font-weight:600;padding-left:12px;border-left:3px solid #4f9cf9">📰 新闻简报（每6小时 · 美股×加密）</div>
-<div class="list">
-<a class="card" href="briefs/brief-20260915-2130.html" style="border-left:3px solid #4f9cf9">
-<div class="date" style="color:#4f9cf9">2026-09-15 21:30 · 第13期 · 新版式</div>
-<div class="name">Clarity Act投票日 · FOMC前夜</div>
-<div class="desc">事实+点评分离的极简流式版式 · SOL ETF流入-96% · ETH七连流出后V型回流 · BTC $77,003待方向</div>
-</a>
-<a class="card" href="briefs/brief-20260827-2200.html" style="border-left:3px solid #4f9cf9">
-<div class="date" style="color:#4f9cf9">2026-08-27 22:00 · 第8期</div>
-<div class="name">NVDA 财报后首日</div>
-<div class="desc">NVDA 跳空高开 +7.3%(225)、纳指 +1.24% · SOL 独走 +9.8% 至 106(八日+40%) · BTC 卡 8 万下方待突破 · 明晚 Warsh 演讲</div>
-</a>
-<a class="card" href="briefs/brief-20260827-1023.html" style="border-left:3px solid #4f9cf9">
-<div class="date" style="color:#4f9cf9">2026-08-27 10:23 · 第7期</div>
-<div class="name">NVDA 财报落地</div>
-<div class="desc">NVDA 大超预期(营收962亿/Q3指引1,080亿)盘后+4.4% · BTC ETF 七连流入、SOL 重上104 · 逆风：PCE粘性+杰克逊霍尔</div>
-</a>
-<a class="card" href="briefs/index.html" style="border-left:3px solid #4f9cf9">
-<div class="date" style="color:#4f9cf9">📋 全部12期存档</div>
-<div class="name">→ 查看所有新闻简报</div>
-</a>
-</div>
-
-<div style="margin:24px 0 8px;font-size:13px;color:#f0b90b;font-weight:600;padding-left:12px;border-left:3px solid #f0b90b">📈 每日缠论分析</div>
-
-<div class="list">
-<a class="card" href="123与2B法则.html" style="border-left:3px solid #bc8cff">
-<div class="date" style="color:#bc8cff">📚 学习工具 · 2026-10-23 上线</div>
-<div class="name">123与2B法则 · BTC多周期形态扫描</div>
-<div class="desc">1d/4h/1h/30m 四周期笔级检测：2B底/2B顶/123底/123顶 自动标注+案例清单+延续胜率统计 · 含法则定义与缠论对照（123≈二买确认链 · 2B≈针破收回）</div>
-<div class="tags"><span class="feat">四周期切换</span><span class="feat">自动标注</span><span class="feat">案例表</span><span class="feat">胜率统计</span></div>
-</a>
+<div class="sec" style="color:#58a6ff;border-color:#58a6ff">🧰 学习工具</div>
+<div class="tools">
 <a class="card" href="ETH_5m缠论读图.html" style="border-left:3px solid #58a6ff">
-<div class="date" style="color:#58a6ff">🔍 学习工具 · 2026-11-04 上线</div>
-<div class="name">ETH 5m 缠论读图 · 255根K线三问</div>
-<div class="desc">一买2,225(面积27%背驰·小转大成立=4h双底第二脚)→三买2,287.8(回抽不回ZG2,274·已兑现)→现处中枢E[2,315~2,324]上沿·上涨段内盘整背驰5%(红柱37.5 vs 1.75)——图上标注+三问三答+知识点清单</div>
-<div class="tags"><span class="feat">一买三证</span><span class="feat">小转大</span><span class="feat">三买五要素</span><span class="feat">背驰定量</span></div>
+<div class="date" style="color:#58a6ff">🔍 缠论读图 · 11-04 上线</div>
+<div class="name">ETH 5m 读图 · 255根K线五问</div>
+<div class="desc">一买/小转大/三买/背驰/减仓决策——图上标注+定量对比（背驰面积5%实测）+实战两问</div>
 </a>
+<a class="card" href="123与2B法则.html" style="border-left:3px solid #bc8cff">
+<div class="date" style="color:#bc8cff">📐 形态扫描 · 10-23 上线</div>
+<div class="name">123与2B法则 · BTC多周期</div>
+<div class="desc">1d/4h/1h/30m 笔级检测自动标注+案例清单+延续胜率 · 点击案例聚焦①②③步骤</div>
+</a>
+<a class="card" href="缠论术语.html" style="border-left:3px solid #2ebd85">
+<div class="date" style="color:#2ebd85">📖 学习手册 · 随时查</div>
+<div class="name">缠论术语图解手册</div>
+<div class="desc">分型/笔/中枢/背驰/三类买卖点/走势终完美——ASCII图解+真实案例</div>
+</a>
+<a class="card" href="背驰学习.html" style="border-left:3px solid #f0883e">
+<div class="date" style="color:#f0883e">📉 实时图解 · 边看边学</div>
+<div class="name">背驰学习</div>
+<div class="desc">K线+成交量+MACD 三栏联动，实时计算背驰四条件，点两根K线对比</div>
+</a>
+</div>
+
+<div class="sec" style="color:#f0b90b;border-color:#f0b90b">📈 每日缠论（最近 5 期）</div>
+<div class="list">
 <a class="card" href="每日缠论_20261104.html">
 <div class="date">2026-11-04 · 🗳️中期选举版(当日更新17:30) · 假跌破V型</div>
 <div class="name">民主党横扫两院——选举恐慌低75,690(4h收盘76,466极限守住76,444差22点)→V型反转78,500(+3.7%)·全币普涨(ZEC+12.7%/NEAR+7.4%)</div>
-<div class="desc">CLARITY Act危殆=监管逆风 · 25段中枢下沿第四次测试=假跌破候选(收盘口径第五次保住) · 78,776第六攻进行时(差276点) · 三演化: A(40%)78,776收盘突破=向上离开→80,345 / C(35%)拉锯等初请(明晚)+非农(周五) / B(25%)77,562跌破=V型失败</div>
+<div class="desc">CLARITY Act危殆=监管逆风 · 25段中枢下沿第四次测试=假跌破候选 · 78,776第六攻进行时(差276点) · 三演化: A(40%)78,776收盘突破→80,345 / C(35%)拉锯等初请+非农 / B(25%)77,562跌破=V型失败</div>
 <div class="tags"><span class="feat">民主党横扫</span><span class="feat">假跌破V型</span><span class="feat">CLARITY逆风</span><span class="feat">78,776第六攻</span></div>
 </a>
 <a class="card" href="每日缠论_20261103.html">
 <div class="date">2026-11-03 · 提现潮+ETF转流出 · 夹缝日</div>
 <div class="name">78,854第四次影线被拒(收盘78,593)·夜盘破77,562至76,641(76,444差197点二守住)·30m中枢21段新纪录·双拒绝</div>
-<div class="desc">复盘11/02: 2✓1✗(67%·影线口径四连拒·主演化A没来) · 消息定数: 被盗63亿(Reuters)+提现47亿趋稳+ETF周五-6.43亿(口径修正) · 山寨先行破位: SOL 90.8/ZEC 1,127/NEAR 3.85 · 三演化: B(35%)76,444跌破=向下离开→76,152三测 / C(40%)换手等非农(周五20:30) / A(25%)77,562收复</div>
+<div class="desc">复盘11/02: 2✓1✗(67%) · 消息定数: 被盗63亿+提现47亿趋稳+ETF周五-6.43亿(口径修正) · 山寨先行破位: SOL 90.8/ZEC 1,127/NEAR 3.85 · 三演化: B(35%)76,444跌破→76,152三测 / C(40%)换手等非农 / A(25%)77,562收复</div>
 <div class="tags"><span class="feat">21段新纪录</span><span class="feat">双拒绝</span><span class="feat">提现47亿</span><span class="feat">山寨先行</span></div>
 </a>
 <a class="card" href="每日缠论_20261102.html">
 <div class="date">2026-11-02 · 事件平息周开局 · 修复验证</div>
 <div class="name">76,152终极防守两次守住(差118点)·反弹笔78,489(+2.9%)·币安PoR 102.11%信心修复·30m十八段中枢第四棒</div>
-<div class="desc">复盘10/30(隔周末): 2✓0✗+2○(C换手主剧本✓·B第一步✓·76,152守住) · 大阴周收官78,313(老中枢体内) · XAU -2.5%=恐慌退潮佐证 · 12月加息押注70%=反弹天花板 · 三演化: A(35%)78,776收盘突破=离开确认→80,345 / B(25%)77,562跌破→76,152二测 / C(40%)中枢延伸等非农(11/06)</div>
+<div class="desc">复盘10/30(隔周末): 2✓0✗+2○ · 大阴周收官78,313(老中枢体内) · XAU -2.5%=恐慌退潮佐证 · 12月加息押注70%=反弹天花板 · 三演化: A(35%)78,776突破→80,345 / B(25%)77,562跌破→76,152二测 / C(40%)中枢延伸等非农</div>
 <div class="tags"><span class="feat">PoR修复</span><span class="feat">18段中枢</span><span class="feat">非农周</span><span class="feat">加息押注70%</span></div>
 </a>
 <a class="card" href="每日缠论_20261030.html">
 <div class="date">2026-10-30 · 🚨币安黑天鹅 · 123底作废</div>
 <div class="name">夜盘新高81,954后两波跳水至76,717(-6.3%)·B1=79,179跌破=结构作废·77,751量度被事件脉冲砸穿·落老中枢[76,152~79,737]</div>
-<div class="desc">复盘10/29: 2✓3✗(40%·黑天鹅推翻"B不改变B1"注) · 全币血洗: NEAR -15%/TAO -11%/BNB -8%(平台币) · XAU -1.3%唯一抗跌 · 新增🚨币圈大事件板块(20亿流出/55亿报道/15亿冻结+行情映射) · 三演化: B(35%)发酵→76,717跌破→75,000 / C(40%)高波动换手 / A(25%)定论→超跌反弹78,242</div>
+<div class="desc">复盘10/29: 2✓3✗(40%·黑天鹅推翻"B不改变B1"注) · 全币血洗: NEAR -15%/TAO -11%/BNB -8% · 新增🚨币圈大事件板块 · 三演化: B(35%)发酵→75,000 / C(40%)高波动换手 / A(25%)定论→超跌反弹78,242</div>
 <div class="tags"><span class="feat">币安事件</span><span class="feat">123底作废</span><span class="feat">老中枢承接</span><span class="feat">黑天鹅纪律</span></div>
 </a>
 <a class="card" href="每日缠论_20261029.html">
 <div class="date">2026-10-29 · ③确认 · 回抽裁判日</div>
 <div class="name">FOMC决议后拉升81,759·123底三步走完(B1 79,179→B2 79,468→T3 80,920三重确认)·4h DIF上穿零轴</div>
-<div class="desc">复盘10/28: 2✓2✗(50%·A方向对但确认发生在决议前10小时·影线口径连续守住) · 决议夜插针80,355扫损后收回(针不算跌破) · 周线止跌基本锁定(高出周开856点) · 三演化: A(40%)回抽80,920不跌回=类二买→82,346 / B(25%)80,462跌破=回抽失败→79,468 / C(35%)高位中枢等GDP(今晚20:30)</div>
+<div class="desc">复盘10/28: 2✓2✗(50%·确认发生在决议前10小时·影线口径连续守住) · 决议夜插针80,355扫损后收回 · 周线止跌基本锁定 · 三演化: A(40%)回抽80,920不跌回=类二买→82,346 / B(25%)80,462跌破→79,468 / C(35%)高位中枢等GDP</div>
 <div class="tags"><span class="feat">123底完成</span><span class="feat">三重确认</span><span class="feat">DIF穿零轴</span><span class="feat">GDP夜</span></div>
 </a>
-<a class="card" href="每日缠论_20261028.html">
-<div class="date">2026-10-28 · FOMC决议日 · 影线③待终审</div>
-<div class="name">凌晨81,271过③位80,920但30m收盘全≤80,910 · 回抽裁判进行时 · 决议北京明天02:00</div>
-<div class="desc">复盘10/27: 2✓2✗(50%·79,685跌破后V反·②失效要分尺度) · 日线底分型确认(84,875→79,179笔终结)+4h反弹笔金叉 · 全币上沿批量测试(BNB 754/ZEC 1,326/NEAR 4.8)与BTC同构=positioning偏多 · 三演化: A(35%)决议后4h收盘站上80,920=③确认→82,346 / B(30%)80,462跌破=影线假突破→77,751 / C(35%)双向插针收敛</div>
-<div class="tags"><span class="feat">影线vs收盘</span><span class="feat">日线底分型</span><span class="feat">FOMC终审</span><span class="feat">positioning</span></div>
-</a>
-<a class="card" href="每日缠论_20261027.html">
-<div class="date">2026-10-27 · FOMC前夜 · ③候选裁判日</div>
-<div class="name">79,179守住(最低79,429差250点)·4h底分型成立(79,685抬高494点)·零下金叉·30m中枢18段(系列新高)</div>
-<div class="desc">复盘10/26: 3✓2✗(60%·A条件链全兑现但只给25%·主演化B给反) · 日线动能首衰减(-364→-350)+低点连续抬高 · 与123法则联动:4h正走③候选(B1 79,179→B2 79,685→T3 80,920待突破) · 三演化: C(40%)缠斗等FOMC决议(北京明天02:00) / A(30%)80,920突破=③确认→82,346 / B(30%)79,685跌破=②失效→77,751</div>
-<div class="tags"><span class="feat">123③候选</span><span class="feat">18段中枢</span><span class="feat">FOMC决议</span><span class="feat">动能首衰减</span></div>
-</a>
-<a class="card" href="每日缠论_20261026.html">
-<div class="date">2026-10-26 · B兑现 · 周线双底保卫战</div>
-<div class="name">作废线80,622失守→79,179周低(差0.6点收回) · 周线收80,114&lt;82,500反弹段否定 · 30m九段升级</div>
-<div class="desc">复盘10/23(隔周末): 3✓3✗(50%·B与周线双裁判兑现/A·C败) · 五级全线同向下·零买点结构日 · 三演化: B(45%)79,179跌破→量度77,751(与消息面77,600合流) / A(25%)守住回抽80,462/81,079 / C(30%)缠斗等FOMC(周四02:00)</div>
-<div class="tags"><span class="feat">周线双底</span><span class="feat">五级同向</span><span class="feat">九段升级</span><span class="feat">FOMC周</span></div>
-</a>
-<a class="card" href="每日缠论_20261023.html">
-<div class="date">2026-10-23 · B深兑现 · 四测裁判日</div>
-<div class="name">84,875顶分型单段-4.7%至80,889(作废线差267点) · 假金叉一天即回 · 三币"离开"全部回吐</div>
-<div class="desc">复盘10/22: 3✓2✗(B方向对但深度超预期·速览六项全错) · 教训: 高位金叉需位置过滤/离开以回抽为最终裁判 · 三演化: B(40%)80,622四测失守→77,751 / A(30%)81,732收复 / C(30%)等周末收官</div>
-<div class="tags"><span class="feat">四测裁判</span><span class="feat">5m十六段</span><span class="feat">假离开记录</span><span class="feat">周线保卫战</span></div>
-</a>
-<a class="card" href="每日缠论_20261022.html">
-<div class="date">2026-10-22 · A二连兑现 · 金叉后回抽裁判日</div>
-<div class="name">昨夜84,875破次级位·日线金叉 · Tesla"beat也跌"二连 · ZEC/NEAR/BNB中枢离开共振</div>
-<div class="desc">复盘10/21: 3✓2✗(A三项全中) · 纪律✓(回踩条件连严三天·改进=用结构位) · 三演化: A(40%)82,900不破→84,875/87,249 / B(35%)深回调82,346类二买 / C(25%)等今晚初请</div>
-<div class="tags"><span class="feat">日线金叉</span><span class="feat">递增双顶</span><span class="feat">离开共振</span><span class="feat">八币种+日历</span></div>
-</a>
-<a class="card" href="每日缠论_20261021.html">
-<div class="date">2026-10-21 · 假离开证伪 · 4h上沿再确认窗口</div>
-<div class="name">昨夜放量上涨笔收复中枢下沿(81,280→83,420) · ZEC/NEAR双八段逼近九段</div>
-<div class="desc">复盘10/20: 3✓2✗(A全兑现)+概率分配打脸记录(B给45%却0根触发·教训固化) · 速览五币全中(ZEC+10.8%) · 三演化: A(40%)82,900回抽不跌回=二式三买→84,340 / B(35%)82,346跌破 / C(25%)消化</div>
-<div class="tags"><span class="feat">二式三买</span><span class="feat">双八段</span><span class="feat">概率同源纪律</span><span class="feat">八币种</span></div>
-</a>
-<a class="card" href="每日缠论_20261020.html">
-<div class="date">2026-10-20 · 下沿得而复失 · 承接带三测前夜</div>
-<div class="name">日线中枢向下离开尝试 · 4h反弹顶分型(82,240递减) · 5m中枢十二段</div>
-<div class="desc">复盘10/19: 2✓3✗(A半兑现:83,158触T1未站稳) · 纪律✓(82,100针破不进场) · 三演化: B(45%)81,146跌破→80,622三测(不破=类二买首选) / A(30%)82,053收复 / C(25%)消化</div>
-<div class="tags"><span class="feat">三测在即</span><span class="feat">类二买窗口</span><span class="feat">满9第四例</span><span class="feat">八币种</span></div>
-</a>
-<a class="card" href="每日缠论_20261019.html">
-<div class="date">2026-10-19 · 一个月复盘 · 日线中枢下沿裁判日</div>
-<div class="name">A剧本超额兑现至87,385 → 双顶回落 · 80,622双底 · 82,500回抽裁判</div>
-<div class="desc">复盘9/18(一个月窗口): 5✓2✗ · T2冻结后2小时补上 · ZEC逼空变盘兑现(-31%) · 周K顶分型成立 · 三演化: A收复82,500回中枢(40%) / B承接带三测(35%) / C收敛(25%)</div>
-<div class="tags"><span class="feat">月度复盘</span><span class="feat">日线中枢</span><span class="feat">双底</span><span class="feat">八币种+NEAR</span></div>
-</a>
-<a class="card" href="每日缠论_20260918.html">
-<div class="date">2026-09-18 · A剧本兑现后回踩 · ZEC历史新高1,516</div>
-<div class="name">加息后普涨日(最高77,150·T2差174点) · 5m中枢十四段</div>
-<div class="desc">复盘9/17: 2✓3✗(周23/27) · 速览三币全中(SOL假跌破/BNB733/XAU避险) · BNB/TAO顶背驰首批反向预警 · 76,275回踩=类二买裁判</div>
-</a>
-<a class="card" href="每日缠论_20260917.html">
-<div class="date">2026-09-17 · FOMC加息25bp落地 · ZEC逼空+20%</div>
-<div class="name">加息不跌+30m底背驰向上离开 · 74,909底分型候选</div>
-<div class="desc">复盘9/16: 1✓2✗(C兑现·反抽带精确命中·周21/24) · BNB 30m十四段+一买兑现 · 底背驰群(BTC/ETH/SOL共振) · 76,096回踩=三买裁判</div>
-</a>
-<a class="card" href="每日缠论_20260916.html">
-<div class="date">2026-09-16 · Clarity Act被阻50-49 · FOMC前夜</div>
-<div class="name">B剧本兑现T1/T2(低74,909) · 承接带消耗定律完全应验</div>
-<div class="desc">复盘9/15: 3✓2✗(周20/22·91%) · 九段裁判位应验日(SOL98.9/ETH2460) · BNB/XAU 30m底背驰一买候选 · 今晚20:00起FOMC静默</div>
-</a>
-<a class="card" href="每日缠论_20260915.html">
-<div class="date">2026-09-15 · Clarity Act投票日+FOMC前夜</div>
-<div class="name">A剧本兑现T1/T2(高79,571) · 30m新中枢向下离开反抽</div>
-<div class="desc">复盘9/14: 3✓2✗(本周17/20) · 九段同日三案例(ETH/SOL 30m九段+TAO 4h十段) · 双事件夜纪律:边沿预警+明晚20:00静默</div>
-</a>
-<a class="card" href="每日缠论_20260914.html">
-<div class="date">2026-09-14</div>
-<div class="name">🔢 30m中枢15段=九段升级活案例 · 4h底分型76,435+柱转红 · FOMC 9/17凌晨</div>
-<div class="desc">周末BTC 76,435~77,494窄幅收敛（C兑现）；9/13 16:00低76,435=日线级别承接带（76,000/76,152/76,403/76,435）第三次精确承接+4h底分型+柱转红；30m中枢[76,716~77,412]从5段延伸到15段——九段检查上线以来首次"满9后继续延伸"活案例=30m升级为4h级别。复盘3✓2✗（本周14/18=77.8%）——两条✗都是"目标位给太远，收敛延伸吞掉空间"。递归：周K顶·日K顶·4h一笔向上（新生）·30m一笔向上·5m向上。FOMC周三演化：A(35%)收上77,412→78,200/B(40%)跌破76,716→76,435第四测→76,152/C(25%)延伸等FOMC（9/17凌晨02:00决息+点阵图）。数据源OKX备援。</div>
-<div class="tags"><span class="feat">FOMC周</span><span class="feat">九段活案例</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260912.html">
-<div class="date">2026-09-12</div>
-<div class="name">✅ CPI世界确认（核心冷却至3.05%）· A剧本全兑现至79,860 · 4h顶背离+30m中枢蓄势</div>
-<div class="desc">9/11夜A剧情完整走完：21:30上涨笔越过T2 78,226至79,301→4h高79,860（阻力带79,229~79,737上方123点）后回落；CPI实际值确认核心同比4.76%→3.05%冷却=温和世界与A互证。复盘打分7✓1✗（本周累计11/13）——唯一✗=20:30针形76,000收回（收盘口径）。ETH 2,403一买→2,666最顺组合兑现。今晨递归：周K顶·日K顶·4h一笔向下（新顶79,860带动能背离=末期标记）·30m一笔向上（底76,943+18%衰竭）·5m回调。周末三演化：A(35%)76,838~76,403出4h底分型→78,544/B(40%)跌破76,838→76,403失守→76,152/C(25%)收敛等FOMC（下周三点阵图）。ZEC/TAO负费率再现。</div>
-<div class="tags"><span class="feat">周末版</span><span class="feat">4h顶背离</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260911.html">
-<div class="date">2026-09-11</div>
-<div class="name">✅ A剧情确认：CPI巨震一根K双向扫损 · 4h底分型给出答案（21:55追加）</div>
-<div class="desc">早间版：CPI日，周K顶·日K顶·4h一笔向下·30m一笔向上（底分型76,403+DIF背离·灰带）·5m一笔回调，76,152日线底=最后防线，A(35%)温和/B(35%)超预期/C(30%)符合按CPI结果三分。21:55追加：20:30一根30m（vol 39,190全周最大）L76,000（跌破76,152后收回=针破）→H78,115（越过T1 77,600）→收77,992——A/B同根各走一半，21:00首根30m收77,486>77,316=A确认；4h底分型76,403确认+上涨笔；ETH 2,433二测不破2,403→过2,480→逼近2,534（下沿一买确认，最顺组合两项全兑现）；七币20:30同步V型。周末视角：4h反弹在日线下跌笔内部，79,229~79,737阻力带，FOMC 9/15-16第二只靴子。</div>
-<div class="tags"><span class="feat">CPI日专版</span><span class="feat">A剧情确认</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260910.html">
-<div class="date">2026-09-10</div>
-<div class="name">🔴 B剧本触发：20:30初请时点击穿三重底 · 77,008距T2仅61点 · 明晚CPI</div>
-<div class="desc">20:45初请后追加：白天77,700~78,200收敛→19:00预演针77,651→20:30数据时点巨量14,911击穿77,706/77,600/77,535三道线到77,008（距T2 76,947差61点）——初请205K符合预期仍跌=时点催化，真实驱动是CPI前夜风险削减；三重底失守=消耗定律第二次应验（9/8三针底→9/10三重底同一剧本）。早上三个双底候选（ETH 2,440/TAO 249.3/XAU 4,345.7）20:30全部破位+SOL破100+BNB逼近709。今晚N1(40%)守76,947修复/N2(40%)失守下探76,152/N3(20%)等CPI。A(40%)收上78,226反弹/B(35%)破77,600→76,947/C(25%)等数据。</div>
-<div class="tags"><span class="feat">数据周核心段</span><span class="feat">三重底判定</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260909.html">
-<div class="date">2026-09-09</div>
-<div class="name">🎯 T2精确到0.1点 · 77,600巨量针双确认 · 4h新中枢下沿争夺</div>
-<div class="desc">9/8夜21:30巨量针77,600.10（5倍量能）——T2精确到0.1点后收回，SOL/ETH/TAO同步针破关键线后全部收回，XAU唯一真破位（4,345）。复盘：早间A(40%)排序连续第二天输给B→晚间B2(45%)修正当日兑现；九段升级卡"差1段满9"当日兑现为向下离开；TAO候选带249.3精确起效。今日：4h新中枢[78,636~79,229]正踩下沿，30m底分型78,360+44%衰竭——A(40%)过78,966修复79,229/B(35%)失守78,226二测77,600/C(25%)收敛等CPI。今日债回购翻倍生效+CPI倒计时2天。结构位精度三连：78,611差25点、102.8差0.02、77,600差0.1。</div>
-<div class="tags"><span class="feat">结构位精度</span><span class="feat">九段升级验证</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260908.html">
-<div class="date">2026-09-08</div>
-<div class="name">🌙B剧本触发：三针底失守78,133 · 等77,600/79,125给答案（19:50欧盘追加）</div>
-<div class="desc">9/8早研判A(40%)站上79,556；13:30~15:30欧盘前单边下破——78,636/78,611双双失守（15:30低78,133超额478点），B(30%)完整触发=连续第二天输给B（教训：亚盘缩量修复的结构改善不作方向依据）。4h新顶分型79,476+下跌笔+新中枢[78,636~79,476]下方；晚间B2(45%)下探T2 77,600/A2(30%)收回79,125/C(25%)等22:30劳动节后首个美股开盘。速览重估：SOL压102.8生死线、ETH差4点不破2,457、BNB逆势新高、TAO回踩进246~256候选带。数据周：周五20:30 CPI+FOMC 9/15-16点阵图。</div>
-<div class="tags"><span class="feat">三针不破</span><span class="feat">双级别共振</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260907.html">
-<div class="date">2026-09-07</div>
-<div class="name">📉 非农3倍超预期 · 突破全部吐回 · 回归宽幅中枢 77,600~81,271</div>
-<div class="desc">9/4夜非农+162K（预期3倍）单根30m -2.31%把9/3突破全部吐回（81,300→78,611）；周末修复后周一亚盘回到80,104=重算中枢上半区。9/4复盘：B剧本（30%）兑现、XAU上调A被数据否定（数据夜不修正概率教训）、全景地图ZEC行首次兑现（+26%至1,258）。16:18追加：B的T1 79,125针刺兑现（78,939），B→50%；TAO第七币首次登场。</div>
-<div class="tags"><span class="feat">中枢上移重算</span><span class="feat">数据夜纪律</span><span class="feat">七币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260904.html">
-<div class="date">2026-09-04</div>
-<div class="name">🚀 92,253手天量突破 · 突破后三买 · 回踩决胜负</div>
-<div class="desc">9/3夜美股盘一根5.4倍量4h阳线77,909→81,333，凌晨最高82,282——一举突破4h上轨79,555+日线前顶81,500（日线二买确认）。区间套二式·突破后三买成立：回踩80,640未跌回，突破确认线79,555。A(45%)回踩后顺势进场看83,500；B(30%)三买失败回抽78,300。30m顶背离灰带警示。BNB、ZEC首次登场（六币种）。</div>
-<div class="tags"><span class="feat">突破后三买</span><span class="feat">日线二买</span><span class="feat">六币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260903.html">
-<div class="date">2026-09-03</div>
-<div class="name">🔁 76,152 二探止跌 · 级别分歧日</div>
-<div class="desc">9/2夜破T1至76,152后拉起（长下影）。30m底背驰成立（23%+DIF抬高）驱动反弹，4h底背驰未确认（11%灰带被夜盘续命成59%）——4h下跌笔内部的30m反弹。回踩76,927不破=二买拼图就位，裁决线77,547。ETH弱于BTC，SOL回中枢，XAU新低4288最弱。</div>
-<div class="tags"><span class="feat">级别分歧</span><span class="feat">30m底背驰</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260902.html">
-<div class="date">2026-09-02</div>
-<div class="name">📉 三角下破 · 76,385 针穿防守位</div>
-<div class="desc">昨夜砸穿全部下沿：77,401→77,350（三角下破）→刺穿防守位76,947→最低76,385→针穿收回。今晨回抽77,645精确卡在大中枢ZD——三卖前置全就位，只差反弹确认死亡。ETH比BTC先破位，SOL破100.2转弱，XAU新低4,329最弱。（OKX源）</div>
-<div class="tags"><span class="feat">三角下破</span><span class="feat">三卖裁决</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260901.html">
-<div class="date">2026-09-01</div>
-<div class="name">⏳ 收敛三角末梢 · 79,384 第四测在即</div>
-<div class="desc">77,600第四次守住（B连续三天兑现），夜盘79,229冲高无背驰。4h新中枢76,947~78,315向上离开中——回踩78,315不破=4h三买候选。本周首次A+B合计80%都给多头。XAU破位新低4,421最弱。</div>
-<div class="tags"><span class="feat">三角末梢</span><span class="feat">4h三买候选</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260831.html">
-<div class="date">2026-08-31</div>
-<div class="name">🎢 过山车之夜 · 77,600 第三次测试</div>
-<div class="desc">B冲顶79,384（目标超额）→凌晨多头清算反转→76,947全额回吐——A、B剧本先后各自兑现，"方向对≠单子对"。4h收敛三角（高点降低+低点抬升）向顶点压缩。ETH精确触及ZG 2,533后回下沿，SOL转弱跌回103下方。</div>
-<div class="tags"><span class="feat">收敛三角</span><span class="feat">顺序之伤</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260830.html">
-<div class="date">2026-08-30</div>
-<div class="name">🔄 假离开确认 · 78,300三次不过</div>
-<div class="desc">昨夜B剧本兑现（概率给反了，诚实复盘）：上破77,730→78,315，闪崩确认为4h大中枢假离开。今日78,300三次冲击依次降低+红柱423→0+15m顶背驰=反弹衰竭聚集。中枢内纪律：不做中段。</div>
-<div class="tags"><span class="feat">假离开</span><span class="feat">盘整背驰</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260829.html">
-<div class="date">2026-08-29</div>
-<div class="name">🌃 夜盘闪崩 76,853 · 4h 三卖测试 77,600</div>
-<div class="desc">昨日A·二卖空完整兑现：79,840精准受阻→连破目标超额下杀76,853。日线顶分型确认。今看4h中枢ZD 77,600回抽回不回——三卖（45%）/假离开（30%）/新低（25%）。ETH回中枢偏强，SOL最强，XAU最弱。</div>
-<div class="tags"><span class="feat">复盘兑现</span><span class="feat">4h三卖</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260828.html">
-<div class="date">2026-08-28</div>
-<div class="name">🎯 中枢上移 · 81,271的最终考验</div>
-<div class="desc">隔夜最高80,845（距81,271仅426点）。4h潜在第二中枢(79,707~80,845)形成中=4h上涨趋势候选。30m中枢上移1,200点=多头结构。区间套逐级定位。</div>
-<div class="tags"><span class="feat">中枢上移</span><span class="feat">区间套</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260827.html">
-<div class="date">2026-08-27</div>
-<div class="name">🎯 日线顶分型确认 · 双级别回调开启</div>
-<div class="desc">昨日演化B(40%)兑现但未走完。更重要的：日线顶分型正式确认(81,271→79,200→79,000)，双级别回调开启，深度预算加档至第二梯队。含复盘、三演化推演、四币种速览。</div>
-<div class="tags"><span class="feat">日线顶分型✓</span><span class="feat">双级别回调</span><span class="feat">四币种</span></div>
-</a>
-<a class="card" href="每日缠论_20260826.html">
-<div class="date">2026-08-26</div>
-<div class="name">🎯 二卖剧本 · BTC 4h顶分型后的反弹监控</div>
-<div class="desc">81,271 顶分型确认 → 压力簇 79,300~79,556 埋伏 → 收敛三角 77,800~79,540 等第二次测试。含区间套卖出版、5m实盘演练、受阻梯队、马后炮复盘。</div>
-<div class="tags"><span class="feat">自动状态判定</span><span class="feat">区间套镜像</span><span class="feat">斐波那契共振</span><span class="feat">马后炮</span></div>
-</a>
-<a class="card" href="案例复盘_BTC0824二买.html">
-<div class="date">2026-08-24 案例（被 8/26 笔记引用）</div>
-<div class="name">📋 BTC 8/24 平台三探底与二买确认</div>
-<div class="desc">高位中枢三探不破 → 16:00 低点抬高二买 → 平台突破 +4.5%。五节结构：全景 → 反转确认 → 区间套 → 级别透视 → 教科书汇总。</div>
-<div class="tags"><span class="feat">五图标注</span><span class="feat">买卖镜像</span><span class="feat">级别自相似</span></div>
-</a>
 </div>
 
-
-<div style="margin:24px 0 8px;font-size:13px;color:#bc8cff;font-weight:600;padding-left:12px;border-left:3px solid #bc8cff">📚 知识库</div>
-<div class="list">
-<a class="card" href="缠论术语.html" style="border-left:3px solid #bc8cff">
-<div class="date" style="color:#bc8cff">学习手册 · 18+术语 · 随时查</div>
-<div class="name">📐 缠论术语图解手册</div>
-<div class="desc">分型/笔/中枢/背驰/三类买卖点/走势类型/级别传导/走势终完美/同级别分解——配ASCII图解+真实K线案例+工具应用。</div>
-</a>
-<a class="card" href="背驰学习.html" style="border-left:3px solid #bc8cff">
-<div class="date" style="color:#bc8cff">实时图解 · 5m/15m/1h/4h · 边看边学</div>
-<div class="name">📉 背驰学习</div>
-<div class="desc">K线+成交量+MACD黄白线三栏实时联动，自动标注前高/中枢/当前段，实时计算背驰四条件，点击两根K线对比形态。</div>
-</a>
+<details class="arch"><summary>📁 历史存档（10/28 及更早 · 30 期 + 案例）</summary>
+<div class="arc-list">
+<a class="arc" href="每日缠论_20261028.html"><span class="d">10-28</span><span>FOMC决议日 · 影线③待终审——81,271过③位但30m收盘全≤80,910<span class="t"> · 回抽裁判进行时</span></span></a>
+<a class="arc" href="每日缠论_20261027.html"><span class="d">10-27</span><span>FOMC前夜 · ③候选裁判日——79,179守住·4h底分型成立·18段中枢<span class="t"> · 79,685抬高494点</span></span></a>
+<a class="arc" href="每日缠论_20261026.html"><span class="d">10-26</span><span>B兑现 · 周线双底保卫战——作废线80,622失守→79,179周低(差0.6点收回)<span class="t"> · 周线反弹段否定</span></span></a>
+<a class="arc" href="每日缠论_20261023.html"><span class="d">10-23</span><span>B深兑现 · 四测裁判日——84,875顶分型单段-4.7%至80,889<span class="t"> · 假金叉一天即回</span></span></a>
+<a class="arc" href="每日缠论_20261022.html"><span class="d">10-22</span><span>A二连兑现 · 金叉后回抽裁判日——84,875破次级位·日线金叉<span class="t"> · 三币离开共振</span></span></a>
+<a class="arc" href="每日缠论_20261021.html"><span class="d">10-21</span><span>假离开证伪 · 4h上沿再确认——放量收复中枢下沿(81,280→83,420)<span class="t"> · ZEC/NEAR双八段</span></span></a>
+<a class="arc" href="每日缠论_20261020.html"><span class="d">10-20</span><span>下沿得而复失 · 承接带三测前夜——日线离开尝试·4h反弹顶分型<span class="t"> · 5m中枢十二段</span></span></a>
+<a class="arc" href="每日缠论_20261019.html"><span class="d">10-19</span><span>一个月复盘 · 日线中枢下沿裁判日——A剧本超额兑现至87,385→双顶回落<span class="t"> · 80,622双底</span></span></a>
+<a class="arc" href="每日缠论_20260918.html"><span class="d">09-18</span><span>A剧本兑现后回踩 · ZEC历史新高1,516<span class="t"> · 加息后普涨(最高77,150)</span></span></a>
+<a class="arc" href="每日缠论_20260917.html"><span class="d">09-17</span><span>FOMC加息25bp落地 · ZEC逼空+20%<span class="t"> · 加息不跌+30m底背驰向上离开</span></span></a>
+<a class="arc" href="每日缠论_20260916.html"><span class="d">09-16</span><span>Clarity Act被阻50-49 · FOMC前夜<span class="t"> · B剧本兑现T1/T2(低74,909)</span></span></a>
+<a class="arc" href="每日缠论_20260915.html"><span class="d">09-15</span><span>Clarity Act投票日+FOMC前夜<span class="t"> · A剧本兑现T1/T2(高79,571)</span></span></a>
+<a class="arc" href="每日缠论_20260914.html"><span class="d">09-14</span><span>30m中枢15段=九段升级活案例<span class="t"> · 4h底分型76,435+柱转红</span></span></a>
+<a class="arc" href="每日缠论_20260912.html"><span class="d">09-12</span><span>CPI世界确认(核心冷却3.05%) · A剧本全兑现至79,860<span class="t"> · 4h顶背离</span></span></a>
+<a class="arc" href="每日缠论_20260911.html"><span class="d">09-11</span><span>A剧情确认：CPI巨震一根K双向扫损<span class="t"> · 4h底分型76,403给出答案</span></span></a>
+<a class="arc" href="每日缠论_20260910.html"><span class="d">09-10</span><span>B剧本触发：初请时点击穿三重底<span class="t"> · 77,008距T2仅61点</span></span></a>
+<a class="arc" href="每日缠论_20260909.html"><span class="d">09-09</span><span>T2精确到0.1点 · 77,600巨量针双确认<span class="t"> · 4h新中枢下沿争夺</span></span></a>
+<a class="arc" href="每日缠论_20260908.html"><span class="d">09-08</span><span>B剧本触发：三针底失守78,133<span class="t"> · 等77,600/79,125给答案</span></span></a>
+<a class="arc" href="每日缠论_20260907.html"><span class="d">09-07</span><span>非农3倍超预期 · 突破全部吐回<span class="t"> · 回归宽幅中枢77,600~81,271</span></span></a>
+<a class="arc" href="每日缠论_20260904.html"><span class="d">09-04</span><span>92,253手天量突破 · 突破后三买 · 回踩决胜负<span class="t"> · BNB/ZEC登场</span></span></a>
+<a class="arc" href="每日缠论_20260903.html"><span class="d">09-03</span><span>76,152二探止跌 · 级别分歧日<span class="t"> · 30m底背驰驱动的4h内部反弹</span></span></a>
+<a class="arc" href="每日缠论_20260902.html"><span class="d">09-02</span><span>三角下破 · 76,385针穿防守位<span class="t"> · 三卖前置全就位</span></span></a>
+<a class="arc" href="每日缠论_20260901.html"><span class="d">09-01</span><span>收敛三角末梢 · 79,384第四测在即<span class="t"> · 77,600第四次守住</span></span></a>
+<a class="arc" href="每日缠论_20260831.html"><span class="d">08-31</span><span>过山车之夜 · 77,600第三次测试<span class="t"> · A、B先后各自兑现</span></span></a>
+<a class="arc" href="每日缠论_20260830.html"><span class="d">08-30</span><span>假离开确认 · 78,300三次不过<span class="t"> · 反弹衰竭聚集</span></span></a>
+<a class="arc" href="每日缠论_20260829.html"><span class="d">08-29</span><span>夜盘闪崩76,853 · 4h三卖测试77,600<span class="t"> · A·二卖空完整兑现</span></span></a>
+<a class="arc" href="每日缠论_20260828.html"><span class="d">08-28</span><span>中枢上移 · 81,271的最终考验<span class="t"> · 4h上涨趋势候选</span></span></a>
+<a class="arc" href="每日缠论_20260827.html"><span class="d">08-27</span><span>日线顶分型确认 · 双级别回调开启<span class="t"> · NVDA财报日</span></span></a>
+<a class="arc" href="每日缠论_20260826.html"><span class="d">08-26</span><span>二卖剧本 · BTC 4h顶分型后的反弹监控<span class="t"> · 区间套卖出版</span></span></a>
+<a class="arc" href="案例复盘_BTC0824二买.html"><span class="d">案例</span><span>BTC 8/24 平台三探底与二买确认<span class="t"> · 五节结构：全景→反转→区间套→级别→教科书</span></span></a>
 </div>
+</details>
 
 <footer>
 ChanAnalysisDaily · 数据源 Binance Futures API · 纯前端，浏览器直开即用<br>
