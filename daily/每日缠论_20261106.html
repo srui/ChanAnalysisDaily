@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>每日缠论 · 2026-11-06</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b111e;color:#cdd6e6;font:14px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:14px 16px 40px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:8px}
+h1{font-size:19px;color:#f6465d;margin-right:auto}
+h1 small{font-size:11.5px;color:#7b8aa5;font-weight:400;margin-left:8px}
+.btn{background:#161f33;border:1px solid #2a3852;color:#cdd6e6;border-radius:7px;padding:5px 12px;cursor:pointer;font-size:13px}
+.btn:hover{border-color:#f6465d;color:#f6465d}
+.sub{font-size:12.5px;color:#8ea0bd;margin-bottom:10px;line-height:1.7}
+.sub b{color:#e8eefb}
+.verdict{border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:12px;line-height:1.8}
+.verdict.g{background:rgba(46,189,133,.08);border:1px solid rgba(46,189,133,.35)}
+.verdict.y{background:rgba(240,185,11,.08);border:1px solid rgba(240,185,11,.35)}
+.verdict.r{background:rgba(246,70,93,.08);border:1px solid rgba(246,70,93,.35)}
+.chart-card{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:8px;margin-bottom:14px;position:relative}
+svg{display:block;width:100%;height:auto;cursor:crosshair}
+.ctip{position:absolute;pointer-events:none;background:rgba(10,16,28,.95);border:1px solid #33445f;border-radius:8px;padding:7px 10px;font-size:12px;line-height:1.7;display:none;z-index:5;white-space:nowrap}
+.ctip b{color:#f0b90b}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:12px 0}
+.pcard{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:13px 15px}
+.pcard h3{font-size:13.5px;margin-bottom:8px}
+.jrow{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed #223049;font-size:12.8px}
+.jrow:last-child{border:none}
+.jrow .v{text-align:right;color:#e8eefb}
+.g{color:#2ebd85}.r{color:#f6465d}.y{color:#f0b90b}.b{color:#58a6ff}
+.tips{margin-top:8px;padding-left:17px;font-size:12.4px;color:#aeb9cf;line-height:1.8}
+.note{margin-top:10px;font-size:11.5px;color:#66748f}
+.sec{font-size:15px;color:#f6465d;font-weight:700;margin:20px 0 8px;padding-left:10px;border-left:3px solid #f6465d}
+</style></head>
+<body>
+<div class="wrap">
+<header>
+<h1>📖 每日缠论 · 2026-11-06 <small>📉 AI 崩盘夜 · 假突破否定 · 76,152 终极防守失守 —— 初请 18.9 万（57 年新低）+纳指 100 -6.36%（AI cash-burn 恐慌）→ BTC 单根 4h -6.1% 至 75,525 · 夜盘低 75,158=76,152 收盘失守（两根） · 日线假金叉 · 30m 双底候选+金叉回升 · 今晚非农终审 · BTC/ETH/SOL/BNB/ZEC/TAO/XAU/NEAR</small></h1>
+<span class="btn" style="cursor:default">🔒 11/06 09:00 快照</span>
+<span class="btn" style="cursor:default" id="updTag">—</span>
+</header>
+<div class="sub"><a class="back" href="../index.html">← 主页</a> ｜ 级别结论先行：<b>周K 本周 O 78,313 H 81,188 L 75,158 现 76,290（周线转阴 -2.6%）、日K 11/05 大阴 -6.4%（吞没前三日涨幅）·<b>昨日金叉（+20）被一口吞没（-293）=假金叉</b>、4h 下跌笔 81,188→75,158（-7.4%）·零上死叉深跌（hist -315）、30m <b>双底候选 75,525/75,158</b>+金叉回升（hist +154）、5m 反弹笔 76,381 进行中</b>。核心定性：<b>「向上离开」被否定（6 天内第二个假突破）+76,152 终极防守 4h 收盘失守（两根）=日线老中枢向下离开确认，量度 75,000/74,6xx</b>。<b>本页为快照分析，不构成执行指令。</b></div>
+<div id="verdict" class="verdict r">加载中…</div>
+<div class="chart-card" id="chart4h"></div>
+<div class="chart-card" id="chart30m"></div>
+<div class="chart-card" id="chart15m"></div>
+
+<div class="pcard fix" style="grid-column:1/-1;border-left:3px solid #f6465d"><h3>📌 TL;DR（09:00 @76,290 · fapi）</h3>
+<div class="jrow"><span>级别结论</span><span class="v"><b class="r">暴跌三因击穿全部多头结构</b>——假突破否定（80,345 两根确认被第三根 4h 收盘 76,007 推翻）+76,152 终极防守收盘失守（两根）+日线假金叉；30m 双底候选是当前唯一的反弹证据</span></div>
+<div class="jrow"><span>关键位</span><span class="v"><b>75,158（昨夜低=双底第二脚）</b>／<b>75,000（跌破 76,152 的量度·Schiff 前瞻位）</b>／76,152（老下沿=现阻力）／76,444（旧中枢下沿）／78,776（旧上沿=强阻力）／74,6xx（更深量度）</span></div>
+<div class="jrow"><span>纪律</span><span class="v"><b>今晚非农（20:30）=终审</b>——12 月加息押注 70% 的验证；数据后第一根 4h 收完再定性；75,158 跌破=量度 75,000 打开；反弹在 76,444/78,776 的受阻=下跌中继确认</span></div>
+</div>
+
+<div class="pcard fix" style="grid-column:1/-1;border-left:3px solid #f6465d"><h3>🚨 暴跌专题 · 为什么暴跌？（三层原因 · 用户重点关注）</h3>
+<div style="font-size:13px;line-height:2.0;color:#c9d4e0">
+<b class="r">① 导火索：AI/芯片股崩盘（美股时段）</b>——<b>纳指 100 -6.36%、纳指综指 -5.5%（收 24,315）、道指 -3.44%、标普 -1.6~3%（2025 年"解放日"关税以来最差单日）</b>：AI 现金消耗恐慌（AI cash-burn fears）引发芯片/AI 股抛售（<a href="https://investinglive.com/news/investinglive-americas-fx-news-wrap-5-nov-nasdaq-100-plunges-6-36-as-ai-selloff-spreads" style="color:#58a6ff">InvestingLive</a>）——<b>这与 10 月中旬以来"AI Doom"背景一脉相承</b>（9 月 jobs shock 曾 15 分钟清算 200 亿）。BTC 的高 beta 属性=tech 抛售的第一溢出对象。<br>
+<b class="r">② 宏观火药：初请 18.9 万=57 年新低（20:30 北京·精确时点）</b>——远低于预期 19.6~19.7 万（前值 19.5 万下修）、四周均值 19.475 万、Q3 劳动生产率大增（<a href="https://www.reuters.com/business/world-at-work/us-weekly-jobless-claims-57-year-lows-amid-low-layoffs-2026-11-05" style="color:#58a6ff">Reuters</a>/<a href="https://www.dol.gov/ui/data.pdf" style="color:#58a6ff">DOL</a>）——<b>就业极强=「更高更久」定价强化</b>：12 月加息押注（70%）获得验证性支持，利率敏感资产集体承压。暴跌启动的时点（20:30 后）与初请发布精确吻合。<br>
+<b class="r">③ 放大器：杠杆清算连锁</b>——BTC 一小时内 78,767→75,986（-3.5%），<b>数亿美元杠杆多头爆仓</b>（<a href="https://cryptoticker.io/en/bitcoin-falls-below-77000-chip-selloff-liquidations" style="color:#58a6ff">Cryptoticker</a>/<a href="https://bitcoinmagazine.com/markets/bitcoin-price-drops-below-75000-tech" style="color:#58a6ff">Bitcoin Magazine</a>）——与 10/24、10/30 同构：亚盘薄流动性+机械清算放大跌幅。<br>
+<b class="y">结构视角（为什么跌这么深）</b>：昨日的突破（80,274 收盘）建立在<b>ETF 三连流出的背离</b>上——11/05 页明确预警"若高位继续流出，82,346 前顶背驰概率上升"：背离的悬空结构+外部催化（AI 崩盘）=回撤深度直达结构底部（75,158 正好回补 10/30 跳水区间的上沿）。<b>缠论点评：消息给了时点与幅度，背离给了脆弱性，清算给了深度——三层各司其职</b>。</div>
+</div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>⏱ 时间线：11/05 19:40 → 11/06 09:00（暴跌夜 · -6.4%）</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0">11/05 19:40 冻结 80,326（初请前 50 分钟）→ 20:00 4h 收盘窗口 → <b>20:30 初请 18.9 万（57 年新低）</b>→ 美股开盘（21:30）AI/芯片崩盘启动 → <b>BTC 80,390→75,525（4h 单根 -6.1%·L 75,525 @23:30）</b>——79,905 生命线/79,737/78,776 旧上沿/76,444 旧下沿/76,152 终极防守<b>五道线一根击穿</b> → 11/06 00:00 4h 收 76,336（<b>76,152 收盘下方第一根</b>）→ 03:30 反弹 76,532 → <b>07:00 第二脚 75,158</b>（<b>距 75,000 量度仅 158 点</b>·30m 双底候选）→ 04:00 4h 收 76,050（<b>76,152 收盘下方第二根=日线老中枢向下离开确认</b>）→ 晨间反弹 76,381 → 09:00 报 76,290（回抽 76,152 老下沿上方）。<b>结果：11/05 三演化 B（25%）兑现且远超（78,776 之外的 75,525）；A 的"两根确认"被第三根推翻；全币血洗：ETH -7.9%/NEAR -7.5%/TAO -7.1%（再破 219.6）/SOL -6.0%/BNB -3.8%；ZEC +0.3%/XAU +0.8% 逆势独强（避险+事件修复叙事）</b>。11/05 日 K：O 80,466 H 80,888 L 75,158 C 76,050（大阴 -6.4%·实体吞没 11/02-04 三日涨幅）。</div>
+</div>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.3);border-radius:8px;font-size:14.5px;font-weight:600;color:#58a6ff">📖 复盘 · 11/05 三演化·二值打分 2✓2✗（复盘窗口=11/05 19:40→11/06 09:00 · 判定基准=fapi 4h/30m）（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1"><h3>📋 打分表：11/05 三演化</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">预判条目（出处）</td><td>判定标准</td><td>结果</td><td>事实</td></tr>
+<tr><td style="padding:5px">B · 79,905 跌破=回抽失守（25%）</td><td>4h 收盘 &lt;79,905</td><td class="g"><b>✓（远超）</b></td><td>4h 收 76,007——79,737/78,776/76,444/76,152 四道线同根击穿</td></tr>
+<tr><td style="padding:5px">B · 观察 79,737/78,776</td><td>触及</td><td class="g"><b>✓</b></td><td>全部触及且跌破——78,776 旧上沿失守=「向上离开」否定</td></tr>
+<tr><td style="padding:5px">A · 80,345 收盘站稳→82,346（35%）</td><td>持续站稳</td><td class="r"><b>✗（两根确认被推翻）</b></td><td>08:00/12:00 两根收盘在线上，20:00 根收 76,007 推翻——初请夜第三根定案</td></tr>
+<tr><td style="padding:5px">C · 80,050~81,188 换手等数据（40% 主演化）</td><td>区间维持</td><td class="r"><b>✗（夜盘终结）</b></td><td>白天换手 10 小时✓，初请后区间被击穿</td></tr>
+</table>
+<div style="margin-top:8px;font-size:12.5px">📊 预判 <b class="g">2✓</b> <b class="r">2✗</b>（50%·B 的路径全兑现但只给 25%——外部崩盘的不可预测性）。累计 36✓30✗（54.5%）。纪律栏：<b>✓昨日预案的 B 行"79,905 跌破=减仓至底仓"是明确写出的——执行了则暴跌夜损失可控（80,326→76,290 的 -5% 大部分被规避）</b>；✓"数据前不加仓"=初请前夜没有追多。</div>
+</div>
+<div class="pcard"><h3>⚠️「两根确认被第三根推翻」的方法论（不计分·本周第二课）</h3>
+<div style="font-size:12.5px;line-height:1.8;color:#c9d4e0">80,345 的 4h 收盘确认：08:00 根 ✓、12:00 根 ✓——19:40 更新版判定"确认已达成"；<b>20:00 根（初请同窗）收 76,007 推翻一切</b>。方法论修正：①<b>收盘确认是"过程确认"不是"终局确认"</b>——N 根确认后的第 N+1 根永远可以推翻，所以确认后必须立刻挂防守位（79,905），跌破即离场——<b>确认的意义是"可以进场"不是"可以不管"</b>；②数据夜（初请/非农）的确认要打折——昨页已写"数据前不加仓"，但"确认已达成"的表述过于自信，应写"待数据夜检验"；③6 天两个假突破（10/28 ③确认→黑天鹅、11/05 向上离开→AI 崩盘）——<b>外部事件的密度本身就是 2026 年 Q4 的市场特征，确认后的事件风险溢价要计入</b>。</div>
+</div>
+<div class="pcard"><h3>速览预判复盘（11/05 · 不计分）</h3>
+<div style="font-size:12.5px;line-height:1.8;color:#c9d4e0">① ETH 2,449 上方 ✗（暴跌至 2,244·-7.9%）；② SOL 98.16 ✗（90.25·-6.0%）；③ BNB 724 ✗（695·-3.8% 相对抗跌）；④ ZEC 1,352 ✓✓（1,322·<b>+0.3% 逆势独强=八币最勇</b>）；⑤ TAO 240 ✗✗（219.89·-7.1% <b>再破 219.6 终极防守</b>）；⑥ XAU ✓✓（4,105·+0.8% 避险独强）；⑦ NEAR 4.276 ✗✗（3.765·-7.5% 新低区）。<b>暴跌夜图谱：高 beta 全灭（ETH/NEAR/TAO/SOL -6~-8%）、平台币相对抗跌（BNB -3.8%）、ZEC/XAU 逆势（避险+独立叙事）——与 10/30 黑天鹅夜同构但更深</b>。</div>
+</div>
+</div></details>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>五级递归联立：本级别一笔=次级别一段（每级配 K 线证据）</h3>
+<div style="font-size:13px;line-height:1.95;color:#c9d4e0">
+<b class="b">① 周K：周线转阴·长上影</b>——本周周K O 78,313 H 81,188 L 75,158 现 76,290（-2.6%）：81,188 上影+75,158 下影=全周 7.6% 振幅的巨震周；收 &lt;76,152=周线大阴（下周续跌动能）；收 &gt;78,313=收复周开（奇迹）。周线这笔=日线级别多段。
+<b class="b">② 日K：大阴吞没+假金叉</b>——11/05 日 K -6.4% 吞没 11/02-04 三日涨幅；<b>昨日金叉（hist +20）被 -293 一口吞没=假金叉记录</b>（本周第三个"假"字记录：假突破、假离开、假金叉）；日线下跌笔 81,188→75,158 进行中；<b>日线老中枢 [76,152~79,737] 向下离开确认（4h 收盘两根在 76,152 下方）——量度 75,000/74,6xx</b>。日线这笔=4h 级别一段。
+<b class="b">③ 4h：下跌笔 -7.4%·零上死叉深跌</b>——81,188→75,158 单段（-7.4%）；4h MACD 零上死叉 hist +58→-130→-261→<b>-315 深跌放大</b>（dif -256 跌穿零轴）；反弹笔候选=75,158→76,381（晨间）；裁判=76,444（旧中枢下沿=回抽阻力）与 75,158（双底失守线）。4h 这笔=30m 级别多段。
+<b class="b">④ 30m：双底候选+金叉回升</b>——<b>75,525（23:30）/75,158（07:00）双底候选</b>（第二脚略低 367 点=弱双底）；30m MACD 深度零下后<b>金叉回升（hist +154 连续三根放大）</b>；反弹笔 75,158→76,381 进行中；<b>双底的确认=回抽不破 75,158+再反弹过 76,532（第一反弹高）</b>。30m 这笔=5m 级别一段。
+<b class="b">⑤ 5m：反弹笔延伸</b>——75,158→76,381；[75,726~76,099] 小中枢；5m MACD 零上——反弹动能维持中。
+<b class="y">递归读法</b>：五级重新同向下（周/日/4h 空）+30m/5m 反弹尝试——<b>与 11/03 的结构镜像对称（那天是下沿三守后的 V 型）</b>：今天 75,158 若双底确认=同款 V 型候选；但级别背景更差（日线老中枢已破=下跌空间打开到 75,000/74,6xx）。<b>今晚非农=双底或破位的终审</b>：就业继续强（如初请）=加息定价再强化→75,158 危；就业走弱=衰退叙事→风险资产另一种跌法；唯一的缓和情形=数据中庸。交易语言：反弹在 76,444/78,776 的受阻程度=下跌中继的确认标尺。</div>
+</div>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(246,70,93,.08);border:1px solid rgba(246,70,93,.35);border-radius:8px;font-size:14.5px;font-weight:600;color:#f6465d">🚨 币圈大事件 · 暴跌夜的加密图谱（AI 崩盘溢出 · 清算 · 与 10/30 对照）（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1;border-left:3px solid #f6465d"><h3>① 暴跌夜的加密侧事件</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px;width:14%">时点</td><td style="width:40%">事件</td><td>状态</td></tr>
+<tr><td style="padding:5px">11/05 20:30-24:00</td><td><b>清算连锁：BTC 一小时 78,767→75,986，数亿美元多头爆仓</b>（Cryptoticker/Bitcoin Magazine）——tech 抛售溢出+机械清算放大</td><td style="color:#2ebd85">已证实</td></tr>
+<tr><td style="padding:5px">11/05-06</td><td><b>全币图谱</b>：高 beta 灭火（ETH -7.9%/NEAR -7.5%/TAO -7.1%/SOL -6.0%）·BNB -3.8% 相对抗跌·<b>ZEC +0.3% 逆势独强</b>（事件修复+独立叙事）·XAU +0.8%（避险）</td><td style="color:#2ebd85">数据确认</td></tr>
+<tr><td style="padding:5px">背景</td><td>币安事件善后正常（无新进展）——暴跌主因在宏观/美股侧，非行业侧</td><td style="color:#8ea0bd">背景噪声</td></tr>
+</table>
+</div>
+<div class="pcard" style="grid-column:1/-1"><h3>② 与 10/30 黑天鹅夜的对照（两次暴跌的结构差异）</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0">
+· <b>驱动来源</b>：10/30=行业危机（币安被盗）→加密内生；11/05=宏观/美股（AI 崩盘+初请）→加密是溢出方；<br>
+· <b>暴跌形态</b>：10/30=两波跳水（04:30/08:00 亚盘）；11/05=单根 4h 击穿（20:00 美股时段）——时点在美股=外部驱动的特征；<br>
+· <b>避险反应</b>：10/30 XAU -1.3%（流动性收缩全跌）；11/05 XAU +0.8%（纯避险模式）——**11/05 是"股灾式"而 10/30 是"信任危机式"**；<br>
+· <b>结构后果</b>：10/30 砸出 76,152 守住（老中枢内）；11/05 收盘跌破 76,152=**老中枢向下离开**——后者级别更重（量度 75,000/74,6xx）。</div>
+</div>
+<div class="pcard" style="grid-column:1/-1"><h3>③ 缠论视角点评</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0"><b>为什么"背离预警"没能阻止判断"确认达成"</b>——11/05 页写了对（ETF 三连流出=质量仪表）也写了错（"80,345 确认已达成"的表述）：背离是概率减分项，不是否决项；但<b>数据夜（初请）前的确认必须降级为"待检验"</b>——这是本次教训的准确表述。<b>暴跌后的结构语言切换</b>：从"突破确认"切换回"破位量度"——75,000 是 76,152 失守的第一量度+Schiff 前瞻位+整数关三重合流；75,158 距其仅 158 点=<b>量度兑现几乎到位</b>，这也是 30m 双底候选的位置逻辑（量度位+双底=技术反弹的经典组合）。<b>仓位纪律重申：单笔≤1% 在暴跌后尤其重要——报复性交易是暴跌后最大的账户杀手</b>。</div>
+</div>
+<div class="pcard" style="grid-column:1/-1"><h3>④ 风险提示</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0">①今晚非农（20:30·待确认）=12 月加息押注 70% 的终审——强数据=75,158 危、弱数据=衰退叙事另一种跌法、中庸=唯一缓和；②AI 崩盘若今晚延续（美股周五盘）=第二轮溢出；③75,000 下方为"无人区"（10 月以来未成交区）——跌破后波动率上限难测；④暴跌后 48 小时=钓鱼与假消息高发期。</div>
+</div>
+</div></details>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.3);border-radius:8px;font-size:14.5px;font-weight:600;color:#58a6ff">📰 消息面 · 暴跌三因完整版（AI 崩盘+57 年低初请+清算）（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1"><h3>⏱ 启动时间线 vs 新闻时点</h3>
+<div style="font-size:12.5px;line-height:1.9;color:#c9d4e0">
+· <b>11/05 20:30（北京）初请 18.9 万发布</b>（57 年新低·预期 19.6 万）——<b>暴跌启动的精确时点</b>（与 19:40 更新版预警的"80 分钟双重裁判窗"吻合，裁判方向=暴跌）；<br>
+· <b>21:30 美股开盘：AI/芯片崩盘</b>——纳指 100 收 -6.36%（标普"解放日"以来最差）·AI cash-burn 恐慌（InvestingLive）——<b>BTC 高 beta 溢出+清算连锁</b>（Cryptoticker）；<br>
+· <b>背景层</b>：Warsh 联储的"更高更久"叙事 + 鲍威尔离任风波（Hassett 公开敦促辞职）+9 月 jobs shock 的 200 亿清算前科——<b>就业强=加息的传导链在本周被两次验证（初请+即将非农）</b>；<br>
+· <b>今晚 20:30 非农（待确认）</b>——本周第三只数据钟：12 月加息押注 70% 的终审。<br>
+<b>矛盾点</b>：ZEC/XAU 逆势独强——暴跌中的独立叙事（ZEC 事件修复+减半叙事、XAU 避险）——<b>普跌中的逆势品种=资金避风港的信号，反弹日往往领涨</b>。<b>缠论点评</b>：三因（AI 崩盘/初请/清算）分别给了时点、方向、深度——结构只负责"跌到哪里算够"：75,158 距 75,000 量度 158 点=技术性反弹的窗口，但<b>反弹的定性=下跌中继，除非 78,776 收复</b>。</div>
+</div>
+</div></details>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(46,189,133,.08);border:1px solid rgba(46,189,133,.35);border-radius:8px;font-size:14.5px;font-weight:600;color:#2ebd85">📅 本周金融日历（11/02~11/08）· 终审日（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard" style="grid-column:1/-1"><h3>⏳ 待发生（今日 → 周末）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px;width:14%">时点</td><td style="width:32%">事件</td><td>关注点与预案</td></tr>
+<tr><td style="padding:5px">11/06(五) 白天</td><td>暴跌后亚洲时段修复观察</td><td>75,158 双底候选的日间检验；今晚美股开盘前的缓冲窗</td></tr>
+<tr><td style="padding:5px"><b class="y">11/06(五) 20:30</b></td><td><b>非农就业报告</b>（时点待确认）</td><td><b>本周终审</b>：12 月加息押注 70% 的验证；<b>强=75,158 危 / 弱=衰退叙事 / 中庸=唯一缓和</b>；数据后第一根 4h 收完再定性</td></tr>
+<tr><td style="padding:5px">11/06(五) 21:30 后</td><td>美股开盘（AI 崩盘是否第二轮）</td><td>纳指若续崩=第二轮溢出；企稳=75,158 双底的呼吸窗</td></tr>
+<tr><td style="padding:5px"><b class="y">11/07(六) 08:00</b></td><td><b>周线收官</b></td><td>现 -2.6% 周阴线：收 &lt;76,152=大阴周（下周续跌动能）；收 &gt;78,313=收复周开（需 +2.6% 奇迹）</td></tr>
+</table>
+<div class="tips">📊 结论汇总：本周走完「选举 V 型（11/04）→ 暴跌否定（11/05）」的极限过山车——<b>两天振幅 7.6%，两个假信号（假突破+假金叉）</b>；今晚非农+美股=最后的裁判，75,000 量度位与 75,158 双底的攻防=本周终章。</div>
+</div>
+</div></details>
+
+<details style="margin:8px 0"><summary style="cursor:pointer;padding:8px 14px;background:rgba(232,179,57,.08);border:1px solid rgba(232,179,57,.3);border-radius:8px;font-size:14.5px;font-weight:600;color:#e8b339">🏛 九段升级检查——「向上离开」被否定·中枢语言重置（点击展开）</summary><div style="padding-top:6px">
+<div class="pcard fix" style="grid-column:1/-1"><h3>🏛 九段升级检查（中枢延伸满 9 段→升级大一级别）</h3>
+<div class="jrow"><span><b class="r">25 段中枢的结局改写</b></span><span class="v">[76,444~78,776] 25 段——11/05 的"向上离开确认"被 11/05 夜暴跌<b>完整否定</b>（跌回中枢内并收盘跌破下沿 76,444/76,152）——<b>满九链最终章：25 段中枢的"结局"是向下突破而非向上</b>（6 天内先上后下的双假动作=极限震荡的完整表达）</span></div>
+<div class="jrow"><span>日线老中枢 [76,152~79,737]</span><span class="v"><b>4h 收盘两根（76,007/76,050）在 76,152 下方=向下离开确认</b>——量度 75,000（第一档·三重合流：量度+Schiff 前瞻+整数关）/74,6xx（更深）；<b>现 76,290 回抽老下沿上方=反抽确认窗口</b></span></div>
+<div class="jrow"><span>30m 新结构</span><span class="v">75,525/75,158 双底候选+金叉回升——若确认（回抽不破+过 76,532）=新 30m 中枢在 75,1~76,5 生长；跌破 75,158=量度直达</span></div>
+<div class="jrow"><span>各币费率（11/06 晨）</span><span class="v">暴跌后费率观察：多头出清进行中——若转深负=空头拥挤（反弹燃料），BTC 现值待更新</span></div>
+<div class="tips">📋 满九链终章修订：第六棒（25 段）的向上离开被否定——<b>中枢的最终方向由"最后一次收盘"决定，不由"最猛的一次突破"决定</b>；本周三个"假"字记录（假突破/假离开/假金叉）=Q4 外部事件密度的直接后果，方法论已沉淀（确认是过程不是终局）。</div>
+</div></div></details>
+
+<div class="sec">🗺 趋势全景地图（09:00 · 五周期联立 + 八币种速览）</div>
+
+<div class="pcard" style="grid-column:1/-1"><h3>BTC 全景表（09:00 @76,290——暴跌次日·双底候选·非农终审日）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:11.8px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">周期</td><td>方向·阶段</td><td>当前在走</td><td>防守位</td><td>目标(剩余)</td><td>预计持仓·类型</td><td>我的选择</td></tr>
+<tr><td style="padding:5px"><b class="b">1d</b></td><td class="r">老中枢破位·量度中</td><td>81,188→75,158（-7.4%）·假金叉</td><td>75,158</td><td>跌破→74,6xx</td><td>—</td><td>不参与（下跌段）</td></tr>
+<tr><td style="padding:5px"><b class="b">4h</b></td><td class="r">下跌笔·零上死叉深跌</td><td>反弹笔 75,158→76,381</td><td>75,158</td><td>76,444→78,776（回抽阻力）</td><td>1-3天·波段</td><td><b>双底确认=短线多（唯一计划·小仓）</b></td></tr>
+<tr><td style="padding:5px"><b class="b">1h</b></td><td class="y">反弹尝试</td><td>76,381 进行中</td><td>75,726</td><td>76,532（第一反弹高）</td><td>数小时·短线</td><td>剩余不足不做</td></tr>
+<tr><td style="padding:5px"><b class="b">30m</b></td><td class="y">双底候选+金叉</td><td>75,525/75,158</td><td>75,158</td><td>确认=过 76,532</td><td>—</td><td>挂 75,158/76,532 预警</td></tr>
+<tr><td style="padding:5px"><b class="b">15m</b></td><td class="g">反弹笔·零上</td><td>5m [75,726~76,099] 小中枢</td><td>75,726</td><td>—</td><td>—</td><td>不参与（非农日）</td></tr>
+</table>
+<div class="tips">读法：<b>从"可参与"回到"暴跌后观察"</b>——唯一的短线计划=30m 双底确认（过 76,532+回抽不破）的小仓反弹，目标只看回抽阻力 76,444/78,776；271 口径：4h 下跌动能 8 分（强）——反弹是 1-4 分衰竭窗的左侧，<b>只做确认后的小仓+不持仓过非农</b>。</div>
+</div>
+
+<div class="pcard" style="grid-column:1/-1"><h3>八币种全景速览（09:00 · 4h 主行 · 暴跌后图谱）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">币种</td><td>现价</td><td>24h</td><td>4h 结构</td><td>一句话</td></tr>
+<tr><td style="padding:5px"><b>BTC</b></td><td>76,290</td><td class="r">-5.0%</td><td>76,152 破位回抽·双底候选</td><td>75,158 跌破→75,000；反弹受阻 76,444/78,776=中继</td></tr>
+<tr><td style="padding:5px"><b>ETH</b></td><td>2,243.7</td><td class="r">-7.9%</td><td>跌回 2,244 起涨区</td><td>11/04 涨幅全部回吐；2,225 双底位=防守</td></tr>
+<tr><td style="padding:5px"><b>SOL</b></td><td>90.25</td><td class="r">-6.0%</td><td>90.82 破位</td><td>先行指标再验证；88=下一段</td></tr>
+<tr><td style="padding:5px"><b>BNB</b></td><td>695.0</td><td class="r">-3.8%</td><td>相对抗跌</td><td>677.8 事件低=防守；抗跌王候选</td></tr>
+<tr><td style="padding:5px"><b class="g">ZEC</b></td><td>1,321.6</td><td class="g">+0.3%</td><td><b>逆势独强</b></td><td>暴跌中的独立叙事=反弹日领涨候选</td></tr>
+<tr><td style="padding:5px"><b class="r">TAO</b></td><td>219.89</td><td class="r">-7.1%</td><td><b>再破 219.6</b></td><td>终极防守二度失守；无防守位状态</td></tr>
+<tr><td style="padding:5px"><b class="g">XAU</b></td><td>4,105.2</td><td class="g">+0.8%</td><td><b>避险独强</b></td><td>股灾式暴跌的避险图谱（对照 10/30 的全跌）</td></tr>
+<tr><td style="padding:5px"><b class="r">NEAR</b></td><td>3.765</td><td class="r">-7.5%</td><td>新低区</td><td>3.742/3.7=最后防线</td></tr>
+</table>
+</div>
+
+<div class="chart-card" id="chartETH"></div>
+<div class="chart-card" id="chartSOL"></div>
+<div class="chart-card" id="chartBNB"></div>
+<div class="chart-card" id="chartZEC"></div>
+<div class="chart-card" id="chartTAO"></div>
+<div class="chart-card" id="chartXAU"></div>
+<div class="chart-card" id="chartNEAR"></div>
+
+<div class="sec">🎯 今日三演化（暴跌次日 · 非农终审 · 按结果三分 · 互斥）</div>
+
+<div class="pcard fix" style="grid-column:1/-1">
+<div class="jrow"><span><b class="g">A · 双底确认·超跌反弹（25%）</b></span><span class="v">75,158 守住 + 30m 底分型确认（过 76,532+回抽不破）→ 反弹 <b>76,444→78,776</b>（+1.5~3.2%）；催化=非农中庸+美股企稳；<b>定性=下跌中继的反弹（除非 78,776 收复）</b>。</span></div>
+<div class="jrow"><span><b class="r">B · 75,158 跌破·量度兑现（40%）</b></span><span class="v">75,158 跌破 → <b>75,000（量度+Schiff+整数关三重合流）</b>→ 74,6xx；催化=非农强（加息终审）+AI 崩盘第二轮；75,000 下方的"无人区"波动率难测。</span></div>
+<div class="jrow"><span><b class="y">C · 75,158~76,444 窄幅·等非农（35%）</b></span><span class="v">暴跌后的喘息窄幅——非农（20:30）+美股开盘（21:30）=今晚双钟；数据后第一根 4h 收完再定性。</span></div>
+</div>
+
+<div class="chart-card" id="chartEvoA"></div>
+<div class="chart-card" id="chartEvoB"></div>
+<div class="chart-card" id="chartEvoC"></div>
+
+<div class="pcard" style="grid-column:1/-1"><h3>📋 预案表（暴跌次日·非农终审版 · 含教练 271 列）</h3>
+<table style="border-collapse:collapse;width:100%;font-size:12px">
+<tr style="color:#8ea0bd;font-size:11px"><td style="padding:4px">演化</td><td>概率</td><td>触发</td><td>进场/271方式</td><td>止损</td><td>目标(T1/T2)</td></tr>
+<tr><td style="padding:5px">A · 超跌反弹</td><td>25%</td><td>过 76,532 + 回抽不破 75,158</td><td>小仓多：双底确认后进（271：4h 强下跌中的左侧反弹——<b>只做确认后+不持仓过非农</b>）</td><td>75,158</td><td>T1 76,444<br>T2 78,776</td></tr>
+<tr><td style="padding:5px">B · 量度兑现</td><td>40%</td><td>4h 收盘 &lt;75,158</td><td>右侧空：跌破确认后看 75,000/74,6xx（<b>75,000 上方不追空</b>——量度位附近的盈亏比恶化）</td><td>76,444</td><td>T1 75,000<br>T2 74,600</td></tr>
+<tr><td style="padding:5px">C · 等非农</td><td>35%</td><td>75,158~76,444 窄幅</td><td>不做（<b>非农夜不预挂不赌方向</b>；两预警挂着；暴跌后 48h=报复性交易高发期——管住手）</td><td>—</td><td>等 20:30</td></tr>
+</table>
+<div class="tips">💡 首要观察位：<b>75,158（双底第二脚）/75,000（三重合流量度）</b>／76,152（老下沿=现阻力）／76,444／76,532（双底确认线）／78,776（强阻力）。速览焦点：ZEC/XAU（逆势独强=反弹领涨候选）、ETH 2,225（双底位回踩）、TAO/NEAR（无防守状态）。</div>
+</div>
+
+<div class="pcard fix" style="grid-column:1/-1"><h3>📖 理论（《二买点交易计划》第二课：先选级别，再做二买计划）</h3>
+<div class="jrow"><span>核心思想</span><span class="v">做交易计划前先把每个周期的立场拍在一张表上——方向、阶段（<b>生长→简单回调→复杂回调→末期</b>）、防守位、目标、<b>剩余利润×预计持仓</b>、我的选择；只在"可参与"的周期里等二买/类二买</span></div>
+<div class="jrow"><span>参与裁定纪律</span><span class="v">剩余利润≥3% 且阶段为生长/简单回调 →"✓ 可参与"；复杂回调/末期 → 等结构；&lt;1% → 放弃；交易区间 → 只做边沿</span></div>
+<div class="tips">本期应用：昨天的"✓可参与"（1d 波段）一夜作废——<b>全景表的可参与行是"当下快照"不是"持有多日的理由"：每天重新拍表，昨天的答案不作数</b>；今天唯一候选=30m 双底确认的小仓反弹（剩 +1.5~3.2% 勉强达标）+非农夜不持仓。<b>暴跌后最重要的纪律：管住手——两天的振幅 7.6% 里，不动比乱动赚得多</b>。</div>
+</div>
+<div class="note">⚠️ 非农终审纪律：今晚 20:30（待确认）——数据后第一根 4h 收完再定性；暴跌后 48 小时=报复性交易与假消息高发期。走势终完美视角：日线下跌笔 81,188→75,158 的"完美"由 75,000（量度兑现）或双底确认后的反弹段定档——今晚非农是催化剂，75,158/75,000 是裁判位。概率同源检查 ✓：B(40%) 与"老中枢破位量度+初请前科+AI 若续崩"一致；A(25%) 给"量度位+双底=技术反弹经典组合"；C(35%)=暴跌后喘息常态。本页为分析快照（数据源 fapi，OKX 备援），不构成执行指令。🔒 本页为 11/06 09:00 快照：数据窗口全部锚定到该时刻。</div>
+</div>
+<script>
+"use strict";
+const API="https://fapi.binance.com/fapi/v1";
+const F=(v,d=0)=>(+v).toFixed(d);
+const fmtT=(t,wd)=>{const d=new Date(t),p=n=>String(n).padStart(2,"0");return (wd?(d.getMonth()+1)+"/"+p(d.getDate())+" ":"")+p(d.getHours())+":"+p(d.getMinutes())};
+async function fetchK(iv,lim){const d=await fetch(`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=${lim}`).then(r=>r.json());return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}
+let fapiDownUntil=0;
+const OKX_SYM={BTCUSDT:"BTC-USDT-SWAP",ETHUSDT:"ETH-USDT-SWAP",SOLUSDT:"SOL-USDT-SWAP",BNBUSDT:"BNB-USDT-SWAP",ZECUSDT:"ZEC-USDT-SWAP",TAOUSDT:"TAO-USDT-SWAP",XAUUSDT:"PAXG-USDT",NEARUSDT:"NEAR-USDT-SWAP"};
+const OKX_IV={"1w":"1W","1d":"1D","4h":"4H","1h":"1H","30m":"30m","15m":"15m","5m":"5m"};
+async function okxK(sym,iv,s,e,limit){
+  const inst=OKX_SYM[sym]||sym,bar=OKX_IV[iv]||iv;
+  let all=[],after=e?""+e:"";
+  while(all.length<limit){
+    let u=`https://www.okx.com/api/v5/market/candles?instId=${inst}&bar=${bar}&limit=100`+(after?`&after=${after}`:"");
+    const j=await fetch(u).then(r=>r.json());
+    if(j.code&&j.code!=="0")throw new Error("okx "+(j.msg||j.code));
+    const rows=(j.data||[]).map(r=>({t:+r[0],o:+r[1],h:+r[2],l:+r[3],c:+r[4]}));
+    if(!rows.length)break;
+    all=rows.concat(all);
+    after=""+rows[0].t;
+    if(rows.length<100)break;
+    if(s&&all[0].t<=s)break;
+  }
+  return all.filter(k=>(!s||k.t>=s)&&(!e||k.t<=e));
+}
+async function fetchK2(iv,s,e){
+  if(Date.now()>=fapiDownUntil){
+    try{let u=`${API}/klines?symbol=BTCUSDT&interval=${iv}&limit=300`;if(s)u+=`&startTime=${s}`;if(e)u+=`&endTime=${e}`;const d=await fetch(u).then(r=>r.json());if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}catch(e2){}
+    fapiDownUntil=Date.now()+60000;
+  }
+  return okxK("BTCUSDT",iv,s,e,300).catch(()=>[]);
+}
+function mEma(a,n){const k=2/(n+1);let e=a[0];return a.map(v=>e=v*k+e*(1-k))}
+function calcMACD(arr){const c=arr.map(k=>k[4]);const dif=mEma(c,12).map((v,i)=>v-mEma(c,26)[i]);const dea=mEma(dif,9);return{dif,dea,hist:dif.map((v,i)=>v-dea[i])}}
+function mergeK(kls){const out=[];
+  for(let i=0;i<kls.length;i++){const h=kls[i][2],l=kls[i][3];const m=out[out.length-1];
+    if(m&&((m.h>=h&&m.l<=l)||(h>=m.h&&l<=m.l))){const prev=out[out.length-2];const dir=prev?(m.h>prev.h?1:-1):(h>=m.h?1:-1);
+      const nh=dir>0?Math.max(m.h,h):Math.min(m.h,h);const nl=dir>0?Math.max(m.l,l):Math.min(m.l,l);
+      const oh=m.h,ol=m.l;m.h=nh;m.l=nl;m.i1=i;m.hi=(dir>0?h>oh:h<oh)?i:m.hi;m.lo=(dir>0?l>ol:l<ol)?i:m.lo;
+    }else out.push({h,l,t:kls[i][0],i0:i,i1:i,hi:i,lo:i});}
+  return out;}
+function buildBiM(kls){const mg=mergeK(kls);const fr=[];
+  for(let j=1;j<mg.length-1;j++){
+    if(mg[j].h>mg[j-1].h&&mg[j].h>mg[j+1].h)fr.push({i:mg[j].hi,type:"顶",price:mg[j].h,t:mg[j].t});
+    else if(mg[j].l<mg[j-1].l&&mg[j].l<mg[j+1].l)fr.push({i:mg[j].lo,type:"底",price:mg[j].l,t:mg[j].t});}
+  const bi=[];for(const f of fr){const last=bi[bi.length-1];
+    if(!last){bi.push(f);continue}
+    if(last.type===f.type){if(last.type==="顶"?f.price>=last.price:f.price<=last.price)bi[bi.length-1]=f}
+    else if(f.i-last.i>=4)bi.push(f);}
+  return bi;}
+function buildZS(pts){if(pts.length<5)return[];
+  const st=[];for(let k=0;k<pts.length-1;k++)st.push({hi:Math.max(pts[k].price,pts[k+1].price),lo:Math.min(pts[k].price,pts[k+1].price),i0:pts[k].i,i1:pts[k+1].i,ep:pts[k+1].price});
+  const out=[];let k=1;
+  while(k+2<st.length){
+    const ZG=Math.min(st[k].hi,st[k+1].hi,st[k+2].hi),ZD=Math.max(st[k].lo,st[k+1].lo,st[k+2].lo);
+    if(ZG>ZD){const inR=v=>v>=ZD&&v<=ZG;
+      const z={ZG,ZD,startI:pts[k].i,endI:pts[k+3].i,segs:3};
+      let j=k+3;
+      while(j<st.length){
+        if(inR(st[j].ep)){z.endI=st[j].i1;z.segs++;j++;continue}
+        if(j+1<st.length&&inR(st[j+1].ep)){z.endI=st[j+1].i1;z.segs+=2;j+=2;continue}
+        break;}
+      out.push(z);k=j+1;
+    }else k++;}
+  return out;}
+function buildSegs(bi){const segs=[];if(bi.length<2)return segs;
+  let dir=bi[1].price>=bi[0].price?1:-1,start=bi[0],ext=bi[1],firstR=null,revCnt=0;
+  for(let i=2;i<bi.length;i++){const p=bi[i];
+    if(dir>0){
+      if(p.type==="顶"){if(p.price>ext.price){ext=p;firstR=null;revCnt=0}}
+      else{
+        if(p.price<start.price){segs.push({dir,from:start,to:ext});start=ext;dir=-1;ext=p;firstR=null;revCnt=0}
+        else{revCnt++;if(revCnt===1)firstR=p;else if(firstR&&p.price<firstR.price){segs.push({dir,from:start,to:ext});start=ext;dir=-1;ext=p;firstR=null;revCnt=0}}
+      }
+    }else{
+      if(p.type==="底"){if(p.price<ext.price){ext=p;firstR=null;revCnt=0}}
+      else{
+        if(p.price>start.price){segs.push({dir,from:start,to:ext});start=ext;dir=1;ext=p;firstR=null;revCnt=0}
+        else{revCnt++;if(revCnt===1)firstR=p;else if(firstR&&p.price>firstR.price){segs.push({dir,from:start,to:ext});start=ext;dir=1;ext=p;firstR=null;revCnt=0}}
+      }
+    }}
+  segs.push({dir,from:start,to:ext,running:true});return segs;}
+function draw(boxId,ks,anns,opts){
+  opts=opts||{};
+  const n=ks.length,W=1420,H=(opts.H||440)+(opts.macd?118:0),ml=70,mr=110,mt=42,mb=26,pw=W-ml-mr,ph=(opts.H||440)-mt-mb;
+  const lo0=Math.min(...ks.map(k=>k.l)),hi0=Math.max(...ks.map(k=>k.h));
+  let lo=lo0,hi=hi0;
+  (opts.lines||[]).forEach(l=>{lo=Math.min(lo,l.p);hi=Math.max(hi,l.p)});
+  (opts.bands||[]).forEach(b=>{lo=Math.min(lo,b.lo);hi=Math.max(hi,b.hi)});
+  const pad=(hi-lo)*0.05;lo-=pad;hi+=pad;
+  const Y=p=>mt+(hi-p)/(hi-lo)*ph;
+  const at=t=>{let i=0,best=1e18;ks.forEach((k,q)=>{const d=Math.abs(k.t-t);if(d<best){best=d;i=q}});return i};
+  const bw=Math.max(2,pw/n*0.6);
+  let s=`<svg viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#0a0f1a" rx="10"/>`;
+  for(let g=0;g<=5;g++){const p=lo+(hi-lo)*g/5,y=Y(p);
+    s+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${ml+pw}" y2="${y.toFixed(1)}" stroke="#151d2e"/><text x="${ml-8}" y="${(y+4).toFixed(1)}" fill="#66748f" font-size="10.5" text-anchor="end">${F(p)}</text>`;}
+  const step=Math.max(1,Math.floor(n/9));
+  ks.forEach((k,q)=>{if(q%step===0)s+=`<text x="${(ml+(q+0.5)*pw/n).toFixed(1)}" y="${H-8}" fill="#66748f" font-size="10" text-anchor="middle">${fmtT(k.t,true)}</text>`});
+  (opts.bands||[]).forEach(b=>{const y1=Y(b.hi),y2=Y(b.lo);
+    s+=`<rect x="${ml}" y="${y1.toFixed(1)}" width="${pw}" height="${Math.max(3,y2-y1).toFixed(1)}" fill="${b.col}" opacity="0.16"/>`
+     +`<text x="${ml+6}" y="${(y1-4).toFixed(1)}" fill="${b.col}" font-size="11" font-weight="700">${b.lab}</text>`;});
+  (opts.lines||[]).forEach(l=>{const y=Y(l.p);
+    s+=`<line x1="${ml}" y1="${y.toFixed(1)}" x2="${ml+pw}" y2="${y.toFixed(1)}" stroke="${l.col}" stroke-width="${l.w||1.2}" stroke-dasharray="${l.d||"7,4"}" opacity=".85"/>`
+     +(l.side==="r"
+       ?`<text x="${ml+pw-6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700" text-anchor="end">${l.lab}</text>`
+       :`<text x="${ml+6}" y="${(y-3).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700">${l.lab}</text>`);});
+  (opts.tlines||[]).forEach(l=>{const q1=at(l.t1),q2=at(l.t2);
+    const x1=ml+(q1+0.5)*pw/n,x2=ml+(q2+0.5)*pw/n;
+    s+=`<line x1="${x1.toFixed(1)}" y1="${Y(l.p1).toFixed(1)}" x2="${x2.toFixed(1)}" y2="${Y(l.p2).toFixed(1)}" stroke="${l.col}" stroke-width="1.6" opacity=".9" stroke-dasharray="${l.d||"8,4"}"/>`;
+    if(l.lab)s+=`<text x="${((x1+x2)/2).toFixed(1)}" y="${((Y(l.p1)+Y(l.p2))/2-5).toFixed(1)}" fill="${l.col}" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0f1a;stroke-width:3px">${l.lab}</text>`;});
+  ks.forEach(k=>{const q=at(k.t),x=ml+(q+0.5)*pw/n,up=k.c>=k.o,col=up?"#2ebd85":"#f6465d";
+    s+=`<line x1="${x.toFixed(1)}" y1="${Y(k.h).toFixed(1)}" x2="${x.toFixed(1)}" y2="${Y(k.l).toFixed(1)}" stroke="${col}" stroke-width="1"/>`;
+    const by=Y(Math.max(k.o,k.c)),bh=Math.max(2,Math.abs(Y(k.c)-Y(k.o)));
+    s+=up?`<rect x="${(x-bw/2).toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="#0a0f1a" stroke="${col}" stroke-width="1"/>`
+         :`<rect x="${(x-bw/2).toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="${col}"/>`;});
+  if(opts.struct){
+    const xi=i=>ml+(i+0.5)*pw/n;
+    opts.struct.segs.forEach(sg=>{s+=`<line x1="${xi(sg.from.i).toFixed(1)}" y1="${Y(sg.from.price).toFixed(1)}" x2="${xi(sg.to.i).toFixed(1)}" y2="${Y(sg.to.price).toFixed(1)}" stroke="#f6465d" stroke-width="2.2" opacity="0.8" stroke-linecap="round"/>`});
+    const rs=opts.struct.segs[opts.struct.segs.length-1];
+    if(rs&&rs.running)s+=`<line x1="${xi(rs.to.i).toFixed(1)}" y1="${Y(rs.to.price).toFixed(1)}" x2="${(ml+pw).toFixed(1)}" y2="${Y(opts.struct.lastPrice).toFixed(1)}" stroke="#f6465d" stroke-width="2.2" stroke-dasharray="6,4" opacity="0.7"/>`;
+    const bi=opts.struct.bi;
+    if(bi.length){s+=`<polyline points="${bi.map(p=>xi(p.i).toFixed(1)+","+Y(p.price).toFixed(1)).join(" ")}" fill="none" stroke="#58a6ff" stroke-width="1.4" opacity="0.85"/>`;
+      bi.forEach(p=>{s+=`<circle cx="${xi(p.i).toFixed(1)}" cy="${Y(p.price).toFixed(1)}" r="1.7" fill="#58a6ff" opacity="0.9"/>`});}
+    opts.struct.zs.forEach(z=>{const x1=xi(z.startI),x2=xi(Math.min(z.endI,n-1));
+      s+=`<rect x="${x1.toFixed(1)}" y="${Y(z.ZG).toFixed(1)}" width="${(x2-x1).toFixed(1)}" height="${(Y(z.ZD)-Y(z.ZG)).toFixed(1)}" fill="#58a6ff" opacity="0.16" stroke="#58a6ff" stroke-width="1.2" stroke-dasharray="4,2" rx="3"/>`;});
+  }
+  (opts.entries||[]).forEach(en=>{const q=at(en.t),x=ml+(q+0.5)*pw/n,y=Y(en.p);
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="${en.col}" stroke="#0a0f1a" stroke-width="2"/>`;
+    s+=`<text x="${x.toFixed(1)}" y="${(y+4.5).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="800" fill="#0d1117">${en.lab}</text>`;});
+  (anns||[]).forEach(a=>{const q=at(a.t),x=ml+(q+0.5)*pw/n,y=Y(a.p);
+    s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="none" stroke="${a.col}" stroke-width="2.2"/>`;
+    const ty=a.below?y+22:y-14;
+    (a.txt||"").split("|").forEach((ln,li)=>{s+=`<text x="${x.toFixed(1)}" y="${(ty+li*13).toFixed(1)}" fill="${a.col}" font-size="10.5" font-weight="700" text-anchor="middle" style="paint-order:stroke;stroke:#0a0f1a;stroke-width:3px">${ln}</text>`});});
+  const ny=Y(opts.now);
+  s+=`<line x1="${ml}" y1="${ny.toFixed(1)}" x2="${ml+pw}" y2="${ny.toFixed(1)}" stroke="#e8b339" stroke-width="1.2" stroke-dasharray="4,3"/>`
+   +`<rect x="${ml+pw+2}" y="${(ny-9).toFixed(1)}" width="${mr-6}" height="18" fill="#e8b339" rx="3"/><text x="${ml+pw+6}" y="${(ny+4).toFixed(1)}" fill="#000" font-size="10.5" font-weight="700">${F(opts.now)}</text>`;
+  s+=`<text x="${ml+4}" y="${mt-10}" fill="#e8eefb" font-size="12.5" font-weight="600">${opts.title||""}</text>`;
+  if(opts.macd){
+    const mh=104,mtop=mt+ph+14,m=opts.macd;
+    const mv=Math.max(...m.hist.map(Math.abs),...m.dif.map(Math.abs))*1.15||1;
+    const MY=v=>mtop+mh/2-(v/mv)*(mh/2-4);
+    s+=`<rect x="${ml}" y="${mtop}" width="${pw}" height="${mh}" fill="#0a0e14" stroke="#1c2230" rx="4"/>`;
+    s+=`<line x1="${ml}" y1="${mtop+mh/2}" x2="${ml+pw}" y2="${mtop+mh/2}" stroke="#3a4250" stroke-width="0.7"/>`;
+    s+=`<text x="${ml+4}" y="${mtop+11}" fill="#8ea0bd" font-size="9.5">MACD(12,26,9) · 动能</text>`;
+    const mcw=Math.max(1.5,pw/n*0.5);
+    ks.forEach((k,q)=>{const hh=m.hist[q];if(Math.abs(hh)<mv*0.002)return;
+      const x=ml+(q+0.5)*pw/n;
+      s+=`<rect x="${(x-mcw/2).toFixed(1)}" y="${Math.min(mtop+mh/2,MY(hh)).toFixed(1)}" width="${mcw.toFixed(1)}" height="${Math.max(0.5,Math.abs(MY(hh)-(mtop+mh/2))).toFixed(1)}" fill="${hh>=0?"#f6465d":"#2ebd85"}" opacity="0.85"/>`});
+    s+=`<polyline points="${m.dif.map((v,q)=>(ml+(q+0.5)*pw/n).toFixed(1)+","+MY(v).toFixed(1)).join(" ")}" fill="none" stroke="#e8b339" stroke-width="1.1"/>`;
+    s+=`<polyline points="${m.dea.map((v,q)=>(ml+(q+0.5)*pw/n).toFixed(1)+","+MY(v).toFixed(1)).join(" ")}" fill="none" stroke="#bc8cff" stroke-width="1.1"/>`;
+  }
+  s+=`<line id="${boxId}_cv" x1="0" y1="${mt}" x2="0" y2="${mt+ph}" stroke="#e8b339" stroke-width="0.9" stroke-dasharray="3,3" opacity="0" pointer-events="none"/>`;
+  s+=`<line id="${boxId}_ch" x1="${ml}" y1="0" x2="${ml+pw}" y2="0" stroke="#e8b339" stroke-width="0.9" stroke-dasharray="3,3" opacity="0" pointer-events="none"/>`;
+  s+=`<g id="${boxId}_pt" opacity="0" pointer-events="none"><rect x="${ml+pw+2}" y="0" width="${mr-6}" height="16" fill="#58a6ff" rx="3"/><text id="${boxId}_ptt" x="${ml+pw+6}" y="12" fill="#0d1117" font-size="10" font-weight="700"></text></g>`;
+  s+="</svg>";
+  document.getElementById(boxId).innerHTML=s;
+  enableCross(boxId,ks,{n,ml,pw,mt,ph,lo,hi,W,H});
+}
+function enableCross(boxId,ks,g){
+  const host=document.getElementById(boxId);
+  const svg=host.querySelector("svg");if(!svg)return;
+  let tip=host.querySelector(".ctip");
+  if(!tip){tip=document.createElement("div");tip.className="ctip";host.appendChild(tip)}
+  svg.addEventListener("mousemove",e=>{
+    const r=svg.getBoundingClientRect();
+    const vx=(e.clientX-r.left)/r.width*g.W,vy=(e.clientY-r.top)/r.height*g.H;
+    let idx=Math.round((vx-g.ml)/(g.pw/g.n)-0.5);idx=Math.max(0,Math.min(g.n-1,idx));
+    const k=ks[idx];if(!k)return;
+    const x=g.ml+(idx+0.5)*g.pw/g.n;
+    const a=host.querySelector("#"+boxId+"_cv"),b=host.querySelector("#"+boxId+"_ch"),pg=host.querySelector("#"+boxId+"_pt"),tx=host.querySelector("#"+boxId+"_ptt");
+    if(a){a.setAttribute("x1",x);a.setAttribute("x2",x);a.setAttribute("opacity",0.7)}
+    if(b&&vy>=g.mt&&vy<=g.mt+g.ph){b.setAttribute("y1",vy);b.setAttribute("y2",vy);b.setAttribute("opacity",0.45);
+      if(pg){const pr=g.hi-(vy-g.mt)/g.ph*(g.hi-g.lo);pg.setAttribute("opacity",0.95);pg.setAttribute("transform","translate(0,"+(vy-8).toFixed(1)+")");if(tx)tx.textContent=pr.toFixed(0)}
+    }else{if(b)b.setAttribute("opacity",0);if(pg)pg.setAttribute("opacity",0)}
+    const up=k.c>=k.o,col=up?"#2ebd85":"#f6465d";
+    tip.innerHTML=`<b>${fmtT(k.t,true)}</b><br>O ${F(k.o)} H <span style="color:#2ebd85">${F(k.h)}</span><br>L <span style="color:#f6465d">${F(k.l)}</span> C <b style="color:${col}">${F(k.c)}</b><br><span style="color:${col}">${up?"▲":"▼"} ${(up?"+":"")+F((k.c-k.o)/k.o*100,2)}%</span>`;
+    tip.style.display="block";
+    let lx=e.clientX-r.left+14,ly=e.clientY-r.top-10;
+    if(lx+170>r.width)lx=e.clientX-r.left-185;
+    if(ly+110>r.height)ly=r.height-115;
+    tip.style.left=Math.max(2,lx)+"px";tip.style.top=Math.max(2,ly)+"px";
+  });
+  svg.addEventListener("mouseleave",()=>{tip.style.display="none";
+    [host.querySelector("#"+boxId+"_cv"),host.querySelector("#"+boxId+"_ch"),host.querySelector("#"+boxId+"_pt")].forEach(el=>{if(el)el.setAttribute("opacity",0)})});
+}
+
+
+
+const T=ds=>new Date(ds).getTime();
+const FREEZE=T("2026-11-06T09:00:00");
+const LV={hiN:81188,loN:75158,loN1:75525,oldLo:76152,zsLo:76444,zsHi:78776,dbl:76532,tgt:75000,tgt2:74600,brk:76044};
+const fmtLV=x=>Math.round(x).toLocaleString("en-US");
+async function load(){
+  try{
+    const now=76290;
+    const k4=await fetchK2("4h",T("2026-10-24T00:00:00"),FREEZE);
+    const a4=k4.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi4=buildBiM(a4);
+    draw("chart4h",k4,[
+      {t:T("2026-11-04T07:00:00"),p:75690,col:"#8b949e",txt:"①75,690 选举低"},
+      {t:T("2026-11-04T20:00:00"),p:LV.hiN,col:"#f6465d",txt:"②81,188|假突破顶"},
+      {t:T("2026-11-05T20:00:00"),p:75525,col:"#f6465d",txt:"③75,525|暴跌单根-6.1%|五道线同根击穿",below:true},
+      {t:T("2026-11-06T07:00:00"),p:LV.loN,col:"#2ebd85",txt:"④75,158|双底第二脚|距75,000量度158点",below:true},
+      {t:T("2026-11-06T08:40:00"),p:76381,col:"#f0b90b",txt:"⑤76,381 回抽老下沿"}
+    ],
+    {title:"BTC 4h · 暴跌否定一切:81,188→75,158(-7.4%)·76,152收盘失守(两根)=老中枢向下离开——量度75,000/74,6xx,现回抽老下沿",H:430,now,
+     bands:[{lo:76152,hi:79737,col:"#2ebd85",lab:"日线老中枢[76,152~79,737]已向下离开"},{lo:76444,hi:78776,col:"#58a6ff",lab:"25段中枢[76,444~78,776]结局改写:向下"}],
+     lines:[{p:LV.loN,col:"#f0b90b",lab:"75,158 双底脚",w:1.8},{p:LV.tgt,col:"#f6465d",lab:"75,000 三重合流量度"},
+            {p:LV.oldLo,col:"#58a6ff",lab:"76,152 现阻力"},{p:LV.zsHi,col:"#8b949e",lab:"78,776 强阻力",side:"r"}],
+     macd:calcMACD(a4),struct:{bi:bi4,segs:buildSegs(bi4),zs:buildZS(bi4),lastPrice:k4[k4.length-1].c}});
+    const k30=await fetchK2("30m",T("2026-11-05T12:00:00"),FREEZE);
+    const a30=k30.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi30=buildBiM(a30);
+    draw("chart30m",k30,[
+      {t:T("2026-11-05T15:00:00"),p:80765,col:"#f0b90b",txt:"①80,765 暴跌前顶"},
+      {t:T("2026-11-05T23:30:00"),p:LV.loN1,col:"#f6465d",txt:"②75,525 第一脚",below:true},
+      {t:T("2026-11-06T03:30:00"),p:76532,col:"#58a6ff",txt:"③76,532 第一反弹高"},
+      {t:T("2026-11-06T07:00:00"),p:LV.loN,col:"#2ebd85",txt:"④75,158 第二脚|金叉回升",below:true}
+    ],
+    {title:"BTC 30m · 双底候选75,525/75,158+金叉回升(hist+154)——确认=过76,532+回抽不破;75,158跌破=量度直达",H:420,now,
+     bands:[{lo:75158,hi:76532,col:"#8b949e",lab:"双底区[75,158~76,532]"}],
+     lines:[{p:LV.dbl,col:"#2ebd85",lab:"76,532 确认线",w:1.8},{p:LV.loN,col:"#f6465d",lab:"75,158"},
+            {p:LV.tgt,col:"#8b949e",lab:"75,000",side:"r"}],
+     macd:calcMACD(a30),struct:{bi:bi30,segs:buildSegs(bi30),zs:buildZS(bi30),lastPrice:k30[k30.length-1].c}});
+    const k15=await fetchK2("15m",T("2026-11-06T00:00:00"),FREEZE);
+    const a15=k15.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    const bi15=buildBiM(a15);
+    draw("chart15m",k15,[
+      {t:T("2026-11-06T07:00:00"),p:LV.loN,col:"#2ebd85",txt:"①75,158 低点",below:true},
+      {t:T("2026-11-06T08:40:00"),p:76381,col:"#f0b90b",txt:"②76,381 反弹"}
+    ],{title:"BTC 15m · 5m小中枢[75,726~76,099]+反弹76,381——非农终审日的喘息窗口",H:400,now,
+       bands:[{lo:75726,hi:76099,col:"#8b949e",lab:"5m中枢[75,726~76,099]"}],
+       lines:[{p:LV.dbl,col:"#f0b90b",lab:"76,532",w:1.8},{p:LV.loN,col:"#f6465d",lab:"75,158"}],
+       macd:calcMACD(a15),struct:{bi:bi15,segs:buildSegs(bi15),zs:buildZS(bi15),lastPrice:k15[k15.length-1].c}});
+    const kA=await fetchK2("30m",T("2026-11-05T12:00:00"),FREEZE);
+    const aA=kA.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    draw("chartEvoA",kA,[
+      {t:T("2026-11-06T00:00:00"),p:LV.dbl,col:"#2ebd85",txt:"①过76,532确认|→76,444→78,776",below:true}
+    ],{title:"演化A(25%)·双底确认=超跌反弹(定性=中继)→76,444→78,776——催化:非农中庸+美股企稳",H:360,now:77400,
+       lines:[{p:LV.dbl,col:"#2ebd85",lab:"76,532 确认",w:1.8},{p:76444,col:"#f0b90b",lab:"76,444"},{p:LV.zsHi,col:"#f6465d",lab:"78,776",side:"r"}],
+       macd:calcMACD(aA)});
+    const kB=await fetchK2("30m",T("2026-11-05T12:00:00"),FREEZE);
+    const aB=kB.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    draw("chartEvoB",kB,[
+      {t:T("2026-11-06T00:00:00"),p:LV.loN,col:"#f6465d",txt:"①75,158跌破|→75,000三重合流|→74,6xx",below:true}
+    ],{title:"演化B(40%)·量度兑现→75,000(量度+Schiff+整数关)→74,6xx——催化:非农强+AI崩盘第二轮",H:360,now:74800,
+       lines:[{p:LV.loN,col:"#f6465d",lab:"75,158",w:1.8},{p:LV.tgt,col:"#f0883e",lab:"75,000"},{p:LV.tgt2,col:"#8b949e",lab:"74,600",side:"r"}],
+       macd:calcMACD(aB)});
+    const kC=await fetchK2("15m",T("2026-11-06T00:00:00"),FREEZE);
+    const aC=kC.map(k=>[k.t,k.o,k.h,k.l,k.c]);
+    draw("chartEvoC",kC,[
+      {t:T("2026-11-06T00:00:00"),p:75800,col:"#f0b90b",txt:"①75,158~76,444喘息|等非农20:30",below:true}
+    ],{title:"演化C(35%)·暴跌后窄幅喘息——非农+美股今晚双钟,数据后第一根4h收完再定性",H:360,now:75800,
+       lines:[{p:76444,col:"#2ebd85",lab:"76,444",w:1.8},{p:LV.loN,col:"#f6465d",lab:"75,158"}],
+       macd:calcMACD(aC)});
+    async function fetchSym(sym,iv,st){
+      if(Date.now()<fapiDownUntil)return okxK(sym,iv,st,FREEZE,300).catch(()=>[]);
+      try{const u=`${API}/klines?symbol=${sym}&interval=${iv}&startTime=${st}&endTime=${FREEZE}&limit=300`;const d=await fetch(u).then(r=>r.json());if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}))}catch(e2){fapiDownUntil=Date.now()+60000}
+      return okxK(sym,iv,st,FREEZE,300).catch(()=>[]);
+    }
+    const kE=await fetchSym("ETHUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartETH",kE,[
+      {t:T("2026-11-05T20:00:00"),p:2243.6,col:"#f6465d",txt:"①2,244|涨幅全回吐|-7.9%",below:true}
+    ],{title:"ETH 4h · 跌回2,244起涨区(现2,244·-7.9%)——11/04涨幅全部回吐;2,225双底位=防守",H:300,now:2243.7,
+       lines:[{p:2303,col:"#f0b90b",lab:"2,303(已破)",w:1.8},{p:2225,col:"#f6465d",lab:"2,225"},{p:2196,col:"#8b949e",lab:"2,196",side:"r"}]});
+    const kS=await fetchSym("SOLUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartSOL",kS,[
+      {t:T("2026-11-05T20:00:00"),p:90.25,col:"#f6465d",txt:"①90.82再破|先行指标",below:true}
+    ],{title:"SOL 4h · 90.82破位(现90.25·-6.0%)——先行指标再验证;88=下一段",H:300,now:90.25,
+       lines:[{p:90.82,col:"#f0b90b",lab:"90.82(已破)",w:1.8},{p:90.25,col:"#f0883e",lab:"90.25"},{p:88,col:"#f6465d",lab:"88",side:"r"}]});
+    const kB2=await fetchSym("BNBUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartBNB",kB2,[
+      {t:T("2026-11-05T20:00:00"),p:695,col:"#f0b90b",txt:"①695 相对抗跌"}
+    ],{title:"BNB 4h · -3.8%相对抗跌(现695)——677.8事件低=防守;抗跌王候选",H:300,now:695.0,
+       lines:[{p:703.7,col:"#f0b90b",lab:"703.7",w:1.8},{p:677.8,col:"#f6465d",lab:"677.8"},{p:660,col:"#8b949e",lab:"660",side:"r"}]});
+    const kZ=await fetchSym("ZECUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartZEC",kZ,[
+      {t:T("2026-11-05T20:00:00"),p:1321.6,col:"#2ebd85",txt:"①1,322|逆势独强|+0.3%"}
+    ],{title:"ZEC 4h · 逆势独强(现1,322·+0.3%)——暴跌中的独立叙事=反弹日领涨候选",H:300,now:1321.6,
+       lines:[{p:1352,col:"#f0b90b",lab:"1,352",w:1.8},{p:1270,col:"#f0883e",lab:"1,270"},{p:1180,col:"#f6465d",lab:"1,180",side:"r"}]});
+    const kT=await fetchSym("TAOUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartTAO",kT,[
+      {t:T("2026-11-05T20:00:00"),p:219.89,col:"#f6465d",txt:"①219.9|再破219.6|无防守",below:true}
+    ],{title:"TAO 4h · 再破219.6终极防守(现219.89·-7.1%)——无防守位状态;205=心理下一档",H:300,now:219.89,
+       lines:[{p:227,col:"#f0b90b",lab:"227(已破)",w:1.8},{p:219.6,col:"#f6465d",lab:"219.6(再破)"},{p:205,col:"#8b949e",lab:"205",side:"r"}]});
+    const kX=await fetchSym("XAUUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartXAU",kX,[
+      {t:T("2026-11-06T00:00:00"),p:4105.2,col:"#2ebd85",txt:"①4,105|避险独强|+0.8%"}
+    ],{title:"XAU 4h · 避险独强(现4,105·+0.8%)——股灾式暴跌的避险图谱(对照10/30全跌)",H:300,now:4105.2,
+       lines:[{p:4104.7,col:"#f0b90b",lab:"4,105",w:1.8},{p:4029,col:"#f0883e",lab:"4,029"},{p:3979,col:"#f6465d",lab:"3,979",side:"r"}]});
+    const kN=await fetchSym("NEARUSDT","4h",T("2026-10-24T00:00:00"));
+    draw("chartNEAR",kN,[
+      {t:T("2026-11-05T20:00:00"),p:3.765,col:"#f6465d",txt:"①3.765|新低区|-7.5%",below:true}
+    ],{title:"NEAR 4h · 新低区(现3.765·-7.5%)——3.742/3.7=最后防线",H:300,now:3.765,
+       lines:[{p:3.742,col:"#f0b90b",lab:"3.742",w:1.8},{p:3.7,col:"#f0883e",lab:"3.7"},{p:3.5,col:"#8b949e",lab:"3.5",side:"r"}]});
+
+    renderVerdict(now);
+    document.getElementById("updTag").textContent="BTC 快照 @76,290 · 冻结于 11/06 09:00（fapi）";
+  }catch(e){
+    document.getElementById("verdict").innerHTML="⚠ 数据加载失败："+e.message+" —— 已尝试 fapi 与 OKX 备援双源。排查：① ⌘⇧R 强制刷新（清缓存）② F12→Console 看红字 ③ 若显示 Failed to fetch=当前网络到两个数据源均不通（代理/VPN切换后重试）";
+    document.getElementById("verdict").className="verdict r";
+    document.getElementById("updTag").textContent="数据源连接失败";
+  }
+}
+function renderVerdict(now){
+  const el=document.getElementById("verdict");
+  el.className="verdict r";
+  el.innerHTML=`📉 <b>暴跌三因：AI/芯片股崩盘（纳指 100 -6.36%·AI cash-burn 恐慌）+ 初请 18.9 万（57 年新低→加息定价强化）+ 数亿美元清算连锁——BTC 单根 4h -6.1% 至 75,525，五道线同根击穿（79,905/79,737/78,776/76,444/76,152）</b>。复盘 11/05：2✓2✗（50%·B 路径全兑现但只给 25%；A 的"两根确认"被第三根推翻=方法论课：确认是过程不是终局）。定性：<b>「向上离开」被否定+76,152 终极防守 4h 收盘失守（两根）=日线老中枢向下离开确认，量度 75,000（三重合流）/74,6xx</b>；日线假金叉（本周第三个"假"字记录）。今晨 75,525/75,158 双底候选+30m 金叉回升（现 76,290 回抽老下沿）。三演化：<b>B(40%) 75,158 跌破→75,000 量度兑现；C(35%) 喘息窄幅等非农（今晚 20:30 终审）；A(25%) 双底确认→76,444/78,776 反弹（定性=中继）</b>。暴跌后纪律：管住手、不持仓过非农、单笔≤1%。<b>本页为分析快照，不构成执行指令</b>。`;
+}
+load();
+</script>
+</body>
+</html>
