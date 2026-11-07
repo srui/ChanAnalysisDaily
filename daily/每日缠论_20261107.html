@@ -49,10 +49,6 @@ svg{display:block;width:100%;height:auto;cursor:crosshair}
 
 <div class="sec" style="color:#2ebd85;border-color:#2ebd85;font-size:17px;margin:18px 0 10px">📊 第一大块 · 技术面（缠论结构 / 多周期热力图 / 价格行为）</div>
 
-<div class="pcard fix" style="grid-column:1/-1;border-left:3px solid #f0b90b"><h3>🔥 BTC / ETH 多周期热力图（实时计算 · 六周期 × 四指标）</h3>
-<div id="heatmapCard">计算中…</div>
-</div>
-
 <div class="pcard fix" style="grid-column:1/-1;border-left:3px solid #e8b339"><h3>📌 TL;DR（11:20 @76,042 · fapi）</h3>
 <div class="jrow"><span>级别结论</span><span class="v"><b class="y">75,000 终审通过：非农冲击 74,811（穿位 189 点）后 V 型收回——量度兑现+承接验证双证齐全</b>；30m 新中枢 [75,525~76,532] 11 段换手；日线 hist 收敛两连=下跌动能衰减中；周末=消化+定下周框架</span></div>
 <div class="jrow"><span>关键位</span><span class="v"><b>75,158/74,811（双底带=终极防守）</b>／75,000（针破收回=已验证支撑）／75,525（30m 中枢下沿）／<b>76,532（30m 中枢上沿=离开裁判）</b>／76,444／78,776（旧上沿=强阻力）</span></div>
@@ -392,76 +388,6 @@ function enableCross(boxId,ks,g){
 
 
 
-/* ===== BTC/ETH 多周期热力图 ===== */
-async function hmFetch(sym,iv){
-  const map={"1w":"1w","1d":"1d","4h":"4h","1h":"1h","30m":"30m","15m":"15m","5m":"5m"};
-  try{
-    if(Date.now()<fapiDownUntil)return okxK(sym,iv,null,FREEZE,300);
-    const d=await fetch(`${API}/klines?symbol=${sym}&interval=${iv}&limit=300`).then(r=>r.json());
-    if(Array.isArray(d)&&d.length)return d.map(k=>({t:+k[0],o:+k[1],h:+k[2],l:+k[3],c:+k[4]}));
-  }catch(e){}
-  return okxK(sym,iv,null,FREEZE,300).catch(()=>[]);
-}
-function hmStatus(kls){
-  if(!kls||kls.length<30)return null;
-  const a=kls.map(k=>[k.t,k.o,k.h,k.l,k.c]);
-  const bi=buildBiM(a),zs=buildZS(bi),m=calcMACD(a);
-  const last=kls[kls.length-1].c;
-  // 笔方向
-  const lastPt=bi[bi.length-1];
-  const dir=lastPt?(lastPt.type==="顶"?"下跌笔":"上涨笔"):"—";
-  // MACD 状态
-  const dif=m.dif[m.dif.length-1],dea=m.dea[m.dea.length-1];
-  const cross=dif>dea?"金叉":"死叉", zero=dif>0?"零上":"零下";
-  // 中枢位置
-  const z=zs[zs.length-1];
-  let pos="无中枢",posCol="#66748f";
-  if(z){ if(last>z.ZG){pos="上沿上方";posCol="#2ebd85"} else if(last<z.ZD){pos="下沿下方";posCol="#f6465d"} else {pos="中枢内";posCol="#f0b90b"} }
-  // 动能(hist 绝对值 3 根趋势)
-  const h0=Math.abs(m.hist[m.hist.length-3]),h1=Math.abs(m.hist[m.hist.length-2]),h2=Math.abs(m.hist[m.hist.length-1]);
-  const mom=h2>h1&&h1>h0?"增强":(h2<h1&&h1<h0?"衰减":"持平");
-  return {dir,cross,zero,pos,posCol,mom,
-    dirCol:dir==="上涨笔"?"#2ebd85":dir==="下跌笔"?"#f6465d":"#66748f",
-    macdCol:cross==="金叉"?(zero==="零上"?"#2ebd85":"#1a8f63"):(zero==="零上"?"#b0495c":"#f6465d"),
-    momCol:mom==="增强"?"#f0883e":mom==="衰减"?"#58a6ff":"#66748f"};
-}
-async function renderHeatmap(){
-  const box=document.getElementById("heatmapCard");
-  if(!box)return;
-  const ivs=["1d","4h","1h","30m","15m","5m"];
-  const ivName={"1d":"日线","4h":"4小时","1h":"1小时","30m":"30分","15m":"15分","5m":"5分"};
-  let rows=[];
-  for(const sym of ["BTCUSDT","ETHUSDT"]){
-    const cells=[];
-    for(const iv of ivs){
-      const kls=await hmFetch(sym,iv);
-      cells.push(hmStatus(kls));
-    }
-    rows.push({sym,cells});
-  }
-  let s='<table style="border-collapse:collapse;width:100%;font-size:11.8px">';
-  s+='<tr style="color:#8ea0bd;font-size:10.5px"><td style="padding:4px;width:64px">品种</td><td style="width:60px">指标</td>';
-  ivs.forEach(iv=>s+=`<td style="padding:4px;text-align:center">${ivName[iv]}</td>`);
-  s+='</tr>';
-  const metrics=[["笔方向","dir","dirCol"],["MACD","cross","macdCol"],["中枢位置","pos","posCol"],["动能","mom","momCol"]];
-  rows.forEach((row,ri)=>{
-    const nm=row.sym==="BTCUSDT"?"BTC":"ETH";
-    metrics.forEach(([label,key,col],mi)=>{
-      s+=`<tr><td${mi===0?` rowspan="4" style="font-weight:700;color:${nm==='BTC'?'#f0b90b':'#58a6ff'};text-align:center;vertical-align:middle"`:''}>${mi===0?nm:''}</td><td style="padding:4px;color:#8ea0bd">${label}</td>`;
-      row.cells.forEach(c=>{
-        if(!c){s+='<td style="padding:4px;text-align:center;color:#66748f">—</td>';return}
-        let txt=c[key];
-        if(key==="cross")txt=`${c.cross}·${c.zero}`;
-        s+=`<td style="padding:4px;text-align:center;font-weight:600;background:${c[col]}22;color:${c[col]};border:1px solid ${c[col]}55;border-radius:4px">${txt}</td>`;
-      });
-      s+='</tr>';
-    });
-  });
-  s+='</table>';
-  s+='<div class="tips">热力图口径：笔方向=当前进行笔；MACD=DIF/DEA 交叉×零轴位置；中枢位置=现价 vs 末中枢 ZG/ZD；动能=|hist| 三根趋势。颜色：绿=多头/金叉/上沿上方，红=空头/死叉/下沿下方，黄=中枢内，橙=增强，蓝=衰减。<b>用法：一屏看穿 BTC/ETH 六个周期的多空结构——单周期信号看方向，多周期同色看趋势共振</b>。</div>';
-  box.innerHTML=s;
-}
-
 const T=ds=>new Date(ds).getTime();
 const FREEZE=T("2026-11-07T11:20:00");
 const LV={loD:74811,loB:75158,zsLo:75525,zsHi:76532,oldLo:76152,oldHi:78776,tgt:80345,tgtDn:74600};
@@ -570,7 +496,6 @@ async function load(){
     ],{title:"NEAR 4h · L 3.61守住收回3.76(现3.76·+0.8%)——3.905=阻力",H:300,now:3.760,
        lines:[{p:3.905,col:"#f0b90b",lab:"3.905",w:1.8},{p:3.7,col:"#f0883e",lab:"3.7"},{p:3.61,col:"#f6465d",lab:"3.61",side:"r"}]});
 
-    renderHeatmap();
     renderVerdict(now);
     document.getElementById("updTag").textContent="BTC 快照 @76,042 · 冻结于 11/07 11:20（fapi）";
   }catch(e){
