@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BTC / ETH 爆仓热力图</title>
+<title>BTC / ETH 爆仓热力图（多空分离）</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0b111e;color:#cdd6e6;font:14px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
@@ -17,22 +17,25 @@ h1 small{font-size:11px;color:#7b8aa5;font-weight:400;margin-left:8px}
 .sub{font-size:12px;color:#8ea0bd;margin-bottom:12px;line-height:1.7}
 .sub b{color:#e8eefb}
 .hm-card{background:#0e1626;border:1px solid #223049;border-radius:12px;padding:10px;margin-bottom:14px;position:relative}
+.hm-title{font-size:13.5px;font-weight:700;margin-bottom:6px;padding-left:10px}
 canvas{display:block;width:100%;border-radius:8px}
-.legend{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:11px;color:#8ea0bd;flex-wrap:wrap}
-.leg-item{display:flex;gap:4px;align-items:center}
-.leg-swatch{width:14px;height:14px;border-radius:3px}
+.legend{display:flex;gap:14px;align-items:center;margin-top:6px;font-size:10.5px;color:#8ea0bd;flex-wrap:wrap}
+.leg-item{display:flex;gap:3px;align-items:center}
+.leg-swatch{width:12px;height:12px;border-radius:3px}
 .tips{margin-top:8px;padding-left:14px;font-size:11.5px;color:#aeb9cf;line-height:1.8}
-.g{color:#2ebd85}.r{color:#f6465d}.y{color:#f0b90b}.o{color:#f0883e}.b{color:#58a6ff}
-.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
-.stat .box{background:#141d31;border-radius:8px;padding:8px 12px}
-.stat .lab{font-size:10.5px;color:#8ea0bd}
-.stat .val{font-size:15px;font-weight:700;margin-top:2px}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px;margin-top:8px}
+.stat .box{background:#141d31;border-radius:6px;padding:6px 10px}
+.stat .lab{font-size:10px;color:#8ea0bd}
+.stat .val{font-size:13px;font-weight:700;margin-top:2px}
+.g{color:#2ebd85}.r{color:#f6465d}.y{color:#f0b90b}.o{color:#f0883e}
+.duo{border-left:3px solid #f6465d}
+.kong{border-left:3px solid #2ebd85}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-<h1>🔥 爆仓热力图 <small>BTC / ETH · 估算清算密集度 · 数据源 Binance OI+费率</small></h1>
+<h1>🔥 爆仓热力图（多空分离） <small>BTC / ETH · 爆多+爆空各一张</small></h1>
 <div style="display:flex;gap:6px">
 <button class="btn active" data-sym="BTCUSDT">BTC</button>
 <button class="btn" data-sym="ETHUSDT">ETH</button>
@@ -44,141 +47,174 @@ canvas{display:block;width:100%;border-radius:8px}
 <button class="btn" id="refreshBtn">⟳ 刷新</button>
 <span class="btn" style="cursor:default" id="updTag">—</span>
 </header>
-<div class="sub"><a href="../index.html">← 主页</a> ｜ <b>爆仓热力图原理</b>：根据 Binance 未平仓合约（OI）逐小时变化，估算每个价位上累积的杠杆仓位密度 → 再按常见杠杆倍数（10x/25x/50x/100x）推算各价位的<b>预估清算金额</b>。颜色越亮（黄→白）= 该价位堆积的清算单越密集 = 价格被"吸向"的磁铁位。资金费率判断方向（正费率=多头杠杆为主、负=空头）。<b>本图为估算模型，仅供学习参考，不构成执行指令。</b></div>
+<div class="sub"><a href="../index.html">← 主页</a> ｜ <b class="r">🔴 爆多图</b>：多头杠杆仓位的清算位分布——<b>价格跌到该位时多头被强制平仓→加速下跌（砸盘燃料）</b>。 <b class="g">🟢 爆空图</b>：空头杠杆仓位的清算位分布——<b>价格涨到该位时空头被强制平仓→加速上涨（轧空燃料）</b>。柱越高/越亮=该价位清算金额越大=磁铁位越强。<b>本页为估算模型，仅供学习参考。</b></div>
 
-<div class="hm-card" id="hmBTC"></div>
-<div class="hm-card" id="hmETH"></div>
+<div class="hm-card" id="hmBTC_long"></div>
+<div class="hm-card" id="hmBTC_short"></div>
+<div class="hm-card" id="hmETH_long"></div>
+<div class="hm-card" id="hmETH_short"></div>
 
 <div class="tips">
-📌 <b>怎么读：</b>
-· 横轴=价格、纵轴=预估清算金额密度（USD）。亮色柱=大量杠杆仓位的清算位 → 价格到达该区可能触发连锁清算（波动放大）。
-· <b class="y">磁铁位</b>：最亮的柱=最大清算堆积，价格趋向被拉向该位置清算。
-· <b class="g">多空分界</b>：现价上方亮区=空头清算区（轧空燃料）；下方亮区=多头清算区（砸盘燃料）。
-· 杠杆假设：10x/25x/50x/100x 均匀分布（实际市场 25x-50x 占比更高，中位杠杆更近现价）。
+📌 <b>用法</b>：
+· <b class="r">爆多图</b>（红色系）看现价<b>下方</b>——最亮的柱=最大多头清算堆积=价格被吸向该位=砸盘目标。
+· <b class="g">爆空图</b>（绿色系）看现价<b>上方</b>——最亮的柱=最大空头清算堆积=价格被拉向该位=轧空目标。
+· 两种燃料的相对大小决定市场偏向：爆多堆积>爆空=下跌风险大；爆空>爆多=上涨弹性足。
 </div>
 </div>
 <script>
 "use strict";
 const API="https://fapi.binance.com";
-let curSym="BTCUSDT",curDays=3;
+let curDays=3;
 
 async function fetchJSON(url){const r=await fetch(url);return r.json()}
 
-async function buildHeatmap(sym,days,boxId){
+async function buildChart(sym,days,boxId,side){
   const box=document.getElementById(boxId);
   const name=sym==="BTCUSDT"?"BTC":"ETH";
-  box.innerHTML=`<div style="text-align:center;padding:40px;color:#66748f">${name} 计算中…</div>`;
+  const sideName=side==="long"?"爆多（多头清算·砸盘燃料）":"爆空（空头清算·轧空燃料）";
+  const accent=side==="long"?"#f6465d":"#2ebd85";
+  const cssClass=side==="long"?"duo":"kong";
+  const emoji=side==="long"?"🔴":"🟢";
+  box.innerHTML=`<div class="hm-title ${cssClass}" style="color:${accent}">${emoji} ${name} ${sideName} — 计算中…</div>`;
   try{
-    // 拉 OI 历史（1h 粒度）+ 价格 K 线
     const bars=days*24;
     const oi=await fetchJSON(`${API}/futures/data/openInterestHist?symbol=${sym}&period=1h&limit=${bars}`);
     const fr=await fetchJSON(`${API}/futures/data/globalLongShortAccountRatio?symbol=${sym}&period=1h&limit=${bars}`).catch(()=>[]);
     const kl=await fetchJSON(`${API}/fapi/v1/klines?symbol=${sym}&interval=1h&limit=${bars}`);
-    if(!Array.isArray(oi)||!Array.isArray(kl)||oi.length<10){box.innerHTML=`<div style="padding:20px;color:#f6465d">${name} 数据获取失败</div>`;return}
+    if(!Array.isArray(oi)||!Array.isArray(kl)||oi.length<10){box.innerHTML=`<div class="hm-title ${cssClass}" style="color:${accent}">${emoji} ${name} ${sideName}</div><div style="padding:15px;color:#f6465d">数据获取失败</div>`;return}
 
-    // 构建 price→OI_change 映射
     const px=new Map(kl.map(k=>[+k[0],{h:+k[2],l:+k[3],c:+k[4]}]));
-    const priceOI=[]; // {price, oiChange, fundRate}
+    const priceOI=[];
     for(let i=1;i<oi.length;i++){
       const t=oi[i].timestamp;
-      const dOI=parseFloat(oi[i].sumOpenInterest)-parseFloat(oi[i-1].sumOpenInterest);
       const dVal=parseFloat(oi[i].sumOpenInterestValue)-parseFloat(oi[i-1].sumOpenInterestValue);
       const k=px.get(t)||px.get(t-3600000);
       if(!k)continue;
       const mid=(k.h+k.l+k.c)/3;
       const f=fr.find?fr.find(x=>x.timestamp===t):null;
       const longRatio=f?parseFloat(f.longShortRatio)/(1+parseFloat(f.longShortRatio)):0.55;
-      priceOI.push({price:mid,oiChange:Math.abs(dVal),longRatio,fund:f?parseFloat(f.longShortRatio):1});
+      priceOI.push({price:mid,oiChange:Math.abs(dVal),longRatio});
     }
-    if(priceOI.length<5){box.innerHTML=`<div style="padding:20px;color:#f0b90b">${name} 数据不足</div>`;return}
+    if(priceOI.length<5){box.innerHTML=`<div class="hm-title ${cssClass}">${emoji} ${name} ${sideName}</div><div style="padding:15px;color:#f0b90b">数据不足</div>`;return}
 
-    // 当前价格
     const ticker=await fetchJSON(`${API}/fapi/v1/ticker/price?symbol=${sym}`).catch(()=>({price:kl[kl.length-1][4]}));
     const nowP=parseFloat(ticker.price);
 
-    // 计算清算分布: 对每个OI增加事件, 按杠杆倍数分散到对应清算价
-    const liq=new Map(); // price_bucket → usd
+    // 只计算指定方向的清算
+    const liq=new Map();
     const levs=[10,25,50,100];
-    const levWeights=[0.2,0.35,0.3,0.15]; // 假设杠杆分布
-    const bucketSize=sym==="BTCUSDT"?100:1; // BTC $100 一格, ETH $1 一格
+    const levW=[0.2,0.35,0.3,0.15];
+    const bucketSize=sym==="BTCUSDT"?100:1;
 
     for(const p of priceOI){
-      const oiUSD=p.oiChange;
-      if(oiUSD<10000)continue; // 过滤噪声
+      if(p.oiChange<10000)continue;
       for(let li=0;li<levs.length;li++){
-        const lev=levs[li],w=levWeights[li];
-        const longUSD=oiUSD*w*p.longRatio;
-        const shortUSD=oiUSD*w*(1-p.longRatio);
-        // 多头清算价 = 入场价 × (1 - 1/lev)
-        const longLiq=p.price*(1-1/lev);
-        const b1=Math.round(longLiq/bucketSize)*bucketSize;
-        liq.set(b1,(liq.get(b1)||0)+longUSD);
-        // 空头清算价 = 入场价 × (1 + 1/lev)
-        const shortLiq=p.price*(1+1/lev);
-        const b2=Math.round(shortLiq/bucketSize)*bucketSize;
-        liq.set(b2,(liq.get(b2)||0)+shortUSD);
+        const lev=levs[li],w=levW[li];
+        if(side==="long"){
+          // 多头: 清算价在入场价下方
+          const usd=p.oiChange*w*p.longRatio;
+          const liqP=p.price*(1-1/lev);
+          const b=Math.round(liqP/bucketSize)*bucketSize;
+          liq.set(b,(liq.get(b)||0)+usd);
+        }else{
+          // 空头: 清算价在入场价上方
+          const usd=p.oiChange*w*(1-p.longRatio);
+          const liqP=p.price*(1+1/lev);
+          const b=Math.round(liqP/bucketSize)*bucketSize;
+          liq.set(b,(liq.get(b)||0)+usd);
+        }
       }
     }
 
-    // 找最大密度 → 归一化
     let maxLiq=0;for(const v of liq.values())if(v>maxLiq)maxLiq=v;
-    if(maxLiq===0){box.innerHTML=`<div style="padding:20px;color:#f0b90b">${name} 无有效清算信号</div>`;return}
+    if(maxLiq===0){box.innerHTML=`<div class="hm-title ${cssClass}">${emoji} ${name} ${sideName}</div><div style="padding:15px;color:#f0b90b">无有效信号</div>`;return}
 
-    // 画布
-    const sorted=Array.from(liq.entries()).filter(v=>v[1]>maxLiq*0.01).sort((a,b)=>a[0]-b[0]);
-    const W=1100,H=420,padL=10,padR=80,padT=30,padB=50;
+    const sorted=Array.from(liq.entries()).filter(v=>v[1]>maxLiq*0.005).sort((a,b)=>a[0]-b[0]);
+    const W=1100,H=320,padL=10,padR=80,padT=28,padB=45;
     const pMin=sorted[0][0],pMax=sorted[sorted.length-1][0];
-    const pr=nowP?Math.min(Math.max(nowP,pMin),pMax):pMax;
-    const xMin=Math.min(pMin,pr-bucketSize*20),xMax=Math.max(pMax,pr+bucketSize*20);
+    const xMin=side==="long"?pMin:Math.min(pMin,nowP-bucketSize*10);
+    const xMax=side==="long"?Math.max(pMax,nowP+bucketSize*10):pMax;
     const cw=W-padL-padR,ch=H-padT-padB;
     const X=p=>padL+(p-xMin)/(xMax-xMin)*cw;
     const Y=v=>padT+ch-(v/maxLiq)*ch;
 
-    // 颜色函数: 密度→色温 (暗→蓝→绿→黄→白热)
+    // 颜色函数: 多头用暖色(红系), 空头用冷色(绿系)
     const heatColor=v=>{
       const t=v/maxLiq;
-      if(t>0.8)return "rgba(255,255,220,0.95)";
-      if(t>0.6)return "rgba(255,220,80,0.85)";
-      if(t>0.4)return "rgba(255,160,40,0.75)";
-      if(t>0.25)return "rgba(240,100,60,0.65)";
-      if(t>0.12)return "rgba(200,70,120,0.5)";
-      if(t>0.05)return "rgba(120,70,180,0.4)";
-      return "rgba(60,60,150,0.25)";
+      if(side==="long"){
+        if(t>0.8)return "rgba(255,160,160,0.95)";
+        if(t>0.6)return "rgba(255,100,100,0.85)";
+        if(t>0.4)return "rgba(240,70,70,0.75)";
+        if(t>0.25)return "rgba(200,50,70,0.6)";
+        if(t>0.12)return "rgba(160,40,80,0.45)";
+        if(t>0.05)return "rgba(120,30,90,0.3)";
+        return "rgba(80,20,100,0.18)";
+      }else{
+        if(t>0.8)return "rgba(160,255,200,0.95)";
+        if(t>0.6)return "rgba(100,240,160,0.85)";
+        if(t>0.4)return "rgba(60,220,130,0.75)";
+        if(t>0.25)return "rgba(40,180,110,0.6)";
+        if(t>0.12)return "rgba(30,140,100,0.45)";
+        if(t>0.05)return "rgba(20,100,90,0.3)";
+        return "rgba(15,70,80,0.18)";
+      }
     };
 
-    let s=`<canvas width="${W}" height="${H}" style="background:#0a0f1a;border-radius:8px"></canvas>`;
-    box.innerHTML=s;
+    // HTML 结构
+    let html=`<div class="hm-title ${cssClass}" style="color:${accent};border-left:3px solid ${accent};padding-left:10px">${emoji} ${name} ${sideName}</div>`;
+    html+=`<canvas width="${W}" height="${H}" style="background:#0a0f1a;border-radius:8px"></canvas>`;
+
+    // 统计 top 3
+    const top3=Array.from(liq.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    html+=`<div class="stat">`;
+    html+=`<div class="box"><div class="lab">当前价格</div><div class="val" style="color:#e8b339">${sym==="BTCUSDT"?"$"+nowP.toLocaleString():"$"+nowP.toFixed(2)}</div></div>`;
+    for(let i=0;i<top3.length;i++){
+      const [p,v]=top3[i];
+      const dist=((p/nowP-1)*100).toFixed(1);
+      const pos=side==="long"?(p<nowP?"下方":"⚠上方异常"):(p>nowP?"上方":"⚠下方异常");
+      html+=`<div class="box"><div class="lab">🧲 #${i+1} ${pos} ${dist>0?"+":""}${dist}%</div><div class="val" style="color:${accent}">${sym==="BTCUSDT"?"$"+p.toLocaleString():"$"+p.toFixed(1)}</div></div>`;
+    }
+    html+=`</div>`;
+
+    // 图例
+    html+=`<div class="legend"><span>密度：</span>`;
+    const legs=side==="long"
+      ?["rgba(80,20,100,0.18)","rgba(160,40,80,0.45)","rgba(240,70,70,0.75)","rgba(255,100,100,0.85)","rgba(255,160,160,0.95)"]
+      :["rgba(15,70,80,0.18)","rgba(30,140,100,0.45)","rgba(60,220,130,0.75)","rgba(100,240,160,0.85)","rgba(160,255,200,0.95)"];
+    const labels=["极低","低","中","高","极强(磁铁)"];
+    for(let i=0;i<legs.length;i++){
+      html+=`<div class="leg-item"><div class="leg-swatch" style="background:${legs[i]}"></div>${labels[i]}</div>`;
+    }
+    html+=`</div>`;
+    box.innerHTML=html;
+
+    // 绘制 canvas
     const cvs=box.querySelector("canvas"),ctx=cvs.getContext("2d");
 
-    // 背景网格
+    // 网格
     ctx.strokeStyle="#1a2438";ctx.lineWidth=0.5;
-    const gridStep=(xMax-xMin)/8;
     for(let i=0;i<=8;i++){
-      const px=xMin+i*gridStep;
-      const x=X(px);
+      const p=xMin+(xMax-xMin)*i/8;
+      const x=X(p);
       ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,padT+ch);ctx.stroke();
       ctx.fillStyle="#66748f";ctx.font="10px sans-serif";ctx.textAlign="center";
-      ctx.fillText(sym==="BTCUSDT"?"$"+px.toFixed(0):"$"+px.toFixed(1),x,H-30);
+      ctx.fillText(sym==="BTCUSDT"?"$"+p.toFixed(0):"$"+p.toFixed(1),x,H-25);
     }
-    // Y 轴标注
-    ctx.textAlign="left";ctx.fillStyle="#8ea0bd";
     for(let i=0;i<=4;i++){
       const v=maxLiq*i/4;
-      ctx.fillText(v>=1e6?"$"+(v/1e6).toFixed(1)+"M":"$"+(v/1e3).toFixed(0)+"K",W-padR+8,padT+ch-v/maxLiq*ch+4);
+      ctx.fillStyle="#8ea0bd";ctx.font="9px sans-serif";ctx.textAlign="left";
+      ctx.fillText(v>=1e6?"$"+(v/1e6).toFixed(1)+"M":"$"+(v/1e3).toFixed(0)+"K",W-padR+8,padT+ch-v/maxLiq*ch+3);
     }
 
-    // 绘制柱状
+    // 柱状
     for(const [p,v] of sorted){
       const x=X(p),bw=Math.max(2,cw/sorted.length*0.7),y=Y(v);
-      const col=heatColor(v);
-      ctx.fillStyle=col;
+      ctx.fillStyle=heatColor(v);
       ctx.fillRect(x-bw/2,y,bw,padT+ch-y);
-      // 密度>60% 标注
       if(v>maxLiq*0.6){
-        ctx.fillStyle=v>maxLiq*0.8?"#fff":"#f0b90b";
+        ctx.fillStyle=v>maxLiq*0.8?"#fff":accent;
         ctx.font="bold 10px sans-serif";ctx.textAlign="center";
-        const tag=sym==="BTCUSDT"?(p/1000).toFixed(1)+"k":p.toFixed(0);
-        ctx.fillText(tag,x,y-6);
+        ctx.fillText(sym==="BTCUSDT"?(p/1000).toFixed(1)+"k":p.toFixed(0),x,y-5);
       }
     }
 
@@ -186,78 +222,48 @@ async function buildHeatmap(sym,days,boxId){
     if(nowP>=xMin&&nowP<=xMax){
       const nx=X(nowP);
       ctx.strokeStyle="#e8b339";ctx.lineWidth=2;ctx.setLineDash([8,4]);
-      ctx.beginPath();ctx.moveTo(nx,padT-5);ctx.lineTo(nx,padT+ch+5);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(nx,padT-3);ctx.lineTo(nx,padT+ch+3);ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle="#e8b339";ctx.font="bold 11px sans-serif";ctx.textAlign="center";
-      ctx.fillText("当前 "+(sym==="BTCUSDT"?"$"+nowP.toFixed(0):"$"+nowP.toFixed(1)),nx,padT-8);
-      // 上方标注"轧空区" 下方标注"砸盘区"
-      ctx.fillStyle="rgba(46,189,133,.6)";ctx.font="10px sans-serif";
-      ctx.fillText("↑ 空头清算区(轧空燃料)",nx+60,padT+16);
-      ctx.fillStyle="rgba(246,70,93,.6)";
-      ctx.fillText("↓ 多头清算区(砸盘燃料)",nx+60,padT+ch-8);
+      ctx.fillText("当前 "+(sym==="BTCUSDT"?"$"+nowP.toFixed(0):"$"+nowP.toFixed(1)),nx,padT-6);
+      // 方向提示
+      ctx.fillStyle=accent+"88";ctx.font="10px sans-serif";
+      if(side==="long"){
+        ctx.fillText("↓ 多头清算区（价格跌到→多头被强平→加速下跌）",nx+120,padT+14);
+      }else{
+        ctx.fillText("↑ 空头清算区（价格涨到→空头被强平→加速上涨）",nx+120,padT+14);
+      }
     }
-
-    // 找 top 3 磁铁位
-    const top3=Array.from(liq.entries()).sort((a,b)=>b[1]-a[1]).slice(0,3);
-    let statHtml=`<div class="stat">`;
-    statHtml+=`<div class="box"><div class="lab">当前价格</div><div class="val" style="color:#e8b339">${sym==="BTCUSDT"?"$"+nowP.toLocaleString():"$"+nowP.toFixed(2)}</div></div>`;
-    for(let i=0;i<top3.length;i++){
-      const [p,v]=top3[i];
-      const side=p>nowP?"<span class='g'>空头清算(上方)</span>":"<span class='r'>多头清算(下方)</span>";
-      const dist=((p/nowP-1)*100).toFixed(1);
-      statHtml+=`<div class="box"><div class="lab">🧲 磁铁位 #${i+1} ${side}</div><div class="val" style="color:${p>nowP?'#2ebd85':'#f6465d'}">${sym==="BTCUSDT"?"$"+p.toLocaleString():"$"+p.toFixed(1)} <small style="font-size:11px;color:#8ea0bd">(${dist>0?'+':''}${dist}%)</small></div></div>`;
-    }
-    statHtml+=`</div>`;
-
-    // 加图例
-    const legend=`<div class="legend">
-<span>密度：</span>
-<div class="leg-item"><div class="leg-swatch" style="background:rgba(60,60,150,.25)"></div>极低</div>
-<div class="leg-item"><div class="leg-swatch" style="background:rgba(200,70,120,.5)"></div>低</div>
-<div class="leg-item"><div class="leg-swatch" style="background:rgba(255,160,40,.75)"></div>中</div>
-<div class="leg-item"><div class="leg-swatch" style="background:rgba(255,220,80,.85)"></div>高</div>
-<div class="leg-item"><div class="leg-swatch" style="background:rgba(255,255,220,.95)"></div>极强(磁铁)</div>
-</div>`;
-    box.innerHTML=s+statHtml+legend;
-    // 重新画 canvas
-    const c2=box.querySelector("canvas");
-    c2.getContext("2d").drawImage(cvs,0,0);
-    // 保存原始 canvas 内容到新 canvas
-    const newCtx=c2.getContext("2d");
-    newCtx.clearRect(0,0,W,H);
-    newCtx.drawImage(cvs,0,0);
 
   }catch(e){
-    box.innerHTML=`<div style="padding:20px;color:#f6465d">${name} 错误: ${e.message}</div>`;
+    box.innerHTML=`<div class="hm-title ${cssClass}">${emoji} ${name} ${sideName}</div><div style="padding:15px;color:#f6465d">错误: ${e.message}</div>`;
   }
 }
 
 async function loadAll(){
   document.getElementById("updTag").textContent="计算中…";
-  await buildHeatmap(curSym,curDays,curSym==="BTCUSDT"?"hmBTC":"hmETH");
-  // 另一个币也画（保持双卡可见）
-  const other=curSym==="BTCUSDT"?"ETHUSDT":"BTCUSDT";
-  await buildHeatmap(other,curDays,other==="BTCUSDT"?"hmBTC":"hmETH");
-  document.getElementById("updTag").textContent=`更新于 ${new Date().toLocaleTimeString("zh-CN",{hour12:false})}`;
-}
-
-// 双币都画
-async function loadBoth(){
-  document.getElementById("updTag").textContent="计算中…";
-  await Promise.all([buildHeatmap("BTCUSDT",curDays,"hmBTC"),buildHeatmap("ETHUSDT",curDays,"hmETH")]);
+  const jobs=[
+    buildChart("BTCUSDT",curDays,"hmBTC_long","long"),
+    buildChart("BTCUSDT",curDays,"hmBTC_short","short"),
+    buildChart("ETHUSDT",curDays,"hmETH_long","long"),
+    buildChart("ETHUSDT",curDays,"hmETH_short","short"),
+  ];
+  await Promise.all(jobs);
   document.getElementById("updTag").textContent=`更新于 ${new Date().toLocaleTimeString("zh-CN",{hour12:false})}`;
 }
 
 document.querySelectorAll("[data-sym]").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll("[data-sym]").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");curSym=b.dataset.sym;loadBoth();
+  b.classList.add("active");
+  // 双币都显示（不分sym了）
+  loadAll();
 }));
 document.querySelectorAll("[data-days]").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll("[data-days]").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");curDays=+b.dataset.days;loadBoth();
+  b.classList.add("active");curDays=+b.dataset.days;loadAll();
 }));
-document.getElementById("refreshBtn").addEventListener("click",loadBoth);
-loadBoth();
+document.getElementById("refreshBtn").addEventListener("click",loadAll);
+loadAll();
 </script>
 </body>
 </html>
